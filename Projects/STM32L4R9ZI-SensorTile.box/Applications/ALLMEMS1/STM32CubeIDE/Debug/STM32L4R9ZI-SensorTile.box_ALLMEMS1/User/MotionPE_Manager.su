@@ -1,0 +1,3 @@
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/MotionPE_Manager.c:43:6:MotionPE_manager_init	48	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/MotionPE_Manager.c:67:6:MotionPE_manager_run	8	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/MotionPE_Manager.c:78:6:MotionPE_manager_get_version	8	static

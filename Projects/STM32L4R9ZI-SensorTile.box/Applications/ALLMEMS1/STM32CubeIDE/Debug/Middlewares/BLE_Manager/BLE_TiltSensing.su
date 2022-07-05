@@ -1,0 +1,4 @@
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_TiltSensing.c:153:13:AttrMod_Request_TiltSensing	0	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_TiltSensing.c:58:17:BLE_InitTiltSensingService	16	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_TiltSensing.c:103:12:BLE_TiltSensingUpdate	56	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_TiltSensing.c:178:13:Read_Request_TiltSensing	32	static

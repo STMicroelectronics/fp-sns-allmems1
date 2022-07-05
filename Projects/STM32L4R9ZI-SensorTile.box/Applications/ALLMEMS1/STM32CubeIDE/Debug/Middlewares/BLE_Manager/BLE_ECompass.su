@@ -1,0 +1,3 @@
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_ECompass.c:120:13:AttrMod_Request_ECompass	0	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_ECompass.c:46:17:BLE_InitECompassService	24	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_ECompass.c:86:12:BLE_ECompassUpdate	24	static

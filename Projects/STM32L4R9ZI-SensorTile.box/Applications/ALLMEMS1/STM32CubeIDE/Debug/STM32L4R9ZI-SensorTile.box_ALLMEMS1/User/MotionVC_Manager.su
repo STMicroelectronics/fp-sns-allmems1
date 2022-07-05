@@ -1,0 +1,3 @@
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/MotionVC_Manager.c:43:6:MotionVC_manager_init	48	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/MotionVC_Manager.c:60:6:MotionVC_manager_update	8	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/MotionVC_Manager.c:71:6:MotionVC_manager_get_version	8	static

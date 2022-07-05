@@ -1,0 +1,4 @@
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_AccEvent.c:150:13:AttrMod_Request_AccEvent	0	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_AccEvent.c:63:17:BLE_InitAccEnvService	16	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_AccEvent.c:110:12:BLE_AccEnvUpdate	32	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_AccEvent.c:175:13:Read_Request_AccEvent	24	static

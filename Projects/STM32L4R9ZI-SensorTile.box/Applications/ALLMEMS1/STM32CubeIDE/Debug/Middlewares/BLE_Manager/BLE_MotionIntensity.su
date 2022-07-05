@@ -1,0 +1,4 @@
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_MotionIntensity.c:137:13:AttrMod_Request_MotionIntensity	0	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_MotionIntensity.c:58:17:BLE_InitMotionIntensityService	16	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_MotionIntensity.c:103:12:BLE_MotionIntensityUpdate	32	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_MotionIntensity.c:162:13:Read_Request_MotionIntensity	24	static

@@ -1,0 +1,4 @@
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_GestureRecognition.c:137:13:AttrMod_Request_GestureRecognition	0	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_GestureRecognition.c:58:17:BLE_InitGestureRecognitionService	16	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_GestureRecognition.c:103:12:BLE_GestureRecognitionUpdate	24	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Middlewares/ST/STM32_BLE_Manager/Src/BLE_GestureRecognition.c:162:13:Read_Request_GestureRecognition	24	static

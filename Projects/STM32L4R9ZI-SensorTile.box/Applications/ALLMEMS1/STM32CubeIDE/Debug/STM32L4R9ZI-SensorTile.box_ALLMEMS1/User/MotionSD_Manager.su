@@ -1,0 +1,4 @@
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/MotionSD_Manager.c:43:6:MotionSD_manager_init	48	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/MotionSD_Manager.c:67:6:MotionSD_manager_run	8	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/MotionSD_Manager.c:77:6:MotionSD_manager_reset	8	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/MotionSD_Manager.c:88:6:MotionSD_manager_get_version	8	static

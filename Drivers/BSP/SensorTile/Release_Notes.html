@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Release Notes for STEVAL-STLKT01V1 Board Drivers</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="_htmresc/mini-st.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-4">
+<div class="card fluid">
+<div class="sectione dark">
+<center>
+<h1 id="release-notes-for-steval-stlkt01v1-board-drivers"><small>Release Notes for</small> <strong>STEVAL-STLKT01V1 Board Drivers</strong></h1>
+<p>Copyright © 2020 STMicroelectronics<br />
+</p>
+<a href="https://www.st.com" class="logo"><img src="_htmresc/st_logo.png" alt="ST logo" /></a>
+</center>
+</div>
+</div>
+<h1 id="license">License</h1>
+<p>Licensed by ST under BSD-3-Clause license (the “License”). You may not use this package except in compliance with the License. You may obtain a copy of the License at: <a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></p>
+<h1 id="purpose">Purpose</h1>
+<p>The BSP (Board Specific Package) STEVAL-STLKT01V1 Board Drivers are based on the HAL drivers and provide a set of high level APIs relative to the hardware components and features in the evaluation board for a given STM32 processor</p>
+<p>The BSP drivers allow a quick access to the boards’ services using high level APIs and without any specific configuration as the link with the HAL and the external components is done in intrinsic within the drivers.</p>
+<p>Here is the list of references to user documents:</p>
+<ul>
+<li><a href="https://www.st.com/resource/en/user_manual/dm00311355.pdf">UM2090</a> : Getting started with the software package for STEVAL-STLKT01V1 based on STM32Cube</li>
+<li><a href="https://www.st.com/stm32cube">STM32Cube</a> : STM32Cube</li>
+</ul>
+</div>
+<div class="col-sm-12 col-lg-8">
+<h1 id="update-history">Update History</h1>
+<div class="collapse">
+<input type="checkbox" id="collapse-section14" checked aria-hidden="true"> <label for="collapse-section14" aria-hidden="true"><strong>v2.1.6 / 10-Feb-2022</strong></label>
+<div>
+<h2 id="main-changes">Main Changes</h2>
+<h3 id="patch-release">Patch Release</h3>
+<ul>
+<li>Added header license neutral</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section13" checked aria-hidden="true"> <label for="collapse-section13" aria-hidden="true"><strong>v2.1.4 / 22-Apr-2020</strong></label>
+<div>
+<h2 id="main-changes-1">Main Changes</h2>
+<h3 id="patch-release-1">Patch Release</h3>
+<ul>
+<li>Solving Chip Select init issue: Sensor_IO_SPI_CS_Init_All must be called before any sensor SPI read/write</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section12" checked aria-hidden="true"> <label for="collapse-section12" aria-hidden="true"><strong>v2.1.3 / 20-Sep-2019</strong></label>
+<div>
+<h2 id="main-changes-2">Main Changes</h2>
+<h3 id="patch-release-2">Patch Release</h3>
+<ul>
+<li>Issue fixed in BSP_SD_WriteBlocks function in SensorTile_sd.c</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section11" checked aria-hidden="true"> <label for="collapse-section11" aria-hidden="true"><strong>v2.1.2 / 11-Jun-2019</strong></label>
+<div>
+<h2 id="main-changes-3">Main Changes</h2>
+<h3 id="patch-release-3">Patch Release</h3>
+<ul>
+<li>Bug fixed: added support for SDSC, SDHC and SDXC in SensorTile_sd</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section10" checked aria-hidden="true"> <label for="collapse-section10" aria-hidden="true"><strong>v2.1.1 / 11-Jun-2019</strong></label>
+<div>
+<h2 id="main-changes-4">Main Changes</h2>
+<h3 id="patch-release-4">Patch Release</h3>
+<ul>
+<li>Bug fixed: updated multi-byte read function in SensorTile_env_sensors and SensorTile_motion_sensors.</li>
+<li>Minor in SensorTile_bus</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section9" aria-hidden="true"> <label for="collapse-section9" aria-hidden="true"><strong>v2.1.0 / 5-Apr-2019</strong></label>
+<div>
+<h2 id="main-changes-5">Main Changes</h2>
+<h3 id="maintenance-and-patch-release">Maintenance and patch release</h3>
+<ul>
+<li>Updated SensorTile_audio</li>
+<li>Bug fixed for pedometer and other minor fixed in SensorTile_motion_sensors</li>
+<li>Added One Shot support in SensorTile_env_sensors</li>
+<li>Updated SensorTile_conf_template</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section8" aria-hidden="true"> <label for="collapse-section8" aria-hidden="true"><strong>v2.0.0 / 5-Feb-2019</strong></label>
+<div>
+<h2 id="main-changes-6">Main Changes</h2>
+<h3 id="product-update">Product update</h3>
+<ul>
+<li>Source Code Refactoring according new BSP v2.6 specifications</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section7" aria-hidden="true"> <label for="collapse-section7" aria-hidden="true"><strong>v1.3.3 / 27-Sep-2017</strong></label>
+<div>
+<h2 id="main-changes-7">Main Changes</h2>
+<h3 id="patch-release-5">Patch Release</h3>
+<ul>
+<li>Updated 3D Accelerometer drivers</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section6" aria-hidden="true"> <label for="collapse-section6" aria-hidden="true"><strong>v1.3.2 / 11-Jul-2017</strong></label>
+<div>
+<h2 id="main-changes-8">Main Changes</h2>
+<h3 id="patch-release-6">Patch Release</h3>
+<ul>
+<li>Minor fixes</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section5" aria-hidden="true"> <label for="collapse-section5" aria-hidden="true"><strong>v1.3.1 / 27-Apr-2017</strong></label>
+<div>
+<h2 id="main-changes-9">Main Changes</h2>
+<h3 id="patch-release-7">Patch Release</h3>
+<ul>
+<li>Updated 3D Accelerometer and 3D Magnetometer drivers</li>
+<li>Updated drivers for sensors I2C and SPI access</li>
+<li>Updated SD Card support drivers</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section4" aria-hidden="true"> <label for="collapse-section4" aria-hidden="true"><strong>v1.3.0 / 13-Mar-2017</strong></label>
+<div>
+<h2 id="main-changes-10">Main Changes</h2>
+<h3 id="maintenance-release">Maintenance Release</h3>
+<ul>
+<li>Updated 3D Accelerometer and 3D Magnetometer drivers</li>
+<li>Updated SD Card support drivers</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section3"  aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>v1.2.0 / 04-Nov-2016</strong></label>
+<div>
+<h2 id="main-changes-11">Main Changes</h2>
+<h3 id="maintenance-release-1">Maintenance release</h3>
+<ul>
+<li>Updated 3D Accelerometer and 3D Magnetometer drivers</li>
+<li>Updated Humidity drivers</li>
+<li>Updated Temperature drivers</li>
+<li>Updated Pressure drivers</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section2"  aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>v1.1.0 / 12-Sep-2016</strong></label>
+<div>
+<h2 id="main-changes-12">Main Changes</h2>
+<h3 id="maintenance-release-2">Maintenance release</h3>
+<ul>
+<li>Improved SD Card support</li>
+<li>Added GG drivers</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section1"  aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>v1.0.0 / 01-Jun-2016</strong></label>
+<div>
+<h2 id="main-changes-13">Main Changes</h2>
+<h3 id="first-official-release">First official release</h3>
+<ul>
+<li>First official release</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<footer class="sticky">
+<p>For complete documentation on <strong>STEVAL-STLKT01V1</strong> , visit: <a href="https://www.st.com/en/evaluation-tools/steval-stlkt01v1.html">www.st.com</a></p>
+This release note uses up to date web standards and, for this reason, should not be opened with Internet Explorer but preferably with popular browsers such as Google Chrome, Mozilla Firefox, Opera or Microsoft Edge.
+</footer>
+</body>
+</html>

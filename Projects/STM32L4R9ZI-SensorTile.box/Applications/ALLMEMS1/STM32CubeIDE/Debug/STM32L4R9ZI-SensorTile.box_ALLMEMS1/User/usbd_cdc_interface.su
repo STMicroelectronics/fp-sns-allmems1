@@ -1,0 +1,7 @@
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/usbd_cdc_interface.c:103:15:CDC_Itf_DeInit	0	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/usbd_cdc_interface.c:118:15:CDC_Itf_Control	0	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/usbd_cdc_interface.c:87:15:CDC_Itf_Init	8	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/usbd_cdc_interface.c:213:9:CDC_Next_Packet_Rx	8	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/usbd_cdc_interface.c:232:6:CDC_PeriodElapsedCallback	16	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/usbd_cdc_interface.c:182:9:CDC_Fill_Buffer	16	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/usbd_cdc_interface.c:272:15:CDC_Itf_Receive	8	static

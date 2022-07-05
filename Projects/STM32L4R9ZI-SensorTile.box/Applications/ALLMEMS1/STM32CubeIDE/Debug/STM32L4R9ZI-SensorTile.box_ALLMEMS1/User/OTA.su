@@ -1,0 +1,3 @@
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/OTA.c:78:8:CheckBootLoaderCompliance	24	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/OTA.c:120:8:UpdateFWBlueMS	72	static
+C:/MyFolder/01_GitRepoProject/01_Release Candidate/02_GitHub/STM32CubeFunctionPack_ALLMEMS1_V4.2.0/Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/Src/OTA.c:251:6:StartUpdateFWBlueMS	48	static

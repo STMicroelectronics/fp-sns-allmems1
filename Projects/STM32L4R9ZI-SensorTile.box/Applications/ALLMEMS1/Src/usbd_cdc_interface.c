@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    usbd_cdc_interface.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Source file for USBD CDC interface
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -86,6 +86,12 @@ USBD_CDC_ItfTypeDef USBD_CDC_fops =
   */
 static int8_t CDC_Itf_Init(void)
 {
+  /* Start the TIM Base generation in interrupt mode */
+  if(HAL_TIM_Base_Start_IT(&TimUpdateVcom) != HAL_OK){
+    /* Starting Error */
+    Error_Handler();
+  }
+  
   /* Set Application Buffers */
   USBD_CDC_SetTxBuffer(&USBD_Device, UserTxBuffer, 0);
   USBD_CDC_SetRxBuffer(&USBD_Device, UserRxBuffer); 

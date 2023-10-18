@@ -1,8 +1,7 @@
 ## About
-Parson is a lighweight [json](http://json.org) library written in C.
+Parson is a lightweight [json](http://json.org) library written in C.
 
 ## Features
-* Full JSON support
 * Lightweight (only 2 files)
 * Simple API
 * Addressing json values with dot notation (similar to C structs or objects in most OO languages, e.g. "objectA.objectB.value")
@@ -140,6 +139,11 @@ Output:
 
 I will always merge *working* bug fixes. However, if you want to add something new to the API, please create an "issue" on github for this first so we can discuss if it should end up in the library before you start implementing it.
 Remember to follow parson's code style and write appropriate tests.
+
+## My other projects
+* [ape](https://github.com/kgabis/ape) - simple programming language implemented in C library
+* [kgflags](https://github.com/kgabis/kgflags) - easy to use command-line flag parsing library   
+* [agnes](https://github.com/kgabis/agnes) - header-only NES emulation library
 
 ## License
 [The MIT License (MIT)](http://opensource.org/licenses/mit-license.php)

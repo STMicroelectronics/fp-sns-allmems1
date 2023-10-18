@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    MotionFX_Manager.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Header for MotionFX_Manager.c
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -87,13 +87,13 @@ void MotionFX_manager_init(void)
   ipKnobs->gbias_gyro_th_sc = GBIAS_GYRO_TH_SC;
   ipKnobs->gbias_mag_th_sc = GBIAS_MAG_TH_SC;
   
-  ipKnobs->acc_orientation[0] ='n';
-  ipKnobs->acc_orientation[1] ='w';
+  ipKnobs->acc_orientation[0] ='s';
+  ipKnobs->acc_orientation[1] ='e';
   ipKnobs->acc_orientation[2] ='u';
 
-  ipKnobs->gyro_orientation[0] = 'n';
-  ipKnobs->gyro_orientation[1] = 'w';
-  ipKnobs->gyro_orientation[2] = 'u';   
+  ipKnobs->gyro_orientation[0] = 's';
+  ipKnobs->gyro_orientation[1] = 'e';
+  ipKnobs->gyro_orientation[2] = 'u';
 
   ipKnobs->mag_orientation[0] = 'n';
   ipKnobs->mag_orientation[1] = 'e';

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_Led.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Led info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -27,10 +27,11 @@
 #endif
    
 /* Exported typedef --------------------------------------------------------- */
+typedef void (*CustomNotifyEventLed_t)(BLE_NotifyEvent_t Event);
 typedef void (*CustomReadRequestLed_t)(uint8_t *LedStatus);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_Led_NotifyEvent;
+extern CustomNotifyEventLed_t CustomNotifyEventLed;
 extern CustomReadRequestLed_t CustomReadRequestLed;
 
 /* Exported functions ------------------------------------------------------- */
@@ -48,7 +49,7 @@ extern BleCharTypeDef* BLE_InitLedService(void);
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-extern void BLE_SetLedAdvertizeData(uint8_t *manuf_data);
+extern void BLE_SetLedAdvertiseData(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**

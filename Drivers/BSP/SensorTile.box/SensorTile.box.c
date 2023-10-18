@@ -201,6 +201,9 @@ int32_t BSP_ADC1_Initialization(ADC_InitUsedDef ADC_InitFor)
         case 256:
           SensorTileADC.Init.Oversampling.Ratio = ADC_OVERSAMPLING_RATIO_256;
         break;
+				default:
+					return BSP_ERROR_PERIPH_FAILURE;
+					break;
       }
     }
 

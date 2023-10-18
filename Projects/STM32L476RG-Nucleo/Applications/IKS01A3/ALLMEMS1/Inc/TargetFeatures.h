@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    TargetFeatures.h 
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Specification of the HW Features for each target platform
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -33,7 +33,7 @@
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_nucleo.h"
 #include "stm32l4xx_hal_conf.h"
-#include "cca02m2_audio_Patch.h"
+#include "cca02m2_audio.h"
 
 #include "iks01a3_motion_sensors.h"
 #include "iks01a3_motion_sensors_ex.h"
@@ -176,9 +176,6 @@ extern void DeInitMics(void);
 extern void LedOnTargetPlatform(void);
 extern void LedOffTargetPlatform(void);
 extern void LedToggleTargetPlatform(void);
-
-extern uint32_t GetPage(uint32_t Address);
-extern uint32_t GetBank(uint32_t Address);
 
 #ifdef __cplusplus
 }

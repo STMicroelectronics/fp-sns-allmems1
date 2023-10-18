@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_TimeDomain.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Time Domain info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -37,8 +37,12 @@ typedef struct
   float z;         //!< Generic Z Value in float
 } BLE_MANAGER_TimeDomainGenericValue_t;
 
+typedef void (*CustomNotifyEventTimeDomain_t)(BLE_NotifyEvent_t Event);
+
+/* Exported Variables ------------------------------------------------------- */
+extern CustomNotifyEventTimeDomain_t CustomNotifyEventTimeDomain;
+
 /* Exported functions ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_TimeDomain_NotifyEvent;
 
 /**
  * @brief  Init Time Domain info service
@@ -46,15 +50,6 @@ extern BLE_NotifyEnv_t BLE_TimeDomain_NotifyEvent;
  * @retval BleCharTypeDef* BleCharPointer: Data structure pointer for Time Domain info service
  */
 BleCharTypeDef* BLE_InitTimeDomainService(void);
-
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting Time Domain Advertize Data
- * @param  uint8_t *manuf_data: Advertize Data
- * @retval None
- */
-void BLE_SetTimeDomainAdvertizeData(uint8_t *manuf_data);
-#endif /* BLE_MANAGER_SDKV2 */
 
 /*
  * @brief  Update Time Domain characteristic value

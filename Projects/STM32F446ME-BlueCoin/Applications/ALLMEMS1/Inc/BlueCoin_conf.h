@@ -2,15 +2,15 @@
   ******************************************************************************
   * @file    BlueCoin_conf.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   This file contains definitions for the MEMS components bus interfaces
   *          This file should be copied to the application folder and renamed
   *          to BlueCoin_conf.h.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -32,7 +32,7 @@ extern "C" {
 #include "stm32f4xx_hal.h"
 //#include "BlueCoin_bus.h"
 #include "BlueCoin.h"  
-#include "Custom_bus.h"
+#include "custom_bus.h"
 #include "BlueCoin_errno.h"
   
 /*Uncomment this define if you want to configure and start acquisition 

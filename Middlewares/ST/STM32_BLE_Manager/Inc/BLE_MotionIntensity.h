@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_MotionIntensity.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Motion Intensity info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -45,10 +45,11 @@ typedef enum
 } BLE_ID_output_t;
 
 typedef void (*CustomReadRequestMotionIntensity_t)(BLE_ID_output_t *MotionIntensityCode);
+typedef void (*CustomNotifyEventMotionIntensity_t)(BLE_NotifyEvent_t Event);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_MotionIntensity_NotifyEvent;
 extern CustomReadRequestMotionIntensity_t CustomReadRequestMotionIntensity;
+extern CustomNotifyEventMotionIntensity_t CustomNotifyEventMotionIntensity;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -65,7 +66,7 @@ extern BleCharTypeDef* BLE_InitMotionIntensityService(void);
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-extern void BLE_SetMotionIntensityAdvertizeData(uint8_t *manuf_data);
+extern void BLE_SetMotionIntensityAdvertiseData(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**

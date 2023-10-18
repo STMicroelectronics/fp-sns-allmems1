@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    MetaDataManager.h 
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.5.0
-  * @date    18-Nov-2021
+  * @version 1.7.0
+  * @date    10-February-2023
   * @brief   Meta Data Manager APIs
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -41,20 +41,6 @@
 /* Each application could customize the Max Meta Data Size [Double Words] <=4K bytes */
 #define MDM_MAX_DATASIZE_64 0x200
 
-/* Uncomment the following define for enabling the PRINTF capability if It's supported */
-#define MDM_ENABLE_PRINTF
-
-#ifdef MDM_ENABLE_PRINTF
-
-  /* Each application must declare it's printf implementation in MetaDataManager_Config.h if it wants to use it */
-  /* #define MDM_PRINTF Something */
-
-  /* Uncomment the following define for enabling the DEBUG of Meta Data Manager */
-  //#define MDM_DEBUG_PARSING
-#else /* MDM_ENABLE_PRINTF */
-  #define MDM_PRINTF(...)
-#endif /* MDM_ENABLE_PRINTF */
-
 /* Imported functions for FLASH Management --------------------------*/
 extern uint32_t UserFunctionForErasingFlash(void);
 extern uint32_t UserFunctionForSavingFlash(void *InitMetaDataVector,void *EndMetaDataVector);
@@ -68,26 +54,14 @@ extern uint32_t UserFunctionForSavingFlash(void *InitMetaDataVector,void *EndMet
 
 /* Meta Data Manager Version */
 #define MDM_VERSION_MAJOR 1
-#define MDM_VERSION_MINOR 5
+#define MDM_VERSION_MINOR 6
 #define MDM_VERSION_PATCH 1
 #define MDM_VERSION ((MDM_VERSION_MAJOR<<16) | (MDM_VERSION_MINOR<<8) | (MDM_VERSION_PATCH))
 
 /* The Meta Data Manager is saved on the last 4Kbytes of FLASH */
-#ifdef USE_STM32F4XX_NUCLEO
-/* Inside of Sector 7 */
-#define MDM_FLASH_ADD ((uint32_t)(0x0807F000))
-#define MDM_FLASH_SECTOR FLASH_SECTOR_7
-#endif /* USE_STM32F4XX_NUCLEO */
-
-#if (defined(USE_STM32L4XX_NUCLEO) || defined (STM32L476xx) || (defined STM32L475xx))
-/* Base @ of Page 510 & 511, 4 Kbytes */
-#define MDM_FLASH_ADD ((uint32_t)0x080FF000)
-#endif /* (defined(USE_STM32L4XX_NUCLEO) || defined(STM32L476xx) || (defined STM32L475xx)) */
-
-#ifdef STM32L4R9xx
-/* Base @ of Page 511, 4 Kbytes */
-#define MDM_FLASH_ADD ((uint32_t)0x081FF000)
-#endif /* STM32L4R9xx */
+#if (defined(STM32F4xx) || defined (STM32L4xx))
+#define MDM_FLASH_ADD ((uint32_t)(FLASH_END - 0xFFF))
+#endif /* (defined(STM32F4xx) || defined (STM32L4xx)) */
 
 #ifdef STM32WB5Mxx
 /* Base @ of Page xxx, 4 Kbytes */

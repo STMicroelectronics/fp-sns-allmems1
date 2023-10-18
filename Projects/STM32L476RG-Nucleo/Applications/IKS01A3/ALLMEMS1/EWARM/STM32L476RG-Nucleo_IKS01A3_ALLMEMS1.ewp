@@ -372,7 +372,7 @@
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\STM32_MotionVC_Library\Inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\STM32_MotionFA_Library\Inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\STM32_MotionTL_Library\Inc</state>
-                    <state>$PROJ_DIR$\..\Patch</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\CCA02M2</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -670,7 +670,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>STM32L476RG-Nucleo_IKS01A3_ALLMEMS1.bin</state>
+                    <state>ALLMEMS1.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -688,7 +688,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>0</hasPrio>
+                <hasPrio>96</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
@@ -709,7 +709,7 @@
                 <debug>1</debug>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>STM32L476RG-Nucleo_IKS01A3_ALLMEMS1.out</state>
+                    <state>ALLMEMS1.out</state>
                 </option>
                 <option>
                     <name>IlinkLibIOConfig</name>
@@ -1103,12 +1103,6 @@
         </group>
         <group>
             <name>User</name>
-            <group>
-                <name>Patch</name>
-                <file>
-                    <name>$PROJ_DIR$\..\Patch\cca02m2_audio_Patch.c</name>
-                </file>
-            </group>
             <file>
                 <name>$PROJ_DIR$\..\Src\AcousticSL_Manager.c</name>
             </file>
@@ -1180,9 +1174,6 @@
             <name>BSP</name>
             <group>
                 <name>CCA02M2</name>
-                <excluded>
-                    <configuration>STM32L476RG-Nucleo_IKS01A3_ALLMEMS1</configuration>
-                </excluded>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\CCA02M2\cca02m2_audio.c</name>
                 </file>

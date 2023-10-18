@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_TiltSensing.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Tilt Sensing info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -36,10 +36,11 @@ typedef struct
 } BLE_ANGLES_output_t;
 
 typedef void (*CustomReadRequestTiltSensing_t)(BLE_ANGLES_output_t *TiltSensingMeasure);
+typedef void (*CustomNotifyEventTiltSensing_t)(BLE_NotifyEvent_t Event);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_TiltSensing_NotifyEvent;
 extern CustomReadRequestTiltSensing_t CustomReadRequestTiltSensing;
+extern CustomNotifyEventTiltSensing_t CustomNotifyEventTiltSensing;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -49,15 +50,6 @@ extern CustomReadRequestTiltSensing_t CustomReadRequestTiltSensing;
  * @retval BleCharTypeDef* BleCharPointer: Data structure pointer for Tilt Sensing info service
  */
 extern BleCharTypeDef* BLE_InitTiltSensingService(void);
-
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting Tilt Sensing Advertise Data
- * @param  uint8_t *manuf_data: Advertise Data
- * @retval None
- */
-extern void BLE_SetTiltSensingAdvertizeData(uint8_t *manuf_data);
-#endif /* BLE_MANAGER_SDKV2 */
 
 /**
  * @brief  Update Tilt Sensing characteristic

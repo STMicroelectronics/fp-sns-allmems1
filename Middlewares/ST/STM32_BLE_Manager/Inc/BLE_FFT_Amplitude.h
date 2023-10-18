@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_FFT_Amplitude.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   FFT Amplitude info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -25,9 +25,12 @@
 #ifdef __cplusplus
  extern "C" {
 #endif 
+   
+/* Exported typedef --------------------------------------------------------- */
+typedef void (*CustomNotifyEventFFT_Amplitude_t)(BLE_NotifyEvent_t Event);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_FFT_Amplitude_NotifyEvent;
+extern CustomNotifyEventFFT_Amplitude_t CustomNotifyEventFFT_Amplitude;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -37,15 +40,6 @@ extern BLE_NotifyEnv_t BLE_FFT_Amplitude_NotifyEvent;
  * @retval BleCharTypeDef* BleCharPointer: Data structure pointer for FFT Amplitude info service
  */
 extern BleCharTypeDef* BLE_InitFFTAmplitudeService(void);
-
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting FFT Amplitude Advertize Data
- * @param  uint8_t *manuf_data: Advertize Data
- * @retval None
- */
-extern void BLE_SetFFTAmplitudeAdvertizeData(uint8_t *manuf_data);
-#endif /* BLE_MANAGER_SDKV2 */
 
 /*
  * @brief  Update FFT Amplitude characteristic value

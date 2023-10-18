@@ -565,7 +565,7 @@ int32_t LSM6DSM_ACC_GetAxesRaw(LSM6DSM_Object_t *pObj, LSM6DSM_AxesRaw_t *Value)
   lsm6dsm_axis3bit16_t  data_raw;
 
   /* Read raw data values. */
-  if (lsm6dsm_acceleration_raw_get(&(pObj->Ctx), data_raw.u8bit) != LSM6DSM_OK)
+  if (lsm6dsm_acceleration_raw_get(&(pObj->Ctx), data_raw.i16bit) != LSM6DSM_OK)
   {
     return LSM6DSM_ERROR;
   }
@@ -590,7 +590,7 @@ int32_t LSM6DSM_ACC_GetAxes(LSM6DSM_Object_t *pObj, LSM6DSM_Axes_t *Acceleration
   float sensitivity = 0.0f;
 
   /* Read raw data values. */
-  if (lsm6dsm_acceleration_raw_get(&(pObj->Ctx), data_raw.u8bit) != LSM6DSM_OK)
+  if (lsm6dsm_acceleration_raw_get(&(pObj->Ctx), data_raw.i16bit) != LSM6DSM_OK)
   {
     return LSM6DSM_ERROR;
   }
@@ -883,7 +883,7 @@ int32_t LSM6DSM_GYRO_GetAxesRaw(LSM6DSM_Object_t *pObj, LSM6DSM_AxesRaw_t *Value
   lsm6dsm_axis3bit16_t  data_raw;
 
   /* Read raw data values. */
-  if (lsm6dsm_angular_rate_raw_get(&(pObj->Ctx), data_raw.u8bit) != LSM6DSM_OK)
+  if (lsm6dsm_angular_rate_raw_get(&(pObj->Ctx), data_raw.i16bit) != LSM6DSM_OK)
   {
     return LSM6DSM_ERROR;
   }
@@ -908,7 +908,7 @@ int32_t LSM6DSM_GYRO_GetAxes(LSM6DSM_Object_t *pObj, LSM6DSM_Axes_t *AngularRate
   float sensitivity;
 
   /* Read raw data values. */
-  if (lsm6dsm_angular_rate_raw_get(&(pObj->Ctx), data_raw.u8bit) != LSM6DSM_OK)
+  if (lsm6dsm_angular_rate_raw_get(&(pObj->Ctx), data_raw.i16bit) != LSM6DSM_OK)
   {
     return LSM6DSM_ERROR;
   }

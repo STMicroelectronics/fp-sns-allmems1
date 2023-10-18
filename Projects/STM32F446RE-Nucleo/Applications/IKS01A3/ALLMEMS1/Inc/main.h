@@ -3,13 +3,13 @@
   ******************************************************************************
   * @file    main.h 
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   This file contains the common defines of the application.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -50,13 +50,25 @@ extern "C" {
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
 #define MCR_BLUEMS_F2I_1D(in, out_int, out_dec) {out_int = (int32_t)in; out_dec= (int32_t)((in-out_int)*10);};
 #define MCR_BLUEMS_F2I_2D(in, out_int, out_dec) {out_int = (int32_t)in; out_dec= (int32_t)((in-out_int)*100);};
 
+  /* Exported define ------------------------------------------------------------*/
+/* STM32 board type*/
+#define BLE_STM32_BOARD "STM32F446RE-NUCLEO"
+  
 /* @brief  Scale factor. It is used to scale acceleration from mg to g */ 
 #define FROM_MG_TO_G    0.001f
-/* USER CODE END EM */
+  
+/* Feature mask for SourceLocalization */
+#define FEATURE_MASK_DIR_OF_ARRIVAL 0x10000000
+   
+/* W2ST command - SL sensitivity */
+#define W2ST_COMMAND_SL_SENSITIVITY 0xCC
+/* W2ST command - SL sensitivity Low */
+#define W2ST_COMMAND_SL_LOW  0x00
+/* W2ST command - SL sensitivity High */
+#define W2ST_COMMAND_SL_HIGH  0x01
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
@@ -84,6 +96,7 @@ extern unsigned char MagnetoCalibrationDone;
 extern uint32_t ForceReCalibration;
 
 extern uint32_t uhCCR1_Val;
+extern uint32_t uhCCR2_Val;
 extern uint32_t uhCCR3_Val;
 extern uint32_t uhCCR4_Val;
 
@@ -107,11 +120,13 @@ extern uint8_t NodeName[];
 #define TIM_CLOCK_ENV 2000U
 #define ALGO_FREQ_AR 16U
 #define FREQ_ACC_GYRO_MAG 20U
-#define DEFAULT_uhCCR1_Val (10000U / ALGO_FREQ_FX)
+#define FREQ_AUDIO_MIC 20U
 #define ALGO_FREQ_ENV 2U
 #define ALGO_FREQ_FX 100U
 #define DEFAULT_uhCCR4_Val (10000U / FREQ_ACC_GYRO_MAG)
 #define DEFAULT_uhCCR3_Val (10000U / ALGO_FREQ_AR)
+#define DEFAULT_uhCCR2_Val (10000U / FREQ_AUDIO_MIC)
+#define DEFAULT_uhCCR1_Val (10000U / ALGO_FREQ_FX)
 #define ALGO_FREQ_AUDIO_LEVEL 20U
 #define TIM_CLOCK_AUDIO_LEVEL 10000U
 #define B1_Pin GPIO_PIN_13
@@ -134,6 +149,7 @@ extern uint8_t NodeName[];
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+
 /* USER CODE BEGIN Private defines */
 /************************************************/
 /* Algorithms Frequency and Time Period section */

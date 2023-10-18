@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    MetaDataManager.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.5.0
-  * @date    18-Nov-2021
+  * @version 1.7.0
+  * @date    10-February-2023
   * @brief   Meta Data Manager APIs implementation
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -23,6 +23,33 @@
 #include <string.h>
 #include "MetaDataManager.h"
 
+/* Local defines -------------------------------------------------------------*/
+/*---------------------------------- STM32F401xE/STM32F411xE/STM32F446xx ------------------------------*/
+#if defined(STM32F401xE) || defined(STM32F411xE) || defined(STM32F446xx)
+#define NUMBER_FLASH_SECTOR FLASH_SECTOR_7
+#endif /* STM32F401xE || STM32F411xE || STM32F446xx */
+/*-----------------------------------------------------------------------------------------------------*/
+   
+/*--------------------------------------- STM32F40xxx/STM32F41xxx -------------------------------------*/ 
+#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || defined(STM32F412Zx) ||\
+    defined(STM32F412Vx) || defined(STM32F412Rx) || defined(STM32F412Cx)
+#define NUMBER_FLASH_SECTOR FLASH_SECTOR_11
+#endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx || STM32F412Zx || STM32F412Vx || STM32F412Rx || STM32F412Cx */
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*-------------------------------------- STM32F413xx/STM32F423xx --------------------------------------*/   
+#if defined(STM32F413xx) || defined(STM32F423xx)
+#define NUMBER_FLASH_SECTOR FLASH_SECTOR_15
+#endif /* STM32F413xx || STM32F423xx */
+/*-----------------------------------------------------------------------------------------------------*/ 
+      
+/*-------------------------------------- STM32F42xxx/STM32F43xxx/STM32F469xx ------------------------------------*/   
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx)|| defined(STM32F439xx) ||\
+    defined(STM32F469xx) || defined(STM32F479xx)
+#define NUMBER_FLASH_SECTOR FLASH_SECTOR_23
+#endif /* STM32F427xx || STM32F437xx || STM32F429xx|| STM32F439xx || STM32F469xx || STM32F479xx */
+/*-----------------------------------------------------------------------------------------------------*/
+
 /* Local variables --------------------------------------------------*/
 /* We move to the first MetaData position after the Meta Data Manager header */
 /* Vector of Meta Data Header + Meta Data.
@@ -35,6 +62,12 @@ static MDM_MetaDataManagerHeader_t *pMetaDataManagerHeader = (MDM_MetaDataManage
 
 static uint32_t NumberOfKnownLic=0;
 static uint32_t NumberOfKnownGMD=0;
+
+/* Private function prototypes -----------------------------------------------*/
+#ifdef STM32L4xx
+static uint32_t GetPage(uint32_t Address);
+static uint32_t GetBank(uint32_t Address);
+#endif /* STM32L4xx */
 
 MDM_knownOsxLicense_t known_OsxLic[]={
   {OSX_END,"LAST",""}/* THIS MUST BE THE LAST ONE */
@@ -435,9 +468,9 @@ static uint32_t ReCallMetaDataManager(void)
     *((uint32_t *) puint8_RW_MetaData)     = MDM_DATA_TYPE_END;
     *(((uint32_t *) puint8_RW_MetaData)+4) = 0; /* No Payload */
 
-    MDM_PRINTF("Meta Data Manager read from Flash\r\n");
+    MDM_PRINTF("Meta Data Manager read from Flash (Address: 0x%lx)\r\n", MDM_FLASH_ADD);
   } else {
-    MDM_PRINTF("Meta Data Manager not present in FLASH\r\n");
+    MDM_PRINTF("Meta Data Manager not present in FLASH (Address: 0x%lx)\r\n", MDM_FLASH_ADD);
   }
   return RetValue;
 }
@@ -653,4 +686,203 @@ uint32_t MDM_ReCallGMD(MDM_GenericMetaDataType_t GMDType,void *GMD)
   }
   return RetValue;
 }
+
+#ifdef STM32F4xx
+/**
+ * @brief User function for Erasing the Flash data for MDM
+ * @param None
+ * @retval uint32_t Success/NotSuccess [1/0]
+ */
+uint32_t UserFunctionForErasingFlash(void) {
+  FLASH_EraseInitTypeDef EraseInitStruct;
+  uint32_t SectorError = 0;
+  uint32_t Success=1;
+
+  EraseInitStruct.TypeErase = TYPEERASE_SECTORS;
+  EraseInitStruct.VoltageRange = VOLTAGE_RANGE_3;
+  EraseInitStruct.Sector = NUMBER_FLASH_SECTOR;
+  EraseInitStruct.NbSectors = 1;
+
+  /* Unlock the Flash to enable the flash control register access *************/
+  HAL_FLASH_Unlock();
+
+  if(HAL_FLASHEx_Erase(&EraseInitStruct, &SectorError) != HAL_OK){
+    /* Error occurred while sector erase. 
+      User can add here some code to deal with this error. 
+      SectorError will contain the faulty sector and then to know the code error on this sector,
+      user can call function 'HAL_FLASH_GetError()'
+      FLASH_ErrorTypeDef errorcode = HAL_FLASH_GetError(); */
+    Success=0;
+    MDM_PRINTF("Error occurred while sector erase\r\n");
+  }
+
+  /* Lock the Flash to disable the flash control register access (recommended
+  to protect the FLASH memory against possible unwanted operation) *********/
+  HAL_FLASH_Lock();
+
+  return Success;
+}
+
+/**
+ * @brief User function for Saving the MDM  on the Flash
+ * @param void *InitMetaDataVector Pointer to the MDM beginning
+ * @param void *EndMetaDataVector Pointer to the MDM end
+ * @retval uint32_t Success/NotSuccess [1/0]
+ */
+uint32_t UserFunctionForSavingFlash(void *InitMetaDataVector,void *EndMetaDataVector)
+{
+  uint32_t Success=1;
+
+  /* Store in Flash Memory */
+  uint32_t Address = MDM_FLASH_ADD;
+  uint32_t *WriteIndex;
+
+  /* Unlock the Flash to enable the flash control register access *************/
+  HAL_FLASH_Unlock();
+
+  for(WriteIndex =((uint32_t *) InitMetaDataVector); WriteIndex<((uint32_t *) EndMetaDataVector); WriteIndex++) {
+    if (HAL_FLASH_Program(TYPEPROGRAM_WORD, Address,*WriteIndex) == HAL_OK){
+      Address = Address + 4;
+    } else {
+      /* Error occurred while writing data in Flash memory.
+         User can add here some code to deal with this error
+         FLASH_ErrorTypeDef errorcode = HAL_FLASH_GetError(); */
+      MDM_PRINTF("Error occurred while writing data in Flash memory\r\n");
+      Success=0;
+    }
+  }
+
+  /* Lock the Flash to disable the flash control register access (recommended
+   to protect the FLASH memory against possible unwanted operation) *********/
+  HAL_FLASH_Lock();
+ 
+  return Success;
+}
+#endif /* STM32F4xx */
+
+#ifdef STM32L4xx
+/**
+  * @brief  Gets the page of a given address
+  * @param  Addr: Address of the FLASH Memory
+  * @retval The page of a given address
+  */
+uint32_t GetPage(uint32_t Addr)
+{
+  uint32_t page = 0;
+  
+  if (Addr < (FLASH_BASE + FLASH_BANK_SIZE)) {
+    /* Bank 1 */
+    page = (Addr - FLASH_BASE) / FLASH_PAGE_SIZE;
+  } else {
+    /* Bank 2 */
+    page = (Addr - (FLASH_BASE + FLASH_BANK_SIZE)) / FLASH_PAGE_SIZE;
+  }
+  
+  return page;
+}
+
+/**
+  * @brief  Gets the bank of a given address
+  * @param  Addr: Address of the FLASH Memory
+  * @retval The bank of a given address
+  */
+uint32_t GetBank(uint32_t Addr)
+{
+  uint32_t bank = 0;
+  
+#if defined (STM32L471xx) || defined (STM32L475xx) || defined (STM32L476xx) || defined (STM32L485xx) || defined (STM32L486xx) || \
+    defined (STM32L496xx) || defined (STM32L4A6xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx) || defined (STM32L4R5xx) || \
+    defined (STM32L4R7xx) || defined (STM32L4R9xx) || defined (STM32L4S5xx) || defined (STM32L4S7xx) || defined (STM32L4S9xx)  
+  if (READ_BIT(SYSCFG->MEMRMP, SYSCFG_MEMRMP_FB_MODE) == 0){
+    /* No Bank swap */
+    if (Addr < (FLASH_BASE + FLASH_BANK_SIZE)) {
+      bank = FLASH_BANK_1;
+    } else {
+      bank = FLASH_BANK_2;
+    }
+  } else {
+    /* Bank swap */
+    if (Addr < (FLASH_BASE + FLASH_BANK_SIZE)) {
+      bank = FLASH_BANK_2;
+    } else {
+      bank = FLASH_BANK_1;
+    }
+  }
+#else
+  bank = FLASH_BANK_1;
+#endif
+  
+  return bank;
+}
+
+/**
+ * @brief User function for Erasing the MDM on Flash
+ * @param None
+ * @retval uint32_t Success/NotSuccess [1/0]
+ */
+uint32_t UserFunctionForErasingFlash(void) {
+  FLASH_EraseInitTypeDef EraseInitStruct;
+  uint32_t SectorError = 0;
+  uint32_t Success=1;
+
+  EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGES;
+  EraseInitStruct.Banks       = GetBank(MDM_FLASH_ADD);
+  EraseInitStruct.Page        = GetPage(MDM_FLASH_ADD);
+  EraseInitStruct.NbPages     = 2;
+
+  /* Unlock the Flash to enable the flash control register access *************/
+  HAL_FLASH_Unlock();
+
+  if(HAL_FLASHEx_Erase(&EraseInitStruct, &SectorError) != HAL_OK){
+    /* Error occurred while sector erase. 
+      User can add here some code to deal with this error. 
+      SectorError will contain the faulty sector and then to know the code error on this sector,
+      user can call function 'HAL_FLASH_GetError()'
+      FLASH_ErrorTypeDef errorcode = HAL_FLASH_GetError(); */
+    Success=0;
+    MDM_PRINTF("Error occurred while writing data in Flash memory\r\n");
+  }
+
+  /* Lock the Flash to disable the flash control register access (recommended
+  to protect the FLASH memory against possible unwanted operation) *********/
+  HAL_FLASH_Lock();
+
+  return Success;
+}
+
+/**
+ * @brief User function for Saving the MDM  on the Flash
+ * @param void *InitMetaDataVector Pointer to the MDM beginning
+ * @param void *EndMetaDataVector Pointer to the MDM end
+ * @retval uint32_t Success/NotSuccess [1/0]
+ */
+uint32_t UserFunctionForSavingFlash(void *InitMetaDataVector,void *EndMetaDataVector)
+{
+  uint32_t Success=1;
+
+  /* Store in Flash Memory */
+  uint32_t Address = MDM_FLASH_ADD;
+  uint64_t *WriteIndex;
+
+  /* Unlock the Flash to enable the flash control register access *************/
+  HAL_FLASH_Unlock();
+  for(WriteIndex =((uint64_t *) InitMetaDataVector); WriteIndex<((uint64_t *) EndMetaDataVector); WriteIndex++) {
+    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, Address,*WriteIndex) == HAL_OK){
+      Address = Address + 8;
+    } else {
+      /* Error occurred while writing data in Flash memory.
+         User can add here some code to deal with this error
+         FLASH_ErrorTypeDef errorcode = HAL_FLASH_GetError(); */
+      MDM_PRINTF("Error occurred while sector erase\r\n");
+      Success =0;
+    }
+  }
+
+  /* Lock the Flash to disable the flash control register access (recommended
+   to protect the FLASH memory against possible unwanted operation) *********/
+  HAL_FLASH_Lock();
+ 
+  return Success;
+}
+#endif /* STM32L4xx */
 

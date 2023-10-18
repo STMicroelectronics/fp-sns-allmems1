@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    main.h 
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Header for main.c module
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -31,6 +31,10 @@
 #define MCR_BLUEMS_F2I_1D(in, out_int, out_dec) {out_int = (int32_t)in; out_dec= (int32_t)((in-out_int)*10);};
 #define MCR_BLUEMS_F2I_2D(in, out_int, out_dec) {out_int = (int32_t)in; out_dec= (int32_t)((in-out_int)*100);};
 
+  /* Exported define ------------------------------------------------------------*/
+/* STM32 board type*/
+#define BLE_STM32_BOARD "STM32L4R9ZI-SensorTile.box"
+
 /* Exported functions ------------------------------------------------------- */
 extern void Error_Handler(void);
 extern void ReadEnvironmentalData(int32_t *PressToSend,uint16_t *HumToSend,int16_t *Temp1ToSend,int16_t *Temp2ToSend);
@@ -44,13 +48,12 @@ extern unsigned char SaveAccellerometerCalibrationToMemory(uint16_t dataSize, ui
 
 extern unsigned char ReCallMagnetoCalibrationFromMemory(void);
 extern unsigned char SaveMagnetoCalibrationToMemory(void);
-  
-extern uint8_t getBlueNRG2_Version(uint8_t *hwVersion, uint16_t *fwVersion);
 
 /* Exported variables  ------------------------------------------------------- */
 extern TIM_HandleTypeDef TimInertialHandle;
 extern TIM_HandleTypeDef TimEnvHandle;
 extern TIM_HandleTypeDef TimAudioDataHandle;
+extern TIM_HandleTypeDef TimUpdateVcom;
 extern TIM_HandleTypeDef TimCCHandle;
 
 extern uint32_t uhCCR1_Val;
@@ -151,6 +154,13 @@ extern uint32_t ForceReCalibration;
 #define TIM_CLOCK_AUDIO_LEVEL   10000U
 /* Update period for mic audio level [ms] */
 #define ALGO_PERIOD_AUDIO_LEVEL (1000U / ALGO_FREQ_AUDIO_LEVEL)
+
+/* Update frequency for environmental sensor [Hz] */
+#define ALGO_FREQ_UPDATE_VCOM   2U
+/* Compute the prescaler value to have TIM4 counter clock equal to 2 KHz */
+#define TIM_CLOCK_UPDATE_VCOM   2000U
+/* Update period for environmental sensor [ms] */
+#define ALGO_PERIOD_UPDATE_VCOM (1000U / ALGO_FREQ_ENV)
 
 /* Range time without connect before Shut Down Mode starts (20 sec) */
 #define RANGE_TIME_WITHOUT_CONNECTED  20000

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_ActivityRecognition.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add Activity Recognition service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,11 +26,11 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_ACT_REC_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x10,0x00,0x01,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define ACT_REC_ADVERTIZE_DATA_POSITION  18
+#define ACT_REC_ADVERTISE_DATA_POSITION  18
 
 /* Exported variables --------------------------------------------------------*/
 
-BLE_NotifyEnv_t BLE_ActRec_NotifyEvent = BLE_NOTIFY_NOTHING;
+CustomNotifyEventActRec_t CustomNotifyEventActRec=NULL;
 CustomReadRequestActRec_t CustomReadRequestActRec=NULL;
 
 /* Private variables ---------------------------------------------------------*/
@@ -39,9 +39,9 @@ static BleCharTypeDef BleCharActRec;
 
 /* Private functions ---------------------------------------------------------*/
 static void AttrMod_Request_ActRec(void *BleCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data);
-#ifndef BLUENRG_LP
+#if (BLUE_CORE != BLUENRG_LP)
 static void Read_Request_ActRec(void *BleCharPointer,uint16_t handle);
-#else /* BLUENRG_LP */
+#else /* (BLUE_CORE != BLUENRG_LP) */
 static void Read_Request_ActRec(void *BleCharPointer,
                              uint16_t handle,
                              uint16_t Connection_Handle,
@@ -49,7 +49,7 @@ static void Read_Request_ActRec(void *BleCharPointer,
                              uint16_t Attr_Val_Offset,
                              uint8_t Data_Length,
                              uint8_t Data[]);
-#endif /* BLUENRG_LP */
+#endif /* (BLUE_CORE != BLUENRG_LP) */
 
 /**
  * @brief  Init Activity Recognition service
@@ -90,9 +90,9 @@ BleCharTypeDef* BLE_InitActRecService(void)
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-void BLE_SetActRecAdvertizeData(uint8_t *manuf_data)
+void BLE_SetActRecAdvertiseData(uint8_t *manuf_data)
 {
-  manuf_data[ACT_REC_ADVERTIZE_DATA_POSITION] |= 0x10U;
+  manuf_data[ACT_REC_ADVERTISE_DATA_POSITION] |= 0x10U;
 }
 #endif /* BLE_MANAGER_SDKV2 */
 
@@ -147,18 +147,23 @@ tBleStatus BLE_ActRecUpdate(BLE_AR_output_t ActivityCode, BLE_AR_algoIdx_t Algor
  */
 static void AttrMod_Request_ActRec(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_ActRec_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_ActRec_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventActRec!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventActRec(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventActRec(BLE_NOTIFY_UNSUB);
+    }
   }
- 
 #if (BLE_DEBUG_LEVEL>1)
+  else {
+     BLE_MANAGER_PRINTF("CustomNotifyEventActRec function Not Defined\r\n");
+  }
+  
  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->ActRec=%s\n", (BLE_ActRec_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+   BytesToWrite = (uint8_t) sprintf((char *)BufferToWrite,"--->ActRec=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
    Term_Update(BufferToWrite,BytesToWrite);
  } else {
-   BLE_MANAGER_PRINTF("--->ActRec=%s", (BLE_ActRec_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+   BLE_MANAGER_PRINTF("--->ActRec=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
  }
 #endif
 }
@@ -170,7 +175,7 @@ static void AttrMod_Request_ActRec(void *VoidCharPointer, uint16_t attr_handle, 
  * @retval None
  */
 
-#ifndef BLUENRG_LP
+#if (BLUE_CORE != BLUENRG_LP)
 static void Read_Request_ActRec(void *VoidCharPointer,uint16_t handle)
 {
   if(CustomReadRequestActRec != NULL) {
@@ -182,7 +187,7 @@ static void Read_Request_ActRec(void *VoidCharPointer,uint16_t handle)
     BLE_MANAGER_PRINTF("\r\n\nRead request ActRec function not defined\r\n\n");
   }
 }
-#else /* BLUENRG_LP */
+#else /* (BLUE_CORE != BLUENRG_LP) */
 static void Read_Request_ActRec(void *BleCharPointer,
                                  uint16_t handle,
                                  uint16_t Connection_Handle,
@@ -229,6 +234,6 @@ static void Read_Request_ActRec(void *BleCharPointer,
     BLE_MANAGER_PRINTF("aci_gatt_srv_authorize_resp_nwk() failed: 0x%02x\r\n", ret);
   }
 }
-#endif /* BLUENRG_LP */
+#endif /* (BLUE_CORE != BLUENRG_LP) */
 
 

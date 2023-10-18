@@ -10,7 +10,7 @@
   *          configuration.
   ******************************************************************************
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -24,14 +24,6 @@
 
 This application should be used to update the BlueNRG-2 firmware stack to latest version 
 or to change the IFR configuration.
-
-------------------------------------
-WARNING: When starting the project from Example Selector in STM32CubeMX and regenerating 
-it from ioc file, you may face a build issue. To solve it, remove from the IDE project 
-the file stm32l4xx_nucleo.c in Application/User virtual folder and delete from Src and 
-Inc folders the files: stm32l4xx_nucleo.c, stm32l4xx_nucleo.h and stm32l4xx_nucleo_errno.h.
-------------------------------------
-
 To change the IFR configuration the #define BLUENRG_DEV_CONFIG_UPDATER must be defined.
 The IFR parameters can be changed editing the file Middlewares\ST\BlueNRG-2\hci\bluenrg1_devConfig.c.
 
@@ -116,10 +108,10 @@ In order to make the program work, you must do the following:
  - WARNING: before opening the project with any toolchain be sure your folder
    installation path is not too in-depth since the toolchain may report errors
    after building.
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.6.1).
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.9.0).
    Alternatively you can use the Keil uVision toolchain (this firmware
    has been successfully tested with V5.32.0) or the IAR toolchain (this firmware has 
-   been successfully tested with Embedded Workbench V8.50.9).
+   been successfully tested with Embedded Workbench V9.20.1).
  - Rebuild all files and load your image into target memory.
  - Run the example.
  - Alternatively, you can download the pre-built binaries in "Binary" 

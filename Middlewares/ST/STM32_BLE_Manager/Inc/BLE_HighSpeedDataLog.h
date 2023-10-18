@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_HighSpeedDataLog.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   BLE_HighSpeedDataLog info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -27,11 +27,12 @@
 #endif
    
 /* Exported typedef --------------------------------------------------------- */
-typedef void (*CustomWriteRequestHighSpeedDataLogFunction)(uint8_t * att_data, uint8_t data_length);
+typedef void (*CustomNotifyEventHighSpeedDataLog_t)(BLE_NotifyEvent_t Event);
+typedef void (*CustomWriteRequestHighSpeedDataLog_t)(uint8_t * att_data, uint8_t data_length);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_HighSpeedDataLog_NotifyEvent;
-extern CustomWriteRequestHighSpeedDataLogFunction CustomWriteRequestHighSpeedDataLogFunctionPointer;
+extern CustomNotifyEventHighSpeedDataLog_t CustomNotifyEventHighSpeedDataLog;
+extern CustomWriteRequestHighSpeedDataLog_t CustomWriteRequestHighSpeedDataLog;
 
 
 /* Exported functions ------------------------------------------------------- */
@@ -42,13 +43,6 @@ extern CustomWriteRequestHighSpeedDataLogFunction CustomWriteRequestHighSpeedDat
  * @retval BleCharTypeDef* BleCharPointer: Data structure pointer for High Speed Data Log info service
  */
 extern BleCharTypeDef* BLE_InitHighSpeedDataLogService(void);
-
-/**
- * @brief  Setting High Speed Data Log Advertize Data
- * @param  uint8_t *manuf_data: Advertize Data
- * @retval None
- */
-extern void BLE_SetHighSpeedDataLogAdvertizeData(uint8_t *manuf_data);
 
 /**
  * @brief  High Speed Data Log Send Buffer

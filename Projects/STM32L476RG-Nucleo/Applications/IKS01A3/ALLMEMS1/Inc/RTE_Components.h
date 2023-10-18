@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -25,7 +25,24 @@
 /* STMicroelectronics.X-CUBE-BLE2.3.2.2 */
 #define HCI_TL
 #define HCI_TL_INTERFACE
-/* STMicroelectronics.X-CUBE-MEMS1.9.1.0 */
+/* STMicroelectronics.X-CUBE-BLEMGR.2.0.0 */
+#define USE_PARSON
+#define BLE_MANAGER_ACC_EVENT
+#define BLE_MANAGER_AUDIO_LEVEL
+#define BLE_MANAGER_ENVIRONMENTAL
+#define BLE_MANAGER_INERTIAL
+#define BLE_MANAGER_ACTIVITY_RECOGNITION
+#define BLE_MANAGER_AUDIO_SOURCE_LOCALIZATION
+#define BLE_MANAGER_CARRY_POSITION
+#define BLE_MANAGER_ECOMPASS
+#define BLE_MANAGER_FITNESS_ACTIVITIES
+#define BLE_MANAGER_GESTURE_RECOGNITION
+#define BLE_MANAGER_MOTION_ALGORITHMS
+#define BLE_MANAGER_MOTION_INTENSITY
+#define BLE_MANAGER_SENSOR_FUSION
+#define BLE_MANAGER_TILT_SENSING
+#define BLUENRG_2
+/* STMicroelectronics.X-CUBE-MEMS1.9.6.0 */
 #define IKS01A3
 
 #endif /* __RTE_COMPONENTS_H__ */

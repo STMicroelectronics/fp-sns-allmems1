@@ -1,21 +1,20 @@
 /**
- ******************************************************************************
- * @file    iks01a3_env_sensors.h
- * @author  MEMS Software Solutions Team
- * @brief   This file provides a set of functions needed to manage the environmental sensors
- ******************************************************************************
- * @attention
- *
- * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
- * All rights reserved.</center></h2>
- *
- * This software component is licensed by ST under BSD 3-Clause license,
- * the "License"; You may not use this file except in compliance with the
- * License. You may obtain a copy of the License at:
- *                        opensource.org/licenses/BSD-3-Clause
- *
- ******************************************************************************
- */
+  ******************************************************************************
+  * @file    iks01a3_env_sensors.h
+  * @author  MEMS Software Solutions Team
+  * @brief   This file provides a set of functions needed to manage the environmental sensors
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2019 - 2023 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef IKS01A3_ENV_SENSORS_H
@@ -65,6 +64,26 @@ extern "C" {
 #define USE_IKS01A3_ENV_SENSOR_LPS22DF_0         0
 #endif
 
+#ifndef USE_IKS01A3_ENV_SENSOR_ILPS22QS_0
+#define USE_IKS01A3_ENV_SENSOR_ILPS22QS_0        0
+#endif
+
+#ifndef USE_IKS01A3_ENV_SENSOR_ILPS28QSW_0
+#define USE_IKS01A3_ENV_SENSOR_ILPS28QSW_0       0
+#endif
+
+#ifndef USE_IKS01A3_ENV_SENSOR_LPS28DFW_0
+#define USE_IKS01A3_ENV_SENSOR_LPS28DFW_0        0
+#endif
+
+#ifndef USE_IKS01A3_ENV_SENSOR_SHT40AD1B_0
+#define USE_IKS01A3_ENV_SENSOR_SHT40AD1B_0       0
+#endif
+
+#ifndef USE_IKS01A3_ENV_SENSOR_SGP40_0
+#define USE_IKS01A3_ENV_SENSOR_SGP40_0           0
+#endif
+
 #if (USE_IKS01A3_ENV_SENSOR_HTS221_0 == 1)
 #include "hts221.h"
 #endif
@@ -101,21 +120,41 @@ extern "C" {
 #include "lps22df.h"
 #endif
 
+#if (USE_IKS01A3_ENV_SENSOR_ILPS22QS_0 == 1)
+#include "ilps22qs.h"
+#endif
+
+#if (USE_IKS01A3_ENV_SENSOR_ILPS28QSW_0 == 1)
+#include "ilps28qsw.h"
+#endif
+
+#if (USE_IKS01A3_ENV_SENSOR_LPS28DFW_0 == 1)
+#include "lps28dfw.h"
+#endif
+
+#if (USE_IKS01A3_ENV_SENSOR_SHT40AD1B_0 == 1)
+#include "sht40ad1b.h"
+#endif
+
+#if (USE_IKS01A3_ENV_SENSOR_SGP40_0 == 1)
+#include "sgp40.h"
+#endif
+
 /** @addtogroup BSP BSP
- * @{
- */
+  * @{
+  */
 
 /** @addtogroup IKS01A3 IKS01A3
- * @{
- */
+  * @{
+  */
 
 /** @addtogroup IKS01A3_ENV_SENSORS IKS01A3 ENV SENSORS
- * @{
- */
+  * @{
+  */
 
 /** @defgroup IKS01A3_ENV_SENSORS_Exported_Types IKS01A3 ENV SENSORS Exported Types
- * @{
- */
+  * @{
+  */
 
 /* Environmental Sensor instance Info */
 typedef struct
@@ -123,10 +162,12 @@ typedef struct
   uint8_t Temperature;
   uint8_t Pressure;
   uint8_t Humidity;
+  uint8_t Gas;
   uint8_t LowPower;
   float   HumMaxOdr;
   float   TempMaxOdr;
   float   PressMaxOdr;
+  float   GasMaxOdr;
 } IKS01A3_ENV_SENSOR_Capabilities_t;
 
 typedef struct
@@ -135,12 +176,12 @@ typedef struct
 } IKS01A3_ENV_SENSOR_Ctx_t;
 
 /**
- * @}
- */
+  * @}
+  */
 
 /** @defgroup IKS01A3_ENV_SENSOR_Exported_Constants IKS01A3 ENV SENSOR Exported Constants
- * @{
- */
+  * @{
+  */
 
 #if (USE_IKS01A3_ENV_SENSOR_HTS221_0 == 1)
 #define IKS01A3_HTS221_0 0
@@ -206,6 +247,77 @@ typedef struct
                            USE_IKS01A3_ENV_SENSOR_LPS27HHTW_0)
 #endif
 
+#if (USE_IKS01A3_ENV_SENSOR_ILPS22QS_0 == 1)
+#define IKS01A3_ILPS22QS_0 (USE_IKS01A3_ENV_SENSOR_HTS221_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS22HH_0 + \
+                            USE_IKS01A3_ENV_SENSOR_STTS751_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS33HW_0 + \
+                            USE_IKS01A3_ENV_SENSOR_STTS22H_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS33K_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS22CH_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS27HHTW_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS22DF_0)
+#endif
+
+#if (USE_IKS01A3_ENV_SENSOR_ILPS28QSW_0 == 1)
+#define IKS01A3_ILPS28QSW_0 (USE_IKS01A3_ENV_SENSOR_HTS221_0 + \
+                             USE_IKS01A3_ENV_SENSOR_LPS22HH_0 + \
+                             USE_IKS01A3_ENV_SENSOR_STTS751_0 + \
+                             USE_IKS01A3_ENV_SENSOR_LPS33HW_0 + \
+                             USE_IKS01A3_ENV_SENSOR_STTS22H_0 + \
+                             USE_IKS01A3_ENV_SENSOR_LPS33K_0 + \
+                             USE_IKS01A3_ENV_SENSOR_LPS22CH_0 + \
+                             USE_IKS01A3_ENV_SENSOR_LPS27HHTW_0 + \
+                             USE_IKS01A3_ENV_SENSOR_LPS22DF_0 + \
+                             USE_IKS01A3_ENV_SENSOR_ILPS22QS_0)
+#endif
+
+#if (USE_IKS01A3_ENV_SENSOR_LPS28DFW_0 == 1)
+#define IKS01A3_LPS28DFW_0 (USE_IKS01A3_ENV_SENSOR_HTS221_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS22HH_0 + \
+                            USE_IKS01A3_ENV_SENSOR_STTS751_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS33HW_0 + \
+                            USE_IKS01A3_ENV_SENSOR_STTS22H_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS33K_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS22CH_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS27HHTW_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS22DF_0 + \
+                            USE_IKS01A3_ENV_SENSOR_ILPS22QS_0 + \
+                            USE_IKS01A3_ENV_SENSOR_ILPS28QSW_0)
+#endif
+
+#if (USE_IKS01A3_ENV_SENSOR_SHT40AD1B_0 == 1)
+#define IKS01A3_SHT40AD1B_0 (USE_IKS01A3_ENV_SENSOR_HTS221_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS22HH_0 + \
+                            USE_IKS01A3_ENV_SENSOR_STTS751_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS33HW_0 + \
+                            USE_IKS01A3_ENV_SENSOR_STTS22H_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS33K_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS22CH_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS27HHTW_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS22DF_0 + \
+                            USE_IKS01A3_ENV_SENSOR_ILPS22QS_0 + \
+                            USE_IKS01A3_ENV_SENSOR_ILPS28QSW_0 + \
+                            USE_IKS01A3_ENV_SENSOR_LPS28DFW_0)
+#endif
+
+#if (USE_IKS01A3_ENV_SENSOR_SGP40_0 == 1)
+#define IKS01A3_SGP40_0 (USE_IKS01A3_ENV_SENSOR_HTS221_0 + \
+                         USE_IKS01A3_ENV_SENSOR_LPS22HH_0 + \
+                         USE_IKS01A3_ENV_SENSOR_STTS751_0 + \
+                         USE_IKS01A3_ENV_SENSOR_LPS33HW_0 + \
+                         USE_IKS01A3_ENV_SENSOR_STTS22H_0 + \
+                         USE_IKS01A3_ENV_SENSOR_LPS33K_0 + \
+                         USE_IKS01A3_ENV_SENSOR_LPS22CH_0 + \
+                         USE_IKS01A3_ENV_SENSOR_LPS27HHTW_0 + \
+                         USE_IKS01A3_ENV_SENSOR_LPS22DF_0 + \
+                         USE_IKS01A3_ENV_SENSOR_ILPS22QS_0 + \
+                         USE_IKS01A3_ENV_SENSOR_ILPS28QSW_0 + \
+                         USE_IKS01A3_ENV_SENSOR_LPS28DFW_0 + \
+                         USE_IKS01A3_ENV_SENSOR_SHT40AD1B_0)
+
+#endif
+
 #ifndef ENV_TEMPERATURE
 #define ENV_TEMPERATURE      1U
 #endif
@@ -215,8 +327,11 @@ typedef struct
 #ifndef ENV_HUMIDITY
 #define ENV_HUMIDITY         4U
 #endif
+#ifndef ENV_GAS
+#define ENV_GAS              8U
+#endif
 
-#define IKS01A3_ENV_FUNCTIONS_NBR    3U
+#define IKS01A3_ENV_FUNCTIONS_NBR    4U
 #define IKS01A3_ENV_INSTANCES_NBR    (USE_IKS01A3_ENV_SENSOR_HTS221_0 + \
                                       USE_IKS01A3_ENV_SENSOR_LPS22HH_0 + \
                                       USE_IKS01A3_ENV_SENSOR_STTS751_0 + \
@@ -225,19 +340,24 @@ typedef struct
                                       USE_IKS01A3_ENV_SENSOR_LPS33K_0 + \
                                       USE_IKS01A3_ENV_SENSOR_LPS22CH_0 + \
                                       USE_IKS01A3_ENV_SENSOR_LPS27HHTW_0 + \
-                                      USE_IKS01A3_ENV_SENSOR_LPS22DF_0)
+                                      USE_IKS01A3_ENV_SENSOR_LPS22DF_0 + \
+                                      USE_IKS01A3_ENV_SENSOR_ILPS22QS_0 + \
+                                      USE_IKS01A3_ENV_SENSOR_ILPS28QSW_0 + \
+                                      USE_IKS01A3_ENV_SENSOR_LPS28DFW_0 + \
+                                      USE_IKS01A3_ENV_SENSOR_SHT40AD1B_0 + \
+                                      USE_IKS01A3_ENV_SENSOR_SGP40_0)
 
 #if (IKS01A3_ENV_INSTANCES_NBR == 0)
 #error "No environmental sensor instance has been selected"
 #endif
 
 /**
- * @}
- */
+  * @}
+  */
 
 /** @addtogroup IKS01A3_ENV_SENSORS_Exported_Functions IKS01A3 ENV SENSOR Exported Functions
- * @{
- */
+  * @{
+  */
 
 int32_t IKS01A3_ENV_SENSOR_Init(uint32_t Instance, uint32_t Functions);
 int32_t IKS01A3_ENV_SENSOR_DeInit(uint32_t Instance);
@@ -250,25 +370,23 @@ int32_t IKS01A3_ENV_SENSOR_SetOutputDataRate(uint32_t Instance, uint32_t Functio
 int32_t IKS01A3_ENV_SENSOR_GetValue(uint32_t Instance, uint32_t Function, float *Value);
 
 /**
- * @}
- */
+  * @}
+  */
 
 /**
- * @}
- */
+  * @}
+  */
 
 /**
- * @}
- */
+  * @}
+  */
 
 /**
- * @}
- */
+  * @}
+  */
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* IKS01A3_ENV_SENSORS_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

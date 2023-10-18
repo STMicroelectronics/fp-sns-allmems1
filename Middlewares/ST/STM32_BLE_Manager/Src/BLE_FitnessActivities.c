@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_FitnessActivities.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add Fitness Activities service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,11 +26,8 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_FITNESS_ACTIVITIES_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x0E,0x00,0x02,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define MOTION_FITNESS_ACTIVITIES_DATA_POSITION  18;
-
 /* Exported variables --------------------------------------------------------*/
-BLE_NotifyEnv_t BLE_FitnessActivities_NotifyEvent = BLE_NOTIFY_NOTHING;
-
+CustomNotifyEventFitnessActivities_t CustomNotifyEventFitnessActivities=NULL;
 CustomWriteRequestFitnessActivities_t CustomWriteRequestFitnessActivities=NULL;
 
 /* Private variables ---------------------------------------------------------*/
@@ -61,7 +58,7 @@ BleCharTypeDef* BLE_InitFitnessActivitiesService(void)
   BleCharPointer->Char_Value_Length=2+1+2; /* 2 byte timestamp, 1 byte action, 2 byte counter */
   BleCharPointer->Char_Properties = ((uint8_t)CHAR_PROP_NOTIFY) | ((uint8_t)CHAR_PROP_WRITE);
   BleCharPointer->Security_Permissions=ATTR_PERMISSION_NONE;
-  BleCharPointer->GATT_Evt_Mask=GATT_NOTIFY_ATTRIBUTE_WRITE | GATT_NOTIFY_READ_REQ_AND_WAIT_FOR_APPL_RESP;
+  BleCharPointer->GATT_Evt_Mask= ((uint8_t)GATT_NOTIFY_ATTRIBUTE_WRITE) | ((uint8_t)GATT_NOTIFY_READ_REQ_AND_WAIT_FOR_APPL_RESP);
   BleCharPointer->Enc_Key_Size=16;
   BleCharPointer->Is_Variable=1;
   
@@ -73,18 +70,6 @@ BleCharTypeDef* BLE_InitFitnessActivitiesService(void)
   
   return BleCharPointer;
 }
-
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting Fitness Activities Advertise Data
- * @param  uint8_t *manuf_data: Advertise Data
- * @retval None
- */
-void BLE_SetFitnessActivitiesAdvertizeData(uint8_t *manuf_data)
-{
-  manuf_data[MOTION_FITNESS_ACTIVITIES_DATA_POSITION] |= 0x0EU;
-}
-#endif /* BLE_MANAGER_SDKV2 */
 
 /**
  * @brief  Update Fitness Activities characteristic
@@ -128,19 +113,24 @@ tBleStatus BLE_FitnessActivitiesUpdate(uint8_t Activity, uint32_t Counter)
  */
 static void AttrMod_Request_FitnessActivities(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_FitnessActivities_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_FitnessActivities_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventFitnessActivities!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventFitnessActivities(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventFitnessActivities(BLE_NOTIFY_UNSUB);
+    }
   }
- 
-#if (BLE_DEBUG_LEVEL>1)  
-  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-    BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->FitnessActivities=%s\n", (BLE_FitnessActivities_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
-    Term_Update(BufferToWrite,BytesToWrite);
-  } else {
-    BLE_MANAGER_PRINTF("--->FitnessActivities=%s", (BLE_FitnessActivities_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+#if (BLE_DEBUG_LEVEL>1)
+  else {
+     BLE_MANAGER_PRINTF("CustomNotifyEventFitnessActivities function Not Defined\r\n");
   }
+  
+ if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+   BytesToWrite = (uint8_t) sprintf((char *)BufferToWrite,"--->Fitness Act=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
+   Term_Update(BufferToWrite,BytesToWrite);
+ } else {
+   BLE_MANAGER_PRINTF("--->Fitness Act=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
+ }
 #endif
 }
 

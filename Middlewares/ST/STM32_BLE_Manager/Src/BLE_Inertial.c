@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_Inertial.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add inertial info services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,10 +26,10 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_INERTIAL_CHAR_UUID(uuid_struct)  COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x00,0x00,0x01,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define INERTIAL_ADVERTIZE_DATA_POSITION  16
+#define INERTIAL_ADVERTISE_DATA_POSITION  16
 
 /* Exported variables --------------------------------------------------------*/
-BLE_NotifyEnv_t BLE_Inertial_NotifyEvent = BLE_NOTIFY_NOTHING;
+CustomNotifyEventInertial_t CustomNotifyEventInertial = NULL;
 
 /* Private Types ----------------------------------------------------------- */
 typedef struct
@@ -127,21 +127,21 @@ BleCharTypeDef* BLE_InitInertialService(uint8_t AccEnable, uint8_t GyroEnable, u
 * @param  uint8_t *manuf_data: Advertise Data
 * @retval None
 */
-void BLE_SetInertialAdvertizeData(uint8_t *manuf_data)
+void BLE_SetInertialAdvertiseData(uint8_t *manuf_data)
 {
   /* Setting Accelerometer Advertise Data */
   if(InertialFeaturesEnabled.AccIsEnable == 1U) {
-    manuf_data[INERTIAL_ADVERTIZE_DATA_POSITION] |= 0x80U;
+    manuf_data[INERTIAL_ADVERTISE_DATA_POSITION] |= 0x80U;
   }
   
   /* Setting Gyroscope Advertise Data */
   if(InertialFeaturesEnabled.GyroIsEnable == 1U) {
-    manuf_data[INERTIAL_ADVERTIZE_DATA_POSITION] |= 0x40U;
+    manuf_data[INERTIAL_ADVERTISE_DATA_POSITION] |= 0x40U;
   }
   
   /* Setting Magnetometer Advertise Data */
   if(InertialFeaturesEnabled.MagIsEnabled == 1U) {
-    manuf_data[INERTIAL_ADVERTIZE_DATA_POSITION] |= 0x20U;
+    manuf_data[INERTIAL_ADVERTISE_DATA_POSITION] |= 0x20U;
   }
 }
 #endif /* BLE_MANAGER_SDKV2 */
@@ -230,18 +230,23 @@ tBleStatus BLE_AccGyroMagUpdate(BLE_MANAGER_INERTIAL_Axes_t *Acc,
 */
 static void AttrMod_Request_Inertial(void *VoidCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_Inertial_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_Inertial_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventInertial!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventInertial(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventInertial(BLE_NOTIFY_UNSUB);
+    }
+  }
+#if (BLE_DEBUG_LEVEL>1)
+  else {
+    BLE_MANAGER_PRINTF("CustomNotifyEventInertial function Not Defined\r\n");
   }
   
-#if (BLE_DEBUG_LEVEL>1)
   if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-    BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite,"--->Acc/Gyro/Mag=%s\n", (BLE_Inertial_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+    BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite,"--->Acc/Gyro/Mag=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
     Term_Update(BufferToWrite,BytesToWrite);
   } else {
-    BLE_MANAGER_PRINTF("--->Acc/Gyro/Mag=%s", (BLE_Inertial_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+    BLE_MANAGER_PRINTF("--->Acc/Gyro/Mag=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
   }
 #endif
 }

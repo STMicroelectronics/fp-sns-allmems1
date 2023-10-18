@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_AudioLevel.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add audio level info services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,11 +26,10 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_AUDIO_LEVEL_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x04,0x00,0x00,0x00,0x00,0x01,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define AUDIO_LEVEL_ADVERTIZE_DATA_POSITION  15
+#define AUDIO_LEVEL_ADVERTISE_DATA_POSITION  15
 
 /* Exported variables --------------------------------------------------------*/
-/* Identifies the notification Events */
-BLE_NotifyEnv_t BLE_AudioLevel_NotifyEvent = BLE_NOTIFY_NOTHING;
+CustomNotifyEventAudioLevel_t CustomNotifyEventAudioLevel=NULL;
 
 /* Private variables ---------------------------------------------------------*/
 /* Data structure pointer for audio level info service */
@@ -75,10 +74,10 @@ BleCharTypeDef* BLE_InitAudioLevelService(uint8_t AudioLevelNumber)
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-void BLE_SetAudioLevelAdvertizeData(uint8_t *manuf_data)
+void BLE_SetAudioLevelAdvertiseData(uint8_t *manuf_data)
 {
   /* Setting Audio Level Advertise Data */
-  manuf_data[AUDIO_LEVEL_ADVERTIZE_DATA_POSITION] |= 0x04U;
+  manuf_data[AUDIO_LEVEL_ADVERTISE_DATA_POSITION] |= 0x04U;
 }
 #endif /* BLE_MANAGER_SDKV2 */
 
@@ -105,7 +104,7 @@ tBleStatus BLE_AudioLevelUpdate(uint16_t *AudioLevelData, uint8_t AudioLevelNumb
   
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharAudioLevel, 0, (2U + AudioLevelNumber), buff);
   
-  if (ret != BLE_STATUS_SUCCESS){
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
     if(BLE_StdErr_Service==BLE_SERV_ENABLE){
       BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating Audio Level Data Char\r\n");
       Stderr_Update(BufferToWrite,BytesToWrite);
@@ -131,18 +130,23 @@ tBleStatus BLE_AudioLevelUpdate(uint16_t *AudioLevelData, uint8_t AudioLevelNumb
  */
 static void AttrMod_Request_AudioLevel(void *VoidCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_AudioLevel_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_AudioLevel_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventAudioLevel!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventAudioLevel(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventAudioLevel(BLE_NOTIFY_UNSUB);
+    }
+  }
+#if (BLE_DEBUG_LEVEL>1)
+  else {
+     BLE_MANAGER_PRINTF("CustomNotifyEventAudioLevel function Not Defined\r\n");
   }
   
-#if (BLE_DEBUG_LEVEL>1)
  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->Audio Level=%s\n", (BLE_AudioLevel_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+   BytesToWrite = (uint8_t) sprintf((char *)BufferToWrite,"--->Audio Level=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
    Term_Update(BufferToWrite,BytesToWrite);
  } else {
-   BLE_MANAGER_PRINTF("--->Audio Level=%s", (BLE_AudioLevel_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+   BLE_MANAGER_PRINTF("--->Audio Level=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
  }
 #endif
 }

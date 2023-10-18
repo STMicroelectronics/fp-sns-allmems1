@@ -11,7 +11,7 @@
   *          Smartphone with BTLE.
   ******************************************************************************
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,14 +26,6 @@
 
 This application shows how to implement a peripheral device tailored for 
 interacting with the "ST BLE Sensor" app for Android/iOS devices.
-
-------------------------------------
-WARNING: When starting the project from Example Selector in STM32CubeMX and regenerating 
-it from ioc file, you may face a build issue. To solve it, remove from the IDE project 
-the file stm32l4xx_nucleo.c in Application/User virtual folder and delete from Src and 
-Inc folders the files: stm32l4xx_nucleo.c, stm32l4xx_nucleo.h and stm32l4xx_nucleo_errno.h.
-------------------------------------
-
 The "ST BLE Sensor" app is freely available on both GooglePlay and iTunes
   - iTunes: https://itunes.apple.com/us/app/st-bluems/id993670214
   - GooglePlay: https://play.google.com/store/apps/details?id=com.st.bluems
@@ -165,10 +157,10 @@ In order to make the program work, you must do the following:
  - WARNING: before opening the project with any toolchain be sure your folder
    installation path is not too in-depth since the toolchain may report errors
    after building.
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.6.1).
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.9.0).
    Alternatively you can use the Keil uVision toolchain (this firmware
    has been successfully tested with V5.32.0) or the IAR toolchain (this firmware has 
-   been successfully tested with Embedded Workbench V8.50.9).
+   been successfully tested with Embedded Workbench V9.20.1).
  - Rebuild all files and 
    - for STM32L476RG MCU: run the *.bat/*.sh script included in the IDE folder 
      (EWARM/MDK-ARM/STM32CubeIDE)

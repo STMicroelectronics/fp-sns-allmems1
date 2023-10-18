@@ -7,10 +7,9 @@
 | STM32L4 HAL                              			| STMicroelectronics   | BSD-3-Clause |
 | BSP Components                           			| STMicroelectronics   | BSD-3-Clause |
 | BSP BlueCoin                            			| STMicroelectronics   | BSD-3-Clause |
-| BSP SensorTile                          			| STMicroelectronics   | BSD-3-Clause |
 | BSP SensorTile.box                       			| STMicroelectronics   | BSD-3-Clause |
-| BSP IKS01A2                              			| STMicroelectronics   | BSD-3-Clause |
 | BSP IKS01A3                              			| STMicroelectronics   | BSD-3-Clause |
+| BSP IKS4A1                              			| STMicroelectronics   | BSD-3-Clause |
 | BSP CCA02M2                              			| STMicroelectronics   | BSD-3-Clause |
 | BSP STM32F4xx-Nucleo                     			| STMicroelectronics   | BSD-3-Clause |
 | BSP STM32L4xx_Nucleo                     			| STMicroelectronics   | BSD-3-Clause |
@@ -35,11 +34,9 @@
 | STM32_USB_Device_Library Middleware      			| STMicroelectronics   | SLA0044 |
 | FatFs Middleware                         			| Third_Party          | BSD-3-Clause |
 | Parson Middleware                        			| Third_Party          | MIT     |
-| STM32F401RE-Nucleo Application Projects  			| STMicroelectronics   | SLA0055 |
 | STM32F446RE-Nucleo Application Projects  			| STMicroelectronics   | SLA0055 |
 | STM32L476RG-Nucleo Application Projects  			| STMicroelectronics   | SLA0055 |
 | STM32F446ME-BlueCoin Application Projects			| STMicroelectronics   | SLA0055 |
-| STM32L476JG-SensorTile Application Projects		| STMicroelectronics   | SLA0055 |
 | STM32L4R9ZI-SensorTile.box Application Projects	| STMicroelectronics   | SLA0055 |
 | Bootloader Utilities								| STMicroelectronics   | SLA0055 | 
 

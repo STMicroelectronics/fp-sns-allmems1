@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_GasConcentration.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Gas concentration info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -28,10 +28,11 @@
    
 /* Exported typedef --------------------------------------------------------- */
 typedef void (*CustomReadRequestGasConcentration_t)(uint32_t *Gas);
+typedef void (*CustomNotifyEventGasConcentration_t)(BLE_NotifyEvent_t Event);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_GasConcentration_NotifyEvent;
 extern CustomReadRequestGasConcentration_t CustomReadRequestGasConcentration;
+extern CustomNotifyEventGasConcentration_t CustomNotifyEventGasConcentration;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -48,7 +49,7 @@ extern BleCharTypeDef* BLE_InitGasConcentrationService(void);
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-extern void BLE_SetGasConcentrationAdvertizeData(uint8_t *manuf_data);
+extern void BLE_SetGasConcentrationAdvertiseData(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**

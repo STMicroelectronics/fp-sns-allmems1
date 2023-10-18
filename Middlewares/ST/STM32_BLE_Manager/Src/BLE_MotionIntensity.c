@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_MotionIntensity.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add Motion Intensity service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,11 +26,11 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_INTENSITY_DETECTION_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x20,0x00,0x01,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define INTENSITY_DETECTION_ADVERTIZE_DATA_POSITION  18
+#define INTENSITY_DETECTION_ADVERTISE_DATA_POSITION  18
 
 /* Exported variables --------------------------------------------------------*/
-BLE_NotifyEnv_t BLE_MotionIntensity_NotifyEvent = BLE_NOTIFY_NOTHING;
 CustomReadRequestMotionIntensity_t CustomReadRequestMotionIntensity=NULL;
+CustomNotifyEventMotionIntensity_t CustomNotifyEventMotionIntensity=NULL;
 
 /* Private variables ---------------------------------------------------------*/
 /* Data structure pointer for Motion Intensity service */
@@ -38,9 +38,9 @@ static BleCharTypeDef BleMotionIntensity;
 
 /* Private functions ---------------------------------------------------------*/
 static void AttrMod_Request_MotionIntensity(void *BleCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data);
-#ifndef BLUENRG_LP
+#if (BLUE_CORE != BLUENRG_LP)
 static void Read_Request_MotionIntensity(void *BleCharPointer,uint16_t handle);
-#else /* BLUENRG_LP */
+#else /* (BLUE_CORE != BLUENRG_LP) */
 static void Read_Request_MotionIntensity(void *BleCharPointer,
                              uint16_t handle,
                              uint16_t Connection_Handle,
@@ -48,7 +48,7 @@ static void Read_Request_MotionIntensity(void *BleCharPointer,
                              uint16_t Attr_Val_Offset,
                              uint8_t Data_Length,
                              uint8_t Data[]);
-#endif /* BLUENRG_LP */
+#endif /* (BLUE_CORE != BLUENRG_LP) */
 
 /**
  * @brief  Init Motion Intensity service
@@ -89,9 +89,9 @@ BleCharTypeDef* BLE_InitMotionIntensityService(void)
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-void BLE_SetMotionIntensityAdvertizeData(uint8_t *manuf_data)
+void BLE_SetMotionIntensityAdvertiseData(uint8_t *manuf_data)
 {
-  manuf_data[INTENSITY_DETECTION_ADVERTIZE_DATA_POSITION] |= 0x20U;
+  manuf_data[INTENSITY_DETECTION_ADVERTISE_DATA_POSITION] |= 0x20U;
 }
 #endif /* BLE_MANAGER_SDKV2 */
 
@@ -136,19 +136,24 @@ tBleStatus BLE_MotionIntensityUpdate(BLE_ID_output_t MotionIntensityCode)
  */
 static void AttrMod_Request_MotionIntensity(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_MotionIntensity_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_MotionIntensity_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventMotionIntensity!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventMotionIntensity(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventMotionIntensity(BLE_NOTIFY_UNSUB);
+    }
   }
- 
 #if (BLE_DEBUG_LEVEL>1)
- if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->Motion Intensity=%s\n", (BLE_MotionIntensity_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
-   Term_Update(BufferToWrite,BytesToWrite);
- } else {
-   BLE_MANAGER_PRINTF("--->Motion Intensity=%s", (BLE_MotionIntensity_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
- }
+  else {
+    BLE_MANAGER_PRINTF("CustomNotifyEventMotionIntensity function Not Defined\r\n");
+  }
+
+  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+    BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite,"--->MotionIntensity=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
+    Term_Update(BufferToWrite,BytesToWrite);
+  } else {
+    BLE_MANAGER_PRINTF("--->MotionIntensity=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
+  }
 #endif
 }
 
@@ -158,7 +163,7 @@ static void AttrMod_Request_MotionIntensity(void *VoidCharPointer, uint16_t attr
  * @param  uint16_t handle Handle of the attribute
  * @retval None
  */
-#ifndef BLUENRG_LP
+#if (BLUE_CORE != BLUENRG_LP)
 static void Read_Request_MotionIntensity(void *VoidCharPointer,uint16_t handle)
 {
   if(CustomReadRequestMotionIntensity != NULL) {
@@ -169,7 +174,7 @@ static void Read_Request_MotionIntensity(void *VoidCharPointer,uint16_t handle)
     BLE_MANAGER_PRINTF("\r\n\nRead request Motion Intensity function not defined\r\n\n");
   }
 }
-#else /* BLUENRG_LP */
+#else /* (BLUE_CORE != BLUENRG_LP) */
 static void Read_Request_MotionIntensity(void *BleCharPointer,
                                          uint16_t handle,
                                          uint16_t Connection_Handle,
@@ -208,5 +213,5 @@ static void Read_Request_MotionIntensity(void *BleCharPointer,
     BLE_MANAGER_PRINTF("aci_gatt_srv_authorize_resp_nwk() failed: 0x%02x\r\n", ret);
   }
 }
-#endif /* BLUENRG_LP */
+#endif /* (BLUE_CORE != BLUENRG_LP) */
 

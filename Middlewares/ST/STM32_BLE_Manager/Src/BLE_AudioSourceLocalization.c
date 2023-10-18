@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_AudioSourceLocalization.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add BLE_AudioSourceLocalization service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,10 +26,10 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_AUDIO_SOURCE_LOCALIZATION_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x10,0x00,0x00,0x00,0x00,0x01,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define AUDIO_SOURCE_LOCALIZATION_ADVERTIZE_DATA_POSITION  18
+#define AUDIO_SOURCE_LOCALIZATION_ADVERTISE_DATA_POSITION  18
 
 /* Exported variables --------------------------------------------------------*/
-BLE_NotifyEnv_t BLE_AudioSourceLocalization_NotifyEvent = BLE_NOTIFY_NOTHING;
+CustomNotifyEventAudioSourceLocalization_t CustomNotifyEventAudioSourceLocalization=NULL;
 
 /* Private variables ---------------------------------------------------------*/
 /* Data structure pointer for Audio Source Localization service */
@@ -72,9 +72,9 @@ BleCharTypeDef* BLE_InitAudioSourceLocalizationService(void)
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-void BLE_SetAudioSourceLocalizationAdvertizeData(uint8_t *manuf_data)
+void BLE_SetAudioSourceLocalizationAdvertiseData(uint8_t *manuf_data)
 {
-  manuf_data[AUDIO_SOURCE_LOCALIZATION_ADVERTIZE_DATA_POSITION] |= 0x10U;
+  manuf_data[AUDIO_SOURCE_LOCALIZATION_ADVERTISE_DATA_POSITION] |= 0x10U;
 }
 #endif /* BLE_MANAGER_SDKV2 */
 
@@ -119,18 +119,23 @@ tBleStatus BLE_AudioSourceLocalizationUpdate(uint16_t Angle)
  */
 static void AttrMod_Request_AudioSourceLocalization(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_AudioSourceLocalization_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_AudioSourceLocalization_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventAudioSourceLocalization!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventAudioSourceLocalization(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventAudioSourceLocalization(BLE_NOTIFY_UNSUB);
+    }
   }
- 
 #if (BLE_DEBUG_LEVEL>1)
+  else {
+     BLE_MANAGER_PRINTF("CustomNotifyEventAudioSourceLocalization function Not Defined\r\n");
+  }
+  
  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->Audio Source Localization=%s\n", (BLE_AudioSourceLocalization_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+   BytesToWrite = (uint8_t) sprintf((char *)BufferToWrite,"--->AudioSrcLoc=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
    Term_Update(BufferToWrite,BytesToWrite);
  } else {
-   BLE_MANAGER_PRINTF("--->Audio Source Localization=%s", (BLE_AudioSourceLocalization_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+   BLE_MANAGER_PRINTF("--->AudioSrcLoc=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
  }
 #endif
 }

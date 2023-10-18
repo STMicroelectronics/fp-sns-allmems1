@@ -1,37 +1,20 @@
 /**
- ******************************************************************************
- * @file    lis3dhh.h
- * @author  MEMS Software Solutions Team
- * @brief   LIS3DHH header driver file
- ******************************************************************************
- * @attention
- *
- * <h2><center>&copy; COPYRIGHT(c) 2018 STMicroelectronics</center></h2>
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of STMicroelectronics nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- ******************************************************************************
- */
+  ******************************************************************************
+  * @file    lis3dhh.h
+  * @author  MEMS Software Solutions Team
+  * @brief   LIS3DHH header driver file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef LIS3DHH_H
@@ -115,7 +98,7 @@ typedef struct
 typedef struct
 {
   LIS3DHH_IO_t        IO;
-  lis3dhh_ctx_t      Ctx;
+  stmdev_ctx_t        Ctx;
   uint8_t             is_initialized;
   uint8_t             acc_is_enabled;
   float               acc_odr;
@@ -155,6 +138,30 @@ typedef struct
   int32_t (*GetAxes)(LIS3DHH_Object_t *, LIS3DHH_Axes_t *);
   int32_t (*GetAxesRaw)(LIS3DHH_Object_t *, LIS3DHH_AxesRaw_t *);
 } LIS3DHH_ACC_Drv_t;
+
+typedef union
+{
+  int16_t i16bit[3];
+  uint8_t u8bit[6];
+} lis3dhh_axis3bit16_t;
+
+typedef union
+{
+  int16_t i16bit;
+  uint8_t u8bit[2];
+} lis3dhh_axis1bit16_t;
+
+typedef union
+{
+  int32_t i32bit[3];
+  uint8_t u8bit[12];
+} lis3dhh_axis3bit32_t;
+
+typedef union
+{
+  int32_t i32bit;
+  uint8_t u8bit[4];
+} lis3dhh_axis1bit32_t;
 
 /**
  * @}
@@ -242,5 +249,3 @@ extern LIS3DHH_ACC_Drv_t LIS3DHH_ACC_Driver;
 /**
  * @}
  */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

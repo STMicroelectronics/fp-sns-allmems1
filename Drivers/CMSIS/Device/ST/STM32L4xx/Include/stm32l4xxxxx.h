@@ -7,18 +7,17 @@
   *          This file contains:
   *           - Data structures and the address mapping for all peripherals
   *           - Peripheral's registers declarations and bits definition
-  *           - Macros to access peripheral’s registers hardware
+  *           - Macros to access peripheral's registers hardware
   *
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Apache License, Version 2.0,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/Apache-2.0
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -45,11 +44,11 @@
 /**
   * @brief Configuration of the Cortex-M4 Processor and Core Peripherals
    */
-#define __CM4_REV                 0x0001  /*!< Cortex-M4 revision r0p1                       */
-#define __MPU_PRESENT             1       /*!< STM32L4XX provides an MPU                     */
-#define __NVIC_PRIO_BITS          4       /*!< STM32L4XX uses 4 Bits for the Priority Levels */
-#define __Vendor_SysTickConfig    0       /*!< Set to 1 if different SysTick Config is used  */
-#define __FPU_PRESENT             1       /*!< FPU present                                   */
+#define __CM4_REV                 0x0001U  /*!< Cortex-M4 revision r0p1                       */
+#define __MPU_PRESENT             1U       /*!< STM32L4XX provides an MPU                     */
+#define __NVIC_PRIO_BITS          4U       /*!< STM32L4XX uses 4 Bits for the Priority Levels */
+#define __Vendor_SysTickConfig    0U       /*!< Set to 1 if different SysTick Config is used  */
+#define __FPU_PRESENT             1U       /*!< FPU present                                   */
 
 /**
   * @}
@@ -788,7 +787,7 @@ typedef struct
   uint32_t      RESERVED7[7];   /*!< Reserved, 0x11C - 0x137                                                              */
   __IO uint32_t VMCCR;          /*!< DSI Host Video Mode Current Configuration Register,        Address offset: 0x138     */
   __IO uint32_t VPCCR;          /*!< DSI Host Video Packet Current Configuration Register,      Address offset: 0x13C     */
-  __IO uint32_t VCCCR;          /*!< DSI Host Video Chuncks Current Configuration Register,     Address offset: 0x140     */
+  __IO uint32_t VCCCR;          /*!< DSI Host Video Chunks Current Configuration Register,     Address offset: 0x140     */
   __IO uint32_t VNPCCR;         /*!< DSI Host Video Null Packet Current Configuration Register, Address offset: 0x144     */
   __IO uint32_t VHSACCR;        /*!< DSI Host Video HSA Current Configuration Register,         Address offset: 0x148     */
   __IO uint32_t VHBPCCR;        /*!< DSI Host Video HBP Current Configuration Register,         Address offset: 0x14C     */
@@ -2823,6 +2822,15 @@ typedef struct
   * @{
   */
 
+/** @addtogroup Hardware_Constant_Definition
+  * @{
+  */
+#define LSI_STARTUP_TIME 130U /*!< LSI Maximum startup time in us */
+
+/**
+  * @}
+  */
+
 /** @addtogroup Peripheral_Registers_Bits_Definition
   * @{
   */
@@ -2838,7 +2846,7 @@ typedef struct
 /******************************************************************************/
 
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32L4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32L4 series)
  */
 #if defined (STM32L412xx) || defined (STM32L422xx) ||defined (STM32L471xx) || defined (STM32L475xx) || defined (STM32L476xx) || defined (STM32L485xx) || defined (STM32L486xx) || defined (STM32L496xx) || defined (STM32L4A6xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx)
 #define ADC_MULTIMODE_SUPPORT                          /*!< ADC feature available only on specific devices: multimode available on devices with several ADC instances */
@@ -2984,7 +2992,7 @@ typedef struct
 
 #define ADC_CFGR_ALIGN_Pos             (5U)
 #define ADC_CFGR_ALIGN_Msk             (0x1UL << ADC_CFGR_ALIGN_Pos)           /*!< 0x00000020 */
-#define ADC_CFGR_ALIGN                 ADC_CFGR_ALIGN_Msk                      /*!< ADC data alignement */
+#define ADC_CFGR_ALIGN                 ADC_CFGR_ALIGN_Msk                      /*!< ADC data alignment */
 
 #define ADC_CFGR_EXTSEL_Pos            (6U)
 #define ADC_CFGR_EXTSEL_Msk            (0xFUL << ADC_CFGR_EXTSEL_Pos)          /*!< 0x000003C0 */
@@ -7863,7 +7871,7 @@ typedef struct
 /*                                                                            */
 /******************************************************************************/
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32L4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32L4 series)
  */
 #if defined (STM32L451xx) || defined (STM32L452xx) || defined (STM32L462xx)
 /* Note: No specific macro feature on this device */
@@ -9371,7 +9379,7 @@ typedef struct
 /******************************************************************************/
 #if defined (STM32L4P5xx) || defined (STM32L4Q5xx) || defined (STM32L4R5xx) || defined (STM32L4R7xx) || defined (STM32L4R9xx) || defined (STM32L4S5xx) || defined (STM32L4S7xx) || defined (STM32L4S9xx)
 /*
-* @brief Specific device feature definitions  (not present on all devices in the STM32L4 serie)
+* @brief Specific device feature definitions  (not present on all devices in the STM32L4 series)
 */
 #define DMA2D_LINE_OFFSET_MODE_SUPPORT
 #define DMA2D_M2M_BLEND_FIXED_COLOR_FG_BG_SUPPORT
@@ -9803,7 +9811,7 @@ typedef struct
 
 #define DSI_LCOLCR_LPE_Pos            (8U)
 #define DSI_LCOLCR_LPE_Msk            (0x1UL << DSI_LCOLCR_LPE_Pos)            /*!< 0x00000100 */
-#define DSI_LCOLCR_LPE                DSI_LCOLCR_LPE_Msk                       /*!< Loosly Packet Enable */
+#define DSI_LCOLCR_LPE                DSI_LCOLCR_LPE_Msk                       /*!< Loosely Packet Enable */
 
 /*******************  Bit definition for DSI_LPCR register  ***************/
 #define DSI_LPCR_DEP_Pos              (0U)
@@ -13966,7 +13974,7 @@ typedef struct
 /******************  Bit definition for FMC_BCR1 register  *******************/
 #define FMC_BCR1_CCLKEN_Pos        (20U)
 #define FMC_BCR1_CCLKEN_Msk        (0x1UL << FMC_BCR1_CCLKEN_Pos)              /*!< 0x00100000 */
-#define FMC_BCR1_CCLKEN            FMC_BCR1_CCLKEN_Msk                         /*!<Continous clock enable     */
+#define FMC_BCR1_CCLKEN            FMC_BCR1_CCLKEN_Msk                         /*!<Continuous clock enable     */
 #if defined (STM32L496xx) || defined (STM32L4A6xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx) || defined (STM32L4R5xx) || defined (STM32L4R7xx) || defined (STM32L4R9xx) || defined (STM32L4S5xx) || defined (STM32L4S7xx) || defined (STM32L4S9xx)
 #define FMC_BCR1_WFDIS_Pos         (21U)
 #define FMC_BCR1_WFDIS_Msk         (0x1UL << FMC_BCR1_WFDIS_Pos)               /*!< 0x00200000 */
@@ -16036,7 +16044,7 @@ typedef struct
 
 #define LTDC_AWCR_AAH_Pos            (0U)
 #define LTDC_AWCR_AAH_Msk            (0x7FFUL << LTDC_AWCR_AAH_Pos)            /*!< 0x000007FF */
-#define LTDC_AWCR_AAH                LTDC_AWCR_AAH_Msk                         /*!< Accumulated Active heigh */
+#define LTDC_AWCR_AAH                LTDC_AWCR_AAH_Msk                         /*!< Accumulated Active Height */
 #define LTDC_AWCR_AAW_Pos            (16U)
 #define LTDC_AWCR_AAW_Msk            (0xFFFUL << LTDC_AWCR_AAW_Pos)            /*!< 0x0FFF0000 */
 #define LTDC_AWCR_AAW                LTDC_AWCR_AAW_Msk                         /*!< Accumulated Active Width */
@@ -16045,7 +16053,7 @@ typedef struct
 
 #define LTDC_TWCR_TOTALH_Pos         (0U)
 #define LTDC_TWCR_TOTALH_Msk         (0x7FFUL << LTDC_TWCR_TOTALH_Pos)         /*!< 0x000007FF */
-#define LTDC_TWCR_TOTALH             LTDC_TWCR_TOTALH_Msk                      /*!< Total Heigh */
+#define LTDC_TWCR_TOTALH             LTDC_TWCR_TOTALH_Msk                      /*!< Total Height */
 #define LTDC_TWCR_TOTALW_Pos         (16U)
 #define LTDC_TWCR_TOTALW_Msk         (0xFFFUL << LTDC_TWCR_TOTALW_Pos)         /*!< 0x0FFF0000 */
 #define LTDC_TWCR_TOTALW             LTDC_TWCR_TOTALW_Msk                      /*!< Total Width */
@@ -16591,12 +16599,12 @@ typedef struct
 /* Arithmetic addition output data */
 #define PKA_ARITHMETIC_ADD_OUT_RESULT             ((0x0BD0UL - PKA_RAM_OFFSET)>>2)   /*!< Output result */
 
-/* Arithmetic substraction input data */
+/* Arithmetic subtraction input data */
 #define PKA_ARITHMETIC_SUB_NB_BITS                ((0x0404UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand number of bits */
 #define PKA_ARITHMETIC_SUB_IN_OP1                 ((0x08B4UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand op1 */
 #define PKA_ARITHMETIC_SUB_IN_OP2                 ((0x0A44UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand op2 */
 
-/* Arithmetic substraction output data */
+/* Arithmetic subtraction output data */
 #define PKA_ARITHMETIC_SUB_OUT_RESULT             ((0x0BD0UL - PKA_RAM_OFFSET)>>2)   /*!< Output result */
 
 /* Arithmetic multiplication input data */
@@ -16632,13 +16640,13 @@ typedef struct
 /* Modular inversion output data */
 #define PKA_MODULAR_INV_OUT_RESULT                ((0x0BD0UL - PKA_RAM_OFFSET)>>2)   /*!< Output result */
 
-/* Modular substraction input data */
+/* Modular subtraction input data */
 #define PKA_MODULAR_SUB_NB_BITS                   ((0x0404UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand number of bits */
 #define PKA_MODULAR_SUB_IN_OP1                    ((0x08B4UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand op1 */
 #define PKA_MODULAR_SUB_IN_OP2                    ((0x0A44UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand op2 */
 #define PKA_MODULAR_SUB_IN_OP3_MOD                ((0x0D5CUL - PKA_RAM_OFFSET)>>2)   /*!< Input operand op3 */
 
-/* Modular substraction output data */
+/* Modular subtraction output data */
 #define PKA_MODULAR_SUB_OUT_RESULT                ((0x0BD0UL - PKA_RAM_OFFSET)>>2)   /*!< Output result */
 
 /* Montgomery multiplication input data */
@@ -16834,11 +16842,11 @@ typedef struct
 
 
 /********************  Bit definition for PWR_CR4 register  ********************/
-#if defined (STM32L412xx) || defined (STM32L422xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx)
+#if defined (STM32L412xx) || defined (STM32L422xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx) || defined (STM32L476xx)
 #define PWR_CR4_EXT_SMPS_ON_Pos      (13U)
 #define PWR_CR4_EXT_SMPS_ON_Msk      (0x1UL << PWR_CR4_EXT_SMPS_ON_Pos)         /*!< 0x00002000 */
 #define PWR_CR4_EXT_SMPS_ON          PWR_CR4_EXT_SMPS_ON_Msk                   /*!< Inform the internal regulator on external SMPS switch status */
-#endif /* STM32L412xx || STM32L422xx || STM32L4P5xx || STM32L4Q5xx */
+#endif /* STM32L412xx || STM32L422xx || STM32L4P5xx || STM32L4Q5xx || STM32L476xx */
 #define PWR_CR4_VBRS_Pos             (9U)
 #define PWR_CR4_VBRS_Msk             (0x1UL << PWR_CR4_VBRS_Pos)               /*!< 0x00000200 */
 #define PWR_CR4_VBRS                 PWR_CR4_VBRS_Msk                          /*!< VBAT Battery charging Resistor Selection */
@@ -16865,11 +16873,11 @@ typedef struct
 #define PWR_SR1_WUFI_Pos             (15U)
 #define PWR_SR1_WUFI_Msk             (0x1UL << PWR_SR1_WUFI_Pos)               /*!< 0x00008000 */
 #define PWR_SR1_WUFI                 PWR_SR1_WUFI_Msk                          /*!< Wake-Up Flag Internal */
-#if defined (STM32L412xx) || defined (STM32L422xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx)
+#if defined (STM32L412xx) || defined (STM32L422xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx) || defined (STM32L476xx)
 #define PWR_SR1_EXT_SMPS_RDY_Pos     (13U)
 #define PWR_SR1_EXT_SMPS_RDY_Msk     (0x1UL << PWR_SR1_EXT_SMPS_RDY_Pos)        /*!< 0x00002000 */
 #define PWR_SR1_EXT_SMPS_RDY         PWR_SR1_EXT_SMPS_RDY_Msk                  /*!< Switching to external SMPS Ready Flag */
-#endif /* STM32L412xx || STM32L422xx || STM32L4P5xx || STM32L4Q5xx */
+#endif /* STM32L412xx || STM32L422xx || STM32L4P5xx || STM32L4Q5xx || STM32L476xx */
 #define PWR_SR1_SBF_Pos              (8U)
 #define PWR_SR1_SBF_Msk              (0x1UL << PWR_SR1_SBF_Pos)                /*!< 0x00000100 */
 #define PWR_SR1_SBF                  PWR_SR1_SBF_Msk                           /*!< Stand-By Flag */
@@ -17869,7 +17877,7 @@ typedef struct
 /*                                                                            */
 /******************************************************************************/
 /*
-* @brief Specific device feature definitions  (not present on all devices in the STM32L4 serie)
+* @brief Specific device feature definitions  (not present on all devices in the STM32L4 series)
 */
 #if defined (STM32L412xx) || defined (STM32L422xx)
 #else
@@ -19830,6 +19838,9 @@ typedef struct
 /******************************************************************************/
 #if defined (STM32L4P5xx) || defined (STM32L4Q5xx)
 #define RNG_VER_3_2
+#define RNG_CR_CONFIG_VAL        0x00F00D00U /*!< Default CONFIG 1,2,3 in CR register */
+#define RNG_HTCFG                0x00007274U /*!< HTCR recommended value for best latency and NIST compliance */
+#define RNG_HTCFG_1              0x17590ABCU /*!< Magic number                         */
 #endif
 /********************  Bits definition for RNG_CR register  *******************/
 #define RNG_CR_RNGEN_Pos    (2U)
@@ -22491,9 +22502,6 @@ typedef struct
 #define SDMMC_STA_DATAEND_Pos           (8U)
 #define SDMMC_STA_DATAEND_Msk           (0x1UL << SDMMC_STA_DATAEND_Pos)       /*!< 0x00000100 */
 #define SDMMC_STA_DATAEND               SDMMC_STA_DATAEND_Msk                  /*!<Data end (data counter, SDIDCOUNT, is zero)   */
-#define SDMMC_STA_STBITERR_Pos          (9U)
-#define SDMMC_STA_STBITERR_Msk          (0x1UL << SDMMC_STA_STBITERR_Pos)      /*!< 0x00000200 */
-#define SDMMC_STA_STBITERR              SDMMC_STA_STBITERR_Msk                 /*!<Start bit not detected on all data signals in wide bus mode */
 #define SDMMC_STA_DBCKEND_Pos           (10U)
 #define SDMMC_STA_DBCKEND_Msk           (0x1UL << SDMMC_STA_DBCKEND_Pos)       /*!< 0x00000400 */
 #define SDMMC_STA_DBCKEND               SDMMC_STA_DBCKEND_Msk                  /*!<Data block sent/received (CRC check passed)   */
@@ -22533,6 +22541,11 @@ typedef struct
 #define SDMMC_STA_SDIOIT_Pos            (22U)
 #define SDMMC_STA_SDIOIT_Msk            (0x1UL << SDMMC_STA_SDIOIT_Pos)        /*!< 0x00400000 */
 #define SDMMC_STA_SDIOIT                SDMMC_STA_SDIOIT_Msk                   /*!<SDIO interrupt received                       */
+
+/* Legacy Defines */
+#define SDMMC_STA_STBITERR_Pos          (9U)
+#define SDMMC_STA_STBITERR_Msk          (0x1UL << SDMMC_STA_STBITERR_Pos)      /*!< 0x00000200 */
+#define SDMMC_STA_STBITERR              SDMMC_STA_STBITERR_Msk                 /*!<Start bit not detected on all data signals in wide bus mode */
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
 /*******************  Bit definition for SDMMC_ICR register  *******************/
@@ -26367,7 +26380,7 @@ typedef struct
 #if defined (STM32L412xx) || defined (STM32L422xx) || defined (STM32L431xx) || defined (STM32L432xx) || defined (STM32L433xx) || defined (STM32L442xx) || defined (STM32L443xx) || defined (STM32L451xx) || defined (STM32L452xx) || defined (STM32L462xx) || defined (STM32L496xx) || defined (STM32L4A6xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx) || defined (STM32L4R5xx) || defined (STM32L4R7xx) || defined (STM32L4R9xx) || defined (STM32L4S5xx) || defined (STM32L4S7xx) || defined (STM32L4S9xx)
 
 /*
-* @brief Specific device feature definitions (not present on all devices in the STM32L4 serie)
+* @brief Specific device feature definitions (not present on all devices in the STM32L4 series)
 */
 #if defined (STM32L412xx) || defined (STM32L422xx) || defined (STM32L431xx) || defined (STM32L432xx) || defined (STM32L433xx) || defined (STM32L442xx) || defined (STM32L443xx) || defined (STM32L451xx) || defined (STM32L452xx) || defined (STM32L462xx) || defined (STM32L496xx) || defined (STM32L4A6xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx) || defined (STM32L4R5xx) || defined (STM32L4R7xx) || defined (STM32L4R9xx) || defined (STM32L4S5xx) || defined (STM32L4S7xx) || defined (STM32L4S9xx)
 #define USART_TCBGT_SUPPORT
@@ -30780,4 +30793,3 @@ typedef struct
   * @}
   */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

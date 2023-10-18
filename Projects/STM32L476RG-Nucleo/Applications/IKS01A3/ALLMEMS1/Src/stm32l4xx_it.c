@@ -3,13 +3,13 @@
   ******************************************************************************
   * @file    stm32l4xx_it.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Interrupt Service Routines.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -227,7 +227,7 @@ void EXTI9_5_IRQHandler(void)
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
 
   /* USER CODE END EXTI9_5_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(LD2_Pin);
+  HAL_GPIO_EXTI_IRQHandler(MEMS_ACC_INT_Pin);
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */
 
   /* USER CODE END EXTI9_5_IRQn 1 */
@@ -327,4 +327,3 @@ void EXTI2_IRQHandler( void )
 }
 /* Code for AcousticSL integration - End Section */
 /* USER CODE END 1 */
-

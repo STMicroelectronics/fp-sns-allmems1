@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    TargetFeatures.h 
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Specification of the HW Features for each target platform
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -54,10 +54,10 @@
 #include "motion_ar.h"
 /* Code for MotionAR integration - End Section */
 
-#ifdef ALLMEMS1_MOTIONCP
+   /* Code for MotionCP integration - Start Section */
 #include "MotionCP_Manager.h"
 #include "motion_cp.h"
-#endif /*  ALLMEMS1_MOTIONCP */
+/* Code for MotionCP integration - End Section */
    
 /* Code for MotionFA integration - Start Section */
 #include "MotionFA_Manager.h"
@@ -142,9 +142,9 @@ typedef struct
   uint32_t MotionARIsInitalized;
   /* Code for MotionAR integration - End Section */
 
-  #ifdef ALLMEMS1_MOTIONCP
+  /* Code for MotionCP integration - Start Section */
   uint32_t MotionCPIsInitalized;
-  #endif /*  ALLMEMS1_MOTIONCP */
+   /* Code for MotionCP integration - End Section */
   
   /* Code for MotionFA integration - Start Section */
   uint32_t MotionFAIsInitalized;
@@ -191,9 +191,6 @@ extern void LedToggleTargetPlatform(void);
 
 extern void InitMics(uint32_t AudioFreq, uint32_t AudioVolume, uint16_t AudioInSamples);
 extern void DeInitMics(void);
-
-extern uint32_t GetPage(uint32_t Address);
-extern uint32_t GetBank(uint32_t Address);
 
 #ifdef __cplusplus
 }

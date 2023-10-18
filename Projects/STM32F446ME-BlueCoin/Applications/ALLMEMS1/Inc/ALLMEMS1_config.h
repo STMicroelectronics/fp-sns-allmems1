@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ALLMEMS1_config.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   FP-SNS-ALLMEMS1 configuration
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -63,8 +63,11 @@ if QUAT_UPDATE_MUL_10MS!=3, then SEND_N_QUATERNIONS must be ==1
 
 /* Package Version only numbers 0->9 */
 #define ALLMEMS1_VERSION_MAJOR '4'
-#define ALLMEMS1_VERSION_MINOR '2'
+#define ALLMEMS1_VERSION_MINOR '3'
 #define ALLMEMS1_VERSION_PATCH '0'
+
+/* Firmware ID */
+#define FIRMWARE_ID 0x07U
 
 /* Define the ALLMEMS1 Name MUST be 7 charz long */
 #define NAME_BLUEMS 'A','M','1','V',ALLMEMS1_VERSION_MAJOR,ALLMEMS1_VERSION_MINOR,ALLMEMS1_VERSION_PATCH

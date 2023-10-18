@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_SensorFusion.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Sensor Fusion info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -36,8 +36,10 @@ typedef struct
   int32_t z;
 } BLE_MOTION_SENSOR_Axes_t;
 
+typedef void (*CustomNotifyEventSensorFusion_t)(BLE_NotifyEvent_t Event);
+
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_SensorFusion_NotifyEvent;
+extern CustomNotifyEventSensorFusion_t CustomNotifyEventSensorFusion;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -54,7 +56,7 @@ extern BleCharTypeDef* BLE_InitSensorFusionService(uint8_t NumberQuaternionsToSe
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-extern void BLE_SetSensorFusionAdvertizeData(uint8_t *manuf_data);
+extern void BLE_SetSensorFusionAdvertiseData(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**

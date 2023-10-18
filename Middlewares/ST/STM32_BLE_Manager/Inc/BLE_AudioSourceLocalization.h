@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_AudioSourceLocalization.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   E-BLE_AudioSourceLocalization info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,11 +29,10 @@
 /* Exported defines ---------------------------------------------------------*/
 
 /* Exported typedef --------------------------------------------------------- */
-typedef void (*CustomReadRequestAudioSourceLocalization_t)(void);
-
+typedef void (*CustomNotifyEventAudioSourceLocalization_t)(BLE_NotifyEvent_t Event);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_AudioSourceLocalization_NotifyEvent;
+extern CustomNotifyEventAudioSourceLocalization_t CustomNotifyEventAudioSourceLocalization;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -50,7 +49,7 @@ extern BleCharTypeDef* BLE_InitAudioSourceLocalizationService(void);
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-extern void BLE_SetAudioSourceLocalizationAdvertizeData(uint8_t *manuf_data);
+extern void BLE_SetAudioSourceLocalizationAdvertiseData(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32l4xx_hal_msp.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   HAL MSP module.
   *         
   @verbatim
@@ -18,7 +18,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -46,8 +46,17 @@
   */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
+    if(htim->Instance == TIM2) {
+    /* TIMx Peripheral clock enable */
+    __HAL_RCC_TIM2_CLK_ENABLE();
+
+    /* Set Interrupt Group Priority */
+    HAL_NVIC_SetPriority(TIM2_IRQn, 0x2, 0);
+
+    /* Enable the TIMx global Interrupt */
+    HAL_NVIC_EnableIRQ(TIM2_IRQn);
   /* Code for MotionFA integration - Start Section */
-  if(htim->Instance == TIM3) {
+  } else if(htim->Instance == TIM3) {
     /* TIMx Peripheral clock enable */
     __HAL_RCC_TIM3_CLK_ENABLE();
 

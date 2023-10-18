@@ -9,7 +9,7 @@
   *          BlueNRG GUI with BlueNRG-2 development platforms.
   ******************************************************************************
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -23,14 +23,6 @@
 
 Virtual_COM_Port is the application to be used with the BlueNRG GUI SW package 
 (the STSW-BNRGUI available on st.com). 
-
-------------------------------------
-WARNING: When starting the project from Example Selector in STM32CubeMX and regenerating 
-it from ioc file, you may face a build issue. To solve it, remove from the IDE project 
-the file stm32l4xx_nucleo.c in Application/User virtual folder and delete from Src and 
-Inc folders the files: stm32l4xx_nucleo.c, stm32l4xx_nucleo.h and stm32l4xx_nucleo_errno.h.
-------------------------------------
-
 The BlueNRG GUI is a PC application that can be used to interact and evaluate the 
 capabilities of the BlueNRG-2 device both in master and slave role. 
 The BlueNRG GUI allows standard and vendor-specific HCI commands to be sent to the 
@@ -77,10 +69,10 @@ In order to make the program work, you must do the following:
  - WARNING: before opening the project with any toolchain be sure your folder
    installation path is not too in-depth since the toolchain may report errors
    after building.
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.6.1).
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.9.0).
    Alternatively you can use the Keil uVision toolchain (this firmware
    has been successfully tested with V5.32.0) or the IAR toolchain (this firmware has 
-   been successfully tested with Embedded Workbench V8.50.9).
+   been successfully tested with Embedded Workbench V9.20.1).
  - Rebuild all files and load your image into target memory.
  - Run the example.
  - Alternatively, you can download the pre-built binaries in "Binary" 

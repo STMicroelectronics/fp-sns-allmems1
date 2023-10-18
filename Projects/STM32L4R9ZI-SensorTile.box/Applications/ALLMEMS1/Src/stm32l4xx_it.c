@@ -2,15 +2,15 @@
   ******************************************************************************
   * @file    stm32l4xx_it.c 
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Main Interrupt Service Routines.
   *          This file provides template for all exceptions handler and 
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,6 +29,7 @@
 extern TIM_HandleTypeDef    TimEnvHandle;
 extern TIM_HandleTypeDef    TimCCHandle;
 extern TIM_HandleTypeDef    TimAudioDataHandle;
+extern TIM_HandleTypeDef    TimUpdateVcom;
 
 /* Code for MotionFA integration - Start Section */
 extern TIM_HandleTypeDef    TimInertialHandle;
@@ -158,6 +159,18 @@ void TIM3_IRQHandler(void)
   HAL_TIM_IRQHandler(&TimInertialHandle);
 }
 /* Code for MotionFA integration - End Section */
+
+#ifdef ALLMEMS1_ENABLE_PRINTF
+/**
+  * @brief  This function handles TIM5 interrupt request.
+  * @param  None
+  * @retval None
+  */
+void TIM2_IRQHandler(void)
+{  
+  HAL_TIM_IRQHandler(&TimUpdateVcom);
+}
+#endif /* ALLMEMS1_ENABLE_PRINTF */
 
 /**
   * @brief  This function handles TIM4 interrupt request.

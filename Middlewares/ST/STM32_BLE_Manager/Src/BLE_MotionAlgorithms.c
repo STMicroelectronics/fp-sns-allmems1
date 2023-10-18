@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_MotionAlgorithms.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add Motion Algorithms service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,13 +26,8 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_MOTION_ALGORITHM_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x0A,0x00,0x02,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define MOTION_ALGORITHM_ADVERTIZE_DATA_POSITION  18;
-
 /* Exported variables --------------------------------------------------------*/
-BLE_NotifyEnv_t BLE_MotionAlgorithms_PE_NotifyEvent = BLE_NOTIFY_NOTHING;
-BLE_NotifyEnv_t BLE_MotionAlgorithms_SD_NotifyEvent = BLE_NOTIFY_NOTHING;
-BLE_NotifyEnv_t BLE_MotionAlgorithms_VC_NotifyEvent = BLE_NOTIFY_NOTHING;
-
+CustomNotifyEventMotionAlgorithms_t CustomNotifyEventMotionAlgorithms=NULL;
 CustomWriteRequestMotionAlgorithms_t CustomWriteRequestMotionAlgorithms=NULL;
 
 /* Private variables ---------------------------------------------------------*/
@@ -65,7 +60,7 @@ BleCharTypeDef* BLE_InitMotionAlgorithmsService(void)
   BleCharPointer->Char_Value_Length=2+1+1; /* 2 byte timestamp, 1 byte action, 1 byte algorithm */
   BleCharPointer->Char_Properties = ((uint8_t)CHAR_PROP_NOTIFY) | ((uint8_t)CHAR_PROP_WRITE);
   BleCharPointer->Security_Permissions=ATTR_PERMISSION_NONE;
-  BleCharPointer->GATT_Evt_Mask=GATT_NOTIFY_ATTRIBUTE_WRITE | GATT_NOTIFY_READ_REQ_AND_WAIT_FOR_APPL_RESP;
+  BleCharPointer->GATT_Evt_Mask= ((uint8_t)GATT_NOTIFY_ATTRIBUTE_WRITE) | ((uint8_t)GATT_NOTIFY_READ_REQ_AND_WAIT_FOR_APPL_RESP);
   BleCharPointer->Enc_Key_Size=16;
   BleCharPointer->Is_Variable=1;
   
@@ -77,18 +72,6 @@ BleCharTypeDef* BLE_InitMotionAlgorithmsService(void)
   
   return BleCharPointer;
 }
-
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting Motion Algorithms Advertise Data
- * @param  uint8_t *manuf_data: Advertise Data
- * @retval None
- */
-void BLE_SetMotionAlgorithmsAdvertizeData(uint8_t *manuf_data)
-{
-  manuf_data[MOTION_ALGORITHM_ADVERTIZE_DATA_POSITION] |= 0x0AU;
-}
-#endif /* BLE_MANAGER_SDKV2 */
 
 /**
  * @brief  Update Motion Algorithms characteristic
@@ -134,57 +117,26 @@ tBleStatus BLE_MotionAlgorithmsUpdate(uint8_t MotionCode)
  */
 static void AttrMod_Request_MotionAlgorithms(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    switch(MotionAlgorithmSelected)
-    {
-    case BLE_MOTION_ALGORITHMS_PE:
-      BLE_MotionAlgorithms_PE_NotifyEvent= BLE_NOTIFY_SUB;
-      break;
-    case BLE_MOTION_ALGORITHMS_SD:
-      BLE_MotionAlgorithms_SD_NotifyEvent= BLE_NOTIFY_SUB;
-      break;
-    case BLE_MOTION_ALGORITHMS_VC:
-      BLE_MotionAlgorithms_VC_NotifyEvent= BLE_NOTIFY_SUB;
-      break;
-    default:
-  	  break;
+if(CustomNotifyEventMotionAlgorithms!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventMotionAlgorithms(BLE_NOTIFY_SUB,MotionAlgorithmSelected);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventMotionAlgorithms(BLE_NOTIFY_UNSUB,MotionAlgorithmSelected);
     }
-  } else if (att_data[0] == 0U){
-    BLE_MotionAlgorithms_PE_NotifyEvent= BLE_NOTIFY_UNSUB;
-    BLE_MotionAlgorithms_SD_NotifyEvent= BLE_NOTIFY_UNSUB;
-    BLE_MotionAlgorithms_VC_NotifyEvent= BLE_NOTIFY_UNSUB;
   }
- 
-#if (BLE_DEBUG_LEVEL>1)  
-  switch(MotionAlgorithmSelected)
-  {
-  case BLE_MOTION_ALGORITHMS_PE:
-    if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-      BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->MotionAlgorithms=%s\n", (BLE_MotionAlgorithms_PE_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
-      Term_Update(BufferToWrite,BytesToWrite);
-    } else {
-      BLE_MANAGER_PRINTF("--->MotionAlgorithms=%s", (BLE_MotionAlgorithms_PE_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
-    }
-    break;
-  case BLE_MOTION_ALGORITHMS_SD:
-    if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-      BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->MotionAlgorithms=%s\n", (BLE_MotionAlgorithms_SD_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
-      Term_Update(BufferToWrite,BytesToWrite);
-    } else {
-      BLE_MANAGER_PRINTF("--->MotionAlgorithms=%s", (BLE_MotionAlgorithms_SD_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
-    }
-    break;
-  case BLE_MOTION_ALGORITHMS_VC:
-    if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-      BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->MotionAlgorithms=%s\n", (BLE_MotionAlgorithms_VC_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
-      Term_Update(BufferToWrite,BytesToWrite);
-    } else {
-      BLE_MANAGER_PRINTF("--->MotionAlgorithms=%s", (BLE_MotionAlgorithms_VC_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
-    }
-    break;
-  default:
-	  break;
+#if (BLE_DEBUG_LEVEL>1)
+  else {
+     BLE_MANAGER_PRINTF("CustomNotifyEventMotionAlgorithms function Not Defined\r\n");
   }
+  
+ if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+   BytesToWrite = (uint8_t) sprintf((char *)BufferToWrite,"--->MotionAlgorithms[%d]=%s\n", MotionAlgorithmSelected,
+                                    (att_data[0] == 01U) ? " ON" : " OFF");
+   Term_Update(BufferToWrite,BytesToWrite);
+ } else {
+   BLE_MANAGER_PRINTF("--->MotionAlgorithms[%d]=%s", MotionAlgorithmSelected,
+                      (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
+ }
 #endif
 }
 
@@ -198,35 +150,8 @@ static void Write_Request_MotionAlgorithms(void *BleCharPointer,uint16_t attr_ha
 {
   MotionAlgorithmSelected= (BLE_MotionAlgorithmsType_t)att_data[0];
   
-  BLE_MotionAlgorithms_PE_NotifyEvent= BLE_NOTIFY_UNSUB;
-  BLE_MotionAlgorithms_SD_NotifyEvent= BLE_NOTIFY_UNSUB;
-  BLE_MotionAlgorithms_VC_NotifyEvent= BLE_NOTIFY_UNSUB;
-  
-  switch(MotionAlgorithmSelected)
-  {
-  case BLE_MOTION_ALGORITHMS_PE:
-    BLE_MotionAlgorithms_PE_NotifyEvent= BLE_NOTIFY_SUB;
-    break;
-  case BLE_MOTION_ALGORITHMS_SD:
-    BLE_MotionAlgorithms_SD_NotifyEvent= BLE_NOTIFY_SUB;
-    break;
-  case BLE_MOTION_ALGORITHMS_VC:
-    BLE_MotionAlgorithms_VC_NotifyEvent= BLE_NOTIFY_SUB;
-    break;
-  default:
-	  break;
-  }
-  
-#if (BLE_DEBUG_LEVEL>1)
-  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-    BytesToWrite =sprintf((char *)BufferToWrite,"--->MotionAlgorithmSelected= %d\r\n", (uint8_t)MotionAlgorithmSelected);
-    Term_Update(BufferToWrite,BytesToWrite);
-  } else
-    BLE_MANAGER_PRINTF("--->MotionAlgorithmSelected= %d\r\n", (uint8_t)MotionAlgorithmSelected);
-#endif
-  
   if(CustomWriteRequestMotionAlgorithms != NULL) {
-    CustomWriteRequestMotionAlgorithms();
+    CustomWriteRequestMotionAlgorithms(MotionAlgorithmSelected);
   }
 }
 

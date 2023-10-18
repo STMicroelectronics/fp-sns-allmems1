@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_TimeDomain.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add BLE Time Domain info services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,11 +26,8 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_TIME_DOMAIN_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x06,0x00,0x02,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define TIME_DOMAIN_ADVERTIZE_DATA_POSITION  18
-
 /* Exported variables --------------------------------------------------------*/
-/* Identifies the notification Events */
-BLE_NotifyEnv_t BLE_TimeDomain_NotifyEvent = BLE_NOTIFY_NOTHING;
+CustomNotifyEventTimeDomain_t CustomNotifyEventTimeDomain=NULL;
 
 /* Private variables ---------------------------------------------------------*/
 /* Data structure pointer for Time Domain info service */
@@ -67,18 +64,6 @@ BleCharTypeDef* BLE_InitTimeDomainService(void)
   return BleCharPointer;
 }
 
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting Time Domain Advertize Data
- * @param  uint8_t *manuf_data: Advertize Data
- * @retval None
- */
-void BLE_SetTimeDomainAdvertizeData(uint8_t *manuf_data)
-{
-  /* Setting Time Domain Advertize Data */
-  manuf_data[TIME_DOMAIN_ADVERTIZE_DATA_POSITION] |= 0x06U;
-}
-#endif /* BLE_MANAGER_SDKV2 */
 
 /*
  * @brief  Update Time Domain characteristic value
@@ -153,8 +138,8 @@ tBleStatus BLE_TimeDomainUpdate(BLE_MANAGER_TimeDomainGenericValue_t PeakValue, 
   
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharTimeDomain, 0, 20,Buff);
   
-  if (ret != BLE_STATUS_SUCCESS){
-    if(ret != BLE_STATUS_INSUFFICIENT_RESOURCES) {
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
+    if(ret != (tBleStatus)BLE_STATUS_INSUFFICIENT_RESOURCES) {
       if(BLE_StdErr_Service==BLE_SERV_ENABLE){
         BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite, "Error Updating Time Domain Char\n");
         Stderr_Update(BufferToWrite,BytesToWrite);
@@ -184,19 +169,24 @@ tBleStatus BLE_TimeDomainUpdate(BLE_MANAGER_TimeDomainGenericValue_t PeakValue, 
  */
 static void AttrMod_Request_TimeDomain(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_TimeDomain_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_TimeDomain_NotifyEvent= BLE_NOTIFY_UNSUB;
- }
- 
+  if(CustomNotifyEventTimeDomain!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventTimeDomain(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventTimeDomain(BLE_NOTIFY_UNSUB);
+    }
+  }
 #if (BLE_DEBUG_LEVEL>1)
- if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->Time Domain=%s\n", (BLE_TimeDomain_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
-   Term_Update(BufferToWrite,BytesToWrite);
- } else {
-   BLE_MANAGER_PRINTF("--->Time Domain=%s", (BLE_TimeDomain_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
- }
+  else {
+    BLE_MANAGER_PRINTF("CustomNotifyEventTimeDomain function Not Defined\r\n");
+  }
+
+  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+    BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite,"--->TimeDomain=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
+    Term_Update(BufferToWrite,BytesToWrite);
+  } else {
+    BLE_MANAGER_PRINTF("--->TimeDomain=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
+  }
 #endif
 }
 

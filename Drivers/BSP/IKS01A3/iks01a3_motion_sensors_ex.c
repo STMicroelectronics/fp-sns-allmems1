@@ -1,62 +1,62 @@
 /**
- ******************************************************************************
- * @file    iks01a3_motion_sensors_ex.c
- * @author  MEMS Software Solutions Team
- * @brief   This file provides a set of extended functions needed to manage the motion sensors
- ******************************************************************************
- * @attention
- *
- * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
- * All rights reserved.</center></h2>
- *
- * This software component is licensed by ST under BSD 3-Clause license,
- * the "License"; You may not use this file except in compliance with the
- * License. You may obtain a copy of the License at:
- *                        opensource.org/licenses/BSD-3-Clause
- *
- ******************************************************************************
- */
+  ******************************************************************************
+  * @file    iks01a3_motion_sensors_ex.c
+  * @author  MEMS Software Solutions Team
+  * @brief   This file provides a set of extended functions needed to manage the motion sensors
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "iks01a3_motion_sensors_ex.h"
 
 /** @addtogroup BSP BSP
- * @{
- */
+  * @{
+  */
 
 /** @addtogroup IKS01A3 IKS01A3
- * @{
- */
+  * @{
+  */
 
 /** @defgroup IKS01A3_MOTION_SENSOR_EX IKS01A3 MOTION SENSOR EX
- * @{
- */
+  * @{
+  */
 
 /** @defgroup IKS01A3_MOTION_SENSOR_EX_Imported_Variables IKS01A3 MOTION SENSOR EX Imported Variables
- * @{
- */
+  * @{
+  */
 
 extern void *MotionCompObj[IKS01A3_MOTION_INSTANCES_NBR];
 
 /**
- * @}
- */
+  * @}
+  */
 
 /** @defgroup IKS01A3_MOTION_SENSOR_EX_Exported_Functions IKS01A3 MOTION SENSOR EX Exported Functions
- * @{
- */
+  * @{
+  */
 
 /**
- * @brief  Get the status of data ready bit (available only for LSM6DSO, LIS2DW12, LIS2MDL, ASM330LHH,
- *         IIS2DLPC, IIS2MDC, ISM303DAC, ISM330DLC, LIS2DH12, LSM6DSOX, AIS2IH, LSM6DSO32X sensors)
- * @param  Instance the device instance
- * @param  Function Motion sensor function. Could be:
- *         - MOTION_ACCELERO or MOTION_GYRO for instance IKS01A3_LSM6DSO_0
- *         - MOTION_ACCELERO for instance IKS01A3_LIS2DW12_0
- *         - MOTION_MAGNETO for instance IKS01A3_LIS2MDL_0
- * @param  Status the pointer to the status
- * @retval BSP status
- */
+  * @brief  Get the status of data ready bit (available only for LSM6DSO, LIS2DW12, LIS2MDL, ASM330LHH,
+  *         IIS2DLPC, IIS2MDC, ISM303DAC, ISM330DLC, LIS2DH12, LSM6DSOX, AIS2IH, LSM6DSO32X, LIS2DU12,
+  *         ASM330LHHX, LSM6DSV16X, LSM6DSV16BX, LSM6DSV32X sensors)
+  * @param  Instance the device instance
+  * @param  Function Motion sensor function. Could be:
+  *         - MOTION_ACCELERO or MOTION_GYRO for instance IKS01A3_LSM6DSO_0
+  *         - MOTION_ACCELERO for instance IKS01A3_LIS2DW12_0
+  *         - MOTION_MAGNETO for instance IKS01A3_LIS2MDL_0
+  * @param  Status the pointer to the status
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Get_DRDY_Status(uint32_t Instance, uint32_t Function, uint8_t *Status)
 {
   int32_t ret;
@@ -662,6 +662,252 @@ int32_t IKS01A3_MOTION_SENSOR_Get_DRDY_Status(uint32_t Instance, uint32_t Functi
       break;
 #endif
 
+#if (USE_IKS01A3_MOTION_SENSOR_LIS2DU12_0 == 1)
+    case IKS01A3_LIS2DU12_0:
+      if ((Function & MOTION_ACCELERO) == MOTION_ACCELERO)
+      {
+        if (LIS2DU12_ACC_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_ASM330LHHX_0 == 1)
+    case IKS01A3_ASM330LHHX_0:
+      if ((Function & MOTION_ACCELERO) == MOTION_ACCELERO)
+      {
+        if (ASM330LHHX_ACC_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else if ((Function & MOTION_GYRO) == MOTION_GYRO)
+      {
+        if (ASM330LHHX_GYRO_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV16X_0 == 1)
+    case IKS01A3_LSM6DSV16X_0:
+      if ((Function & MOTION_ACCELERO) == MOTION_ACCELERO)
+      {
+        if (LSM6DSV16X_ACC_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else if ((Function & MOTION_GYRO) == MOTION_GYRO)
+      {
+        if (LSM6DSV16X_GYRO_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV16BX_0 == 1)
+    case IKS01A3_LSM6DSV16BX_0:
+      if ((Function & MOTION_ACCELERO) == MOTION_ACCELERO)
+      {
+        if (LSM6DSV16BX_ACC_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else if ((Function & MOTION_GYRO) == MOTION_GYRO)
+      {
+        if (LSM6DSV16BX_GYRO_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV_0 == 1)
+    case IKS01A3_LSM6DSV_0:
+      if ((Function & MOTION_ACCELERO) == MOTION_ACCELERO)
+      {
+        if (LSM6DSV_ACC_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else if ((Function & MOTION_GYRO) == MOTION_GYRO)
+      {
+        if (LSM6DSV_GYRO_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV16B_0 == 1)
+    case IKS01A3_LSM6DSV16B_0:
+      if ((Function & MOTION_ACCELERO) == MOTION_ACCELERO)
+      {
+        if (LSM6DSV16B_ACC_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else if ((Function & MOTION_GYRO) == MOTION_GYRO)
+      {
+        if (LSM6DSV16B_GYRO_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LIS2DUX12_0 == 1)
+    case IKS01A3_LIS2DUX12_0:
+      if ((Function & MOTION_ACCELERO) == MOTION_ACCELERO)
+      {
+        if (LIS2DUX12_ACC_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LIS2DUXS12_0 == 1)
+    case IKS01A3_LIS2DUXS12_0:
+      if ((Function & MOTION_ACCELERO) == MOTION_ACCELERO)
+      {
+        if (LIS2DUXS12_ACC_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV32X_0 == 1)
+    case IKS01A3_LSM6DSV32X_0:
+      if ((Function & MOTION_ACCELERO) == MOTION_ACCELERO)
+      {
+        if (LSM6DSV32X_ACC_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else if ((Function & MOTION_GYRO) == MOTION_GYRO)
+      {
+        if (LSM6DSV32X_GYRO_Get_DRDY_Status(MotionCompObj[Instance], Status) != BSP_ERROR_NONE)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
+      }
+      else
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      break;
+#endif
+
     default:
       ret = BSP_ERROR_WRONG_PARAM;
       break;
@@ -671,13 +917,14 @@ int32_t IKS01A3_MOTION_SENSOR_Get_DRDY_Status(uint32_t Instance, uint32_t Functi
 }
 
 /**
- * @brief  Get the register value (available only for LSM6DSO, LIS2DW12, LIS2MDL, ASM330LHH, IIS2DLPC,
- *         IIS2MDC, ISM303DAC, ISM330DLC, LIS2DH12, LSM6DSOX, AIS2IH, LSM6DSO32X sensors)
- * @param  Instance the device instance
- * @param  Reg address to be read
- * @param  Data pointer where the value is written to
- * @retval BSP status
- */
+  * @brief  Get the register value (available only for LSM6DSO, LIS2DW12, LIS2MDL, ASM330LHH, IIS2DLPC,
+  *         IIS2MDC, ISM303DAC, ISM330DLC, LIS2DH12, LSM6DSOX, AIS2IH, LSM6DSO32X, LIS2DU12, ASM330LHHX,
+  *         LSM6DSV16X, LSM6DSV16BX, LSM6DSV32X sensors)
+  * @param  Instance the device instance
+  * @param  Reg address to be read
+  * @param  Data pointer where the value is written to
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Read_Register(uint32_t Instance, uint8_t Reg, uint8_t *Data)
 {
   int32_t ret;
@@ -996,6 +1243,123 @@ int32_t IKS01A3_MOTION_SENSOR_Read_Register(uint32_t Instance, uint8_t Reg, uint
       break;
 #endif
 
+#if (USE_IKS01A3_MOTION_SENSOR_LIS2DU12_0 == 1)
+    case IKS01A3_LIS2DU12_0:
+      if (LIS2DU12_Read_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_ASM330LHHX_0 == 1)
+    case IKS01A3_ASM330LHHX_0:
+      if (ASM330LHHX_Read_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV16X_0 == 1)
+    case IKS01A3_LSM6DSV16X_0:
+      if (LSM6DSV16X_Read_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV16BX_0 == 1)
+    case IKS01A3_LSM6DSV16BX_0:
+      if (LSM6DSV16BX_Read_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV_0 == 1)
+    case IKS01A3_LSM6DSV_0:
+      if (LSM6DSV_Read_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV16B_0 == 1)
+    case IKS01A3_LSM6DSV16B_0:
+      if (LSM6DSV16B_Read_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LIS2DUX12_0 == 1)
+    case IKS01A3_LIS2DUX12_0:
+      if (LIS2DUX12_Read_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LIS2DUXS12_0 == 1)
+    case IKS01A3_LIS2DUXS12_0:
+      if (LIS2DUXS12_Read_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV32X_0 == 1)
+    case IKS01A3_LSM6DSV32X_0:
+      if (LSM6DSV32X_Read_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
     default:
       ret = BSP_ERROR_WRONG_PARAM;
       break;
@@ -1005,13 +1369,14 @@ int32_t IKS01A3_MOTION_SENSOR_Read_Register(uint32_t Instance, uint8_t Reg, uint
 }
 
 /**
- * @brief  Set the register value (available only for LSM6DSO, LIS2DW12, LIS2MDL, ASM330LHH, IIS2DLPC,
- *         IIS2MDC, ISM303DAC, ISM330DLC, LIS2DH12, LSM6DSOX, AIS2IH, LSM6DSO32X sensors)
- * @param  Instance the device instance
- * @param  Reg address to be read
- * @param  Data value to be written
- * @retval BSP status
- */
+  * @brief  Set the register value (available only for LSM6DSO, LIS2DW12, LIS2MDL, ASM330LHH, IIS2DLPC,
+  *         IIS2MDC, ISM303DAC, ISM330DLC, LIS2DH12, LSM6DSOX, AIS2IH, LSM6DSO32X, LIS2DU12, ASM330LHHX,
+  *         LSM6DSV16X, LSM6DSV16BX, LSM6DSV32X sensors)
+  * @param  Instance the device instance
+  * @param  Reg address to be read
+  * @param  Data value to be written
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Write_Register(uint32_t Instance, uint8_t Reg, uint8_t Data)
 {
   int32_t ret;
@@ -1330,6 +1695,123 @@ int32_t IKS01A3_MOTION_SENSOR_Write_Register(uint32_t Instance, uint8_t Reg, uin
       break;
 #endif
 
+#if (USE_IKS01A3_MOTION_SENSOR_LIS2DU12_0 == 1)
+    case IKS01A3_LIS2DU12_0:
+      if (LIS2DU12_Write_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_ASM330LHHX_0 == 1)
+    case IKS01A3_ASM330LHHX_0:
+      if (ASM330LHHX_Write_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV16X_0 == 1)
+    case IKS01A3_LSM6DSV16X_0:
+      if (LSM6DSV16X_Write_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV16BX_0 == 1)
+    case IKS01A3_LSM6DSV16BX_0:
+      if (LSM6DSV16BX_Write_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV_0 == 1)
+    case IKS01A3_LSM6DSV_0:
+      if (LSM6DSV_Write_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV16B_0 == 1)
+    case IKS01A3_LSM6DSV16B_0:
+      if (LSM6DSV16B_Write_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LIS2DUX12_0 == 1)
+    case IKS01A3_LIS2DUX12_0:
+      if (LIS2DUX12_Write_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LIS2DUXS12_0 == 1)
+    case IKS01A3_LIS2DUXS12_0:
+      if (LIS2DUXS12_Write_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
+#if (USE_IKS01A3_MOTION_SENSOR_LSM6DSV32X_0 == 1)
+    case IKS01A3_LSM6DSV32X_0:
+      if (LSM6DSV32X_Write_Reg(MotionCompObj[Instance], Reg, Data) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+      else
+      {
+        ret = BSP_ERROR_NONE;
+      }
+      break;
+#endif
+
     default:
       ret = BSP_ERROR_WRONG_PARAM;
       break;
@@ -1339,11 +1821,11 @@ int32_t IKS01A3_MOTION_SENSOR_Write_Register(uint32_t Instance, uint8_t Reg, uin
 }
 
 /**
- * @brief  Get the status of all hardware events (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  Status the pointer to the status of all hardware events
- * @retval BSP status
- */
+  * @brief  Get the status of all hardware events (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  Status the pointer to the status of all hardware events
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Get_Event_Status(uint32_t Instance, IKS01A3_MOTION_SENSOR_Event_Status_t *Status)
 {
   int32_t ret;
@@ -1401,12 +1883,12 @@ int32_t IKS01A3_MOTION_SENSOR_Get_Event_Status(uint32_t Instance, IKS01A3_MOTION
 }
 
 /**
- * @brief  Enable the free fall detection (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  IntPin the interrupt pin to be used
- * @note   This function sets the LSM6DSO accelerometer ODR to 416Hz and the LSM6DSO accelerometer full scale to 2g
- * @retval BSP status
- */
+  * @brief  Enable the free fall detection (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  IntPin the interrupt pin to be used
+  * @note   This function sets the LSM6DSO accelerometer ODR to 416Hz and the LSM6DSO accelerometer full scale to 2g
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Enable_Free_Fall_Detection(uint32_t Instance, IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
 {
   int32_t ret;
@@ -1435,10 +1917,10 @@ int32_t IKS01A3_MOTION_SENSOR_Enable_Free_Fall_Detection(uint32_t Instance, IKS0
 }
 
 /**
- * @brief  Disable the free fall detection (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @retval BSP status
- */
+  * @brief  Disable the free fall detection (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Disable_Free_Fall_Detection(uint32_t Instance)
 {
   int32_t ret;
@@ -1467,11 +1949,11 @@ int32_t IKS01A3_MOTION_SENSOR_Disable_Free_Fall_Detection(uint32_t Instance)
 }
 
 /**
- * @brief  Set the free fall detection threshold (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Threshold the threshold to be set
- * @retval BSP status
- */
+  * @brief  Set the free fall detection threshold (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Threshold the threshold to be set
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_Free_Fall_Threshold(uint32_t Instance, uint8_t Threshold)
 {
   int32_t ret;
@@ -1500,11 +1982,11 @@ int32_t IKS01A3_MOTION_SENSOR_Set_Free_Fall_Threshold(uint32_t Instance, uint8_t
 }
 
 /**
- * @brief  Set the free fall detection duration (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Duration the duration to be set
- * @retval BSP status
- */
+  * @brief  Set the free fall detection duration (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Duration the duration to be set
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_Free_Fall_Duration(uint32_t Instance, uint8_t Duration)
 {
   int32_t ret;
@@ -1533,11 +2015,11 @@ int32_t IKS01A3_MOTION_SENSOR_Set_Free_Fall_Duration(uint32_t Instance, uint8_t 
 }
 
 /**
- * @brief  Enable the pedometer detection (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @note   This function sets the LSM6DSO accelerometer ODR to 26Hz and the LSM6DSO accelerometer full scale to 2g
- * @retval BSP status
- */
+  * @brief  Enable the pedometer detection (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @note   This function sets the LSM6DSO accelerometer ODR to 26Hz and the LSM6DSO accelerometer full scale to 2g
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Enable_Pedometer(uint32_t Instance)
 {
   int32_t ret;
@@ -1566,10 +2048,10 @@ int32_t IKS01A3_MOTION_SENSOR_Enable_Pedometer(uint32_t Instance)
 }
 
 /**
- * @brief  Disable the pedometer detection (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @retval BSP status
- */
+  * @brief  Disable the pedometer detection (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Disable_Pedometer(uint32_t Instance)
 {
   int32_t ret;
@@ -1598,11 +2080,11 @@ int32_t IKS01A3_MOTION_SENSOR_Disable_Pedometer(uint32_t Instance)
 }
 
 /**
- * @brief  Reset step counter (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @note   This function sets the LSM6DSO accelerometer ODR to 26Hz and the LSM6DSO accelerometer full scale to 2g
- * @retval BSP status
- */
+  * @brief  Reset step counter (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @note   This function sets the LSM6DSO accelerometer ODR to 26Hz and the LSM6DSO accelerometer full scale to 2g
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Reset_Step_Counter(uint32_t Instance)
 {
   int32_t ret;
@@ -1631,11 +2113,11 @@ int32_t IKS01A3_MOTION_SENSOR_Reset_Step_Counter(uint32_t Instance)
 }
 
 /**
- * @brief  Get step count (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  StepCount number of steps
- * @retval BSP status
- */
+  * @brief  Get step count (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  StepCount number of steps
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Get_Step_Count(uint32_t Instance, uint16_t *StepCount)
 {
   int32_t ret;
@@ -1664,12 +2146,12 @@ int32_t IKS01A3_MOTION_SENSOR_Get_Step_Count(uint32_t Instance, uint16_t *StepCo
 }
 
 /**
- * @brief  Enable the tilt detection (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  IntPin the interrupt pin to be used
- * @note   This function sets the LSM6DSO accelerometer ODR to 26Hz and the LSM6DSO accelerometer full scale to 2g
- * @retval BSP status
- */
+  * @brief  Enable the tilt detection (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  IntPin the interrupt pin to be used
+  * @note   This function sets the LSM6DSO accelerometer ODR to 26Hz and the LSM6DSO accelerometer full scale to 2g
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Enable_Tilt_Detection(uint32_t Instance, IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
 {
   int32_t ret;
@@ -1698,10 +2180,10 @@ int32_t IKS01A3_MOTION_SENSOR_Enable_Tilt_Detection(uint32_t Instance, IKS01A3_M
 }
 
 /**
- * @brief  Disable the tilt detection (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @retval BSP status
- */
+  * @brief  Disable the tilt detection (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Disable_Tilt_Detection(uint32_t Instance)
 {
   int32_t ret;
@@ -1730,12 +2212,12 @@ int32_t IKS01A3_MOTION_SENSOR_Disable_Tilt_Detection(uint32_t Instance)
 }
 
 /**
- * @brief  Enable the wake up detection (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  IntPin the interrupt pin to be used
- * @note   This function sets the LSM6DSO accelerometer ODR to 416Hz and the LSM6DSO accelerometer full scale to 2g
- * @retval BSP status
- */
+  * @brief  Enable the wake up detection (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  IntPin the interrupt pin to be used
+  * @note   This function sets the LSM6DSO accelerometer ODR to 416Hz and the LSM6DSO accelerometer full scale to 2g
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Enable_Wake_Up_Detection(uint32_t Instance, IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
 {
   int32_t ret;
@@ -1792,10 +2274,10 @@ int32_t IKS01A3_MOTION_SENSOR_Enable_Wake_Up_Detection(uint32_t Instance, IKS01A
 }
 
 /**
- * @brief  Disable the wake up detection (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @retval BSP status
- */
+  * @brief  Disable the wake up detection (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Disable_Wake_Up_Detection(uint32_t Instance)
 {
   int32_t ret;
@@ -1850,11 +2332,11 @@ int32_t IKS01A3_MOTION_SENSOR_Disable_Wake_Up_Detection(uint32_t Instance)
 }
 
 /**
- * @brief  Set the wake up detection threshold (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  Threshold the threshold to be set
- * @retval BSP status
- */
+  * @brief  Set the wake up detection threshold (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  Threshold the threshold to be set
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_Wake_Up_Threshold(uint32_t Instance, uint8_t Threshold)
 {
   int32_t ret;
@@ -1909,11 +2391,11 @@ int32_t IKS01A3_MOTION_SENSOR_Set_Wake_Up_Threshold(uint32_t Instance, uint8_t T
 }
 
 /**
- * @brief  Set the wake up detection duration (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  Duration the duration to be set
- * @retval BSP status
- */
+  * @brief  Set the wake up detection duration (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  Duration the duration to be set
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_Wake_Up_Duration(uint32_t Instance, uint8_t Duration)
 {
   int32_t ret;
@@ -1968,11 +2450,11 @@ int32_t IKS01A3_MOTION_SENSOR_Set_Wake_Up_Duration(uint32_t Instance, uint8_t Du
 }
 
 /**
- * @brief  Enable the inactivity detection (available only for LIS2DW12 and AIS2IH sensors)
- * @param  Instance the device instance
- * @param  IntPin the interrupt pin to be used
- * @retval BSP status
- */
+  * @brief  Enable the inactivity detection (available only for LIS2DW12 and AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  IntPin the interrupt pin to be used
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Enable_Inactivity_Detection(uint32_t Instance, IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
 {
   int32_t ret;
@@ -2016,10 +2498,10 @@ int32_t IKS01A3_MOTION_SENSOR_Enable_Inactivity_Detection(uint32_t Instance, IKS
 }
 
 /**
- * @brief  Disable the inactivity detection (available only for LIS2DW12 and AIS2IH sensors)
- * @param  Instance the device instance
- * @retval BSP status
- */
+  * @brief  Disable the inactivity detection (available only for LIS2DW12 and AIS2IH sensors)
+  * @param  Instance the device instance
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Disable_Inactivity_Detection(uint32_t Instance)
 {
   int32_t ret;
@@ -2061,11 +2543,11 @@ int32_t IKS01A3_MOTION_SENSOR_Disable_Inactivity_Detection(uint32_t Instance)
 }
 
 /**
- * @brief  Set the sleep duration (available only for LIS2DW12 and AIS2IH sensors)
- * @param  Instance the device instance
- * @param  Duration the duration to be set
- * @retval BSP status
- */
+  * @brief  Set the sleep duration (available only for LIS2DW12 and AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  Duration the duration to be set
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_Sleep_Duration(uint32_t Instance, uint8_t Duration)
 {
   int32_t ret;
@@ -2107,12 +2589,12 @@ int32_t IKS01A3_MOTION_SENSOR_Set_Sleep_Duration(uint32_t Instance, uint8_t Dura
 }
 
 /**
- * @brief  Enable the single tap detection (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  IntPin the interrupt pin to be used
- * @note   This function sets the LSM6DSO accelerometer ODR to 416Hz and the LSM6DSO accelerometer full scale to 2g
- * @retval BSP status
- */
+  * @brief  Enable the single tap detection (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  IntPin the interrupt pin to be used
+  * @note   This function sets the LSM6DSO accelerometer ODR to 416Hz and the LSM6DSO accelerometer full scale to 2g
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Enable_Single_Tap_Detection(uint32_t Instance, IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
 {
   int32_t ret;
@@ -2141,10 +2623,10 @@ int32_t IKS01A3_MOTION_SENSOR_Enable_Single_Tap_Detection(uint32_t Instance, IKS
 }
 
 /**
- * @brief  Disable the single tap detection (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @retval BSP status
- */
+  * @brief  Disable the single tap detection (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Disable_Single_Tap_Detection(uint32_t Instance)
 {
   int32_t ret;
@@ -2173,12 +2655,12 @@ int32_t IKS01A3_MOTION_SENSOR_Disable_Single_Tap_Detection(uint32_t Instance)
 }
 
 /**
- * @brief  Enable the double tap detection (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  IntPin the interrupt pin to be used
- * @note   This function sets the LSM6DSO accelerometer ODR to 416Hz and the LSM6DSO accelerometer full scale to 2g
- * @retval BSP status
- */
+  * @brief  Enable the double tap detection (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  IntPin the interrupt pin to be used
+  * @note   This function sets the LSM6DSO accelerometer ODR to 416Hz and the LSM6DSO accelerometer full scale to 2g
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Enable_Double_Tap_Detection(uint32_t Instance, IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
 {
   int32_t ret;
@@ -2207,10 +2689,10 @@ int32_t IKS01A3_MOTION_SENSOR_Enable_Double_Tap_Detection(uint32_t Instance, IKS
 }
 
 /**
- * @brief  Disable the double tap detection (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @retval BSP status
- */
+  * @brief  Disable the double tap detection (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Disable_Double_Tap_Detection(uint32_t Instance)
 {
   int32_t ret;
@@ -2239,11 +2721,11 @@ int32_t IKS01A3_MOTION_SENSOR_Disable_Double_Tap_Detection(uint32_t Instance)
 }
 
 /**
- * @brief  Set the tap threshold (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Threshold the threshold to be set
- * @retval BSP status
- */
+  * @brief  Set the tap threshold (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Threshold the threshold to be set
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_Tap_Threshold(uint32_t Instance, uint8_t Threshold)
 {
   int32_t ret;
@@ -2272,11 +2754,11 @@ int32_t IKS01A3_MOTION_SENSOR_Set_Tap_Threshold(uint32_t Instance, uint8_t Thres
 }
 
 /**
- * @brief  Set the tap shock time (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Time the tap shock time to be set
- * @retval BSP status
- */
+  * @brief  Set the tap shock time (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Time the tap shock time to be set
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_Tap_Shock_Time(uint32_t Instance, uint8_t Time)
 {
   int32_t ret;
@@ -2305,11 +2787,11 @@ int32_t IKS01A3_MOTION_SENSOR_Set_Tap_Shock_Time(uint32_t Instance, uint8_t Time
 }
 
 /**
- * @brief  Set the tap quiet time (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Time the tap quiet time to be set
- * @retval BSP status
- */
+  * @brief  Set the tap quiet time (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Time the tap quiet time to be set
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_Tap_Quiet_Time(uint32_t Instance, uint8_t Time)
 {
   int32_t ret;
@@ -2338,11 +2820,11 @@ int32_t IKS01A3_MOTION_SENSOR_Set_Tap_Quiet_Time(uint32_t Instance, uint8_t Time
 }
 
 /**
- * @brief  Set the tap duration time (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Time the tap duration time to be set
- * @retval BSP status
- */
+  * @brief  Set the tap duration time (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Time the tap duration time to be set
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_Tap_Duration_Time(uint32_t Instance, uint8_t Time)
 {
   int32_t ret;
@@ -2371,12 +2853,12 @@ int32_t IKS01A3_MOTION_SENSOR_Set_Tap_Duration_Time(uint32_t Instance, uint8_t T
 }
 
 /**
- * @brief  Enable 6D Orientation (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  IntPin the interrupt pin to be used
- * @note   This function sets the LSM6DSO accelerometer ODR to 416Hz and the LSM6DSO accelerometer full scale to 2g
- * @retval BSP status
- */
+  * @brief  Enable 6D Orientation (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  IntPin the interrupt pin to be used
+  * @note   This function sets the LSM6DSO accelerometer ODR to 416Hz and the LSM6DSO accelerometer full scale to 2g
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Enable_6D_Orientation(uint32_t Instance, IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
 {
   int32_t ret;
@@ -2433,10 +2915,10 @@ int32_t IKS01A3_MOTION_SENSOR_Enable_6D_Orientation(uint32_t Instance, IKS01A3_M
 }
 
 /**
- * @brief  Disable 6D Orientation (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @retval BSP status
- */
+  * @brief  Disable 6D Orientation (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Disable_6D_Orientation(uint32_t Instance)
 {
   int32_t ret;
@@ -2491,11 +2973,11 @@ int32_t IKS01A3_MOTION_SENSOR_Disable_6D_Orientation(uint32_t Instance)
 }
 
 /**
- * @brief  Set the 6D orientation threshold (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  Threshold the threshold to be set
- * @retval BSP status
- */
+  * @brief  Set the 6D orientation threshold (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  Threshold the threshold to be set
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_6D_Orientation_Threshold(uint32_t Instance, uint8_t Threshold)
 {
   int32_t ret;
@@ -2550,11 +3032,11 @@ int32_t IKS01A3_MOTION_SENSOR_Set_6D_Orientation_Threshold(uint32_t Instance, ui
 }
 
 /**
- * @brief  Get 6D Orientation XL (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  xl the pointer to the 6D orientation XL axis
- * @retval BSP status
- */
+  * @brief  Get 6D Orientation XL (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  xl the pointer to the 6D orientation XL axis
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_XL(uint32_t Instance, uint8_t *xl)
 {
   int32_t ret;
@@ -2609,11 +3091,11 @@ int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_XL(uint32_t Instance, uint8_t *
 }
 
 /**
- * @brief  Get 6D Orientation XH (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  xh the pointer to the 6D orientation XH axis
- * @retval BSP status
- */
+  * @brief  Get 6D Orientation XH (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  xh the pointer to the 6D orientation XH axis
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_XH(uint32_t Instance, uint8_t *xh)
 {
   int32_t ret;
@@ -2668,11 +3150,11 @@ int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_XH(uint32_t Instance, uint8_t *
 }
 
 /**
- * @brief  Get 6D Orientation YL (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  yl the pointer to the 6D orientation YL axis
- * @retval BSP status
- */
+  * @brief  Get 6D Orientation YL (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  yl the pointer to the 6D orientation YL axis
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_YL(uint32_t Instance, uint8_t *yl)
 {
   int32_t ret;
@@ -2727,11 +3209,11 @@ int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_YL(uint32_t Instance, uint8_t *
 }
 
 /**
- * @brief  Get 6D Orientation YH (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  yh the pointer to the 6D orientation YH axis
- * @retval BSP status
- */
+  * @brief  Get 6D Orientation YH (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  yh the pointer to the 6D orientation YH axis
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_YH(uint32_t Instance, uint8_t *yh)
 {
   int32_t ret;
@@ -2786,11 +3268,11 @@ int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_YH(uint32_t Instance, uint8_t *
 }
 
 /**
- * @brief  Get 6D Orientation ZL (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  zl the pointer to the 6D orientation ZL axis
- * @retval BSP status
- */
+  * @brief  Get 6D Orientation ZL (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  zl the pointer to the 6D orientation ZL axis
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_ZL(uint32_t Instance, uint8_t *zl)
 {
   int32_t ret;
@@ -2845,11 +3327,11 @@ int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_ZL(uint32_t Instance, uint8_t *
 }
 
 /**
- * @brief  Get 6D Orientation ZH (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  zh the pointer to the 6D orientation ZH axis
- * @retval BSP status
- */
+  * @brief  Get 6D Orientation ZH (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  zh the pointer to the 6D orientation ZH axis
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_ZH(uint32_t Instance, uint8_t *zh)
 {
   int32_t ret;
@@ -2904,11 +3386,11 @@ int32_t IKS01A3_MOTION_SENSOR_Get_6D_Orientation_ZH(uint32_t Instance, uint8_t *
 }
 
 /**
- * @brief  Get number of unread FIFO samples (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  NumSamples number of unread FIFO samples
- * @retval BSP status
- */
+  * @brief  Get number of unread FIFO samples (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  NumSamples number of unread FIFO samples
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_FIFO_Get_Num_Samples(uint32_t Instance, uint16_t *NumSamples)
 {
   int32_t ret;
@@ -2963,11 +3445,11 @@ int32_t IKS01A3_MOTION_SENSOR_FIFO_Get_Num_Samples(uint32_t Instance, uint16_t *
 }
 
 /**
- * @brief  Get FIFO full status (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Status FIFO full status
- * @retval BSP status
- */
+  * @brief  Get FIFO full status (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Status FIFO full status
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_FIFO_Get_Full_Status(uint32_t Instance, uint8_t *Status)
 {
   int32_t ret;
@@ -2996,13 +3478,13 @@ int32_t IKS01A3_MOTION_SENSOR_FIFO_Get_Full_Status(uint32_t Instance, uint8_t *S
 }
 
 /**
- * @brief  Set FIFO BDR value (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Function Motion sensor function. Could be:
- *         - MOTION_GYRO or MOTION_ACCELERO for instance IKS01A3_LSM6DSO_0
- * @param  Odr FIFO BDR value
- * @retval BSP status
- */
+  * @brief  Set FIFO BDR value (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Function Motion sensor function. Could be:
+  *         - MOTION_GYRO or MOTION_ACCELERO for instance IKS01A3_LSM6DSO_0
+  * @param  Odr FIFO BDR value
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_FIFO_Set_BDR(uint32_t Instance, uint32_t Function, float Bdr)
 {
   int32_t ret;
@@ -3049,11 +3531,11 @@ int32_t IKS01A3_MOTION_SENSOR_FIFO_Set_BDR(uint32_t Instance, uint32_t Function,
 }
 
 /**
- * @brief  Set FIFO full interrupt on INT1 pin (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Status FIFO full interrupt on INT1 pin
- * @retval BSP status
- */
+  * @brief  Set FIFO full interrupt on INT1 pin (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Status FIFO full interrupt on INT1 pin
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_FIFO_Set_INT1_FIFO_Full(uint32_t Instance, uint8_t Status)
 {
   int32_t ret;
@@ -3082,11 +3564,11 @@ int32_t IKS01A3_MOTION_SENSOR_FIFO_Set_INT1_FIFO_Full(uint32_t Instance, uint8_t
 }
 
 /**
- * @brief  Set FIFO watermark level (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Watermark FIFO watermark level
- * @retval BSP status
- */
+  * @brief  Set FIFO watermark level (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Watermark FIFO watermark level
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_FIFO_Set_Watermark_Level(uint32_t Instance, uint16_t Watermark)
 {
   int32_t ret;
@@ -3115,11 +3597,11 @@ int32_t IKS01A3_MOTION_SENSOR_FIFO_Set_Watermark_Level(uint32_t Instance, uint16
 }
 
 /**
- * @brief  Set FIFO stop on watermark (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Status FIFO stop on watermark status
- * @retval BSP status
- */
+  * @brief  Set FIFO stop on watermark (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Status FIFO stop on watermark status
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_FIFO_Set_Stop_On_Fth(uint32_t Instance, uint8_t Status)
 {
   int32_t ret;
@@ -3148,11 +3630,11 @@ int32_t IKS01A3_MOTION_SENSOR_FIFO_Set_Stop_On_Fth(uint32_t Instance, uint8_t St
 }
 
 /**
- * @brief  Set FIFO mode (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  Mode FIFO mode
- * @retval BSP status
- */
+  * @brief  Set FIFO mode (available only for LSM6DSO, LIS2DW12, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  Mode FIFO mode
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_FIFO_Set_Mode(uint32_t Instance, uint8_t Mode)
 {
   int32_t ret;
@@ -3207,11 +3689,11 @@ int32_t IKS01A3_MOTION_SENSOR_FIFO_Set_Mode(uint32_t Instance, uint8_t Mode)
 }
 
 /**
- * @brief  Get FIFO tag (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Tag FIFO tag
- * @retval BSP status
- */
+  * @brief  Get FIFO tag (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Tag FIFO tag
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_FIFO_Get_Tag(uint32_t Instance, uint8_t *Tag)
 {
   int32_t ret;
@@ -3240,13 +3722,13 @@ int32_t IKS01A3_MOTION_SENSOR_FIFO_Get_Tag(uint32_t Instance, uint8_t *Tag)
 }
 
 /**
- * @brief  Get FIFO axes data (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Function Motion sensor function. Could be:
- *         - MOTION_GYRO or MOTION_ACCELERO for instance IKS01A3_LSM6DSO_0
- * @param  Data FIFO axes data
- * @retval BSP status
- */
+  * @brief  Get FIFO axes data (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Function Motion sensor function. Could be:
+  *         - MOTION_GYRO or MOTION_ACCELERO for instance IKS01A3_LSM6DSO_0
+  * @param  Data FIFO axes data
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_FIFO_Get_Axes(uint32_t Instance, uint32_t Function, IKS01A3_MOTION_SENSOR_Axes_t *Data)
 {
   int32_t ret;
@@ -3293,19 +3775,19 @@ int32_t IKS01A3_MOTION_SENSOR_FIFO_Get_Axes(uint32_t Instance, uint32_t Function
 }
 
 /**
- * @brief  Set device self-test (available only for LSM6DSO, LIS2DW12, LIS2MDL, AIS2IH sensors)
- * @param  Instance the device instance
- * @param  Function Motion sensor function. Could be:
- *         - MOTION_GYRO or MOTION_ACCELERO for LSM6DSO
- *         - MOTION_ACCELERO                for LIS2DW12, AIS2IH
- *         - MOTION_MAGNETO                 for LIS2MDL
- *
- * @param  Mode self-test mode:
- *         - 0: disable self-test, 1: positive self-test, 2: negative self-test for LSM6DSO, LIS2DW12, AIS2IH
- *         - 0: disable self-test, 1: enable self-test                          for LIS2MDL
- *
- * @retval BSP status
- */
+  * @brief  Set device self-test (available only for LSM6DSO, LIS2DW12, LIS2MDL, AIS2IH sensors)
+  * @param  Instance the device instance
+  * @param  Function Motion sensor function. Could be:
+  *         - MOTION_GYRO or MOTION_ACCELERO for LSM6DSO
+  *         - MOTION_ACCELERO                for LIS2DW12, AIS2IH
+  *         - MOTION_MAGNETO                 for LIS2MDL
+  *
+  * @param  Mode self-test mode:
+  *         - 0: disable self-test, 1: positive self-test, 2: negative self-test for LSM6DSO, LIS2DW12, AIS2IH
+  *         - 0: disable self-test, 1: enable self-test                          for LIS2MDL
+  *
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_Set_SelfTest(uint32_t Instance, uint32_t Function, uint8_t Mode)
 {
   int32_t ret;
@@ -3412,11 +3894,11 @@ int32_t IKS01A3_MOTION_SENSOR_Set_SelfTest(uint32_t Instance, uint32_t Function,
 }
 
 /**
- * @brief  Set DRDY mode (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Mode DRDY mode
- * @retval BSP status
- */
+  * @brief  Set DRDY mode (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Mode DRDY mode
+  * @retval BSP status
+  */
 int32_t IKS01A3_MOTION_SENSOR_DRDY_Set_Mode(uint32_t Instance, uint8_t Mode)
 {
   int32_t ret;
@@ -3445,14 +3927,15 @@ int32_t IKS01A3_MOTION_SENSOR_DRDY_Set_Mode(uint32_t Instance, uint8_t Mode)
 }
 
 /**
- * @brief  Enable DRDY on selected interrupt pin (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Function Motion sensor function. Could be:
- *         - MOTION_GYRO or MOTION_ACCELERO for LSM6DSO
- * @param  IntPin the interrupt pin to be used
- * @retval BSP status
- */
-int32_t IKS01A3_MOTION_SENSOR_DRDY_Enable_Interrupt(uint32_t Instance, uint32_t Function, IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
+  * @brief  Enable DRDY on selected interrupt pin (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Function Motion sensor function. Could be:
+  *         - MOTION_GYRO or MOTION_ACCELERO for LSM6DSO
+  * @param  IntPin the interrupt pin to be used
+  * @retval BSP status
+  */
+int32_t IKS01A3_MOTION_SENSOR_DRDY_Enable_Interrupt(uint32_t Instance, uint32_t Function,
+                                                    IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
 {
   int32_t ret;
 
@@ -3512,14 +3995,15 @@ int32_t IKS01A3_MOTION_SENSOR_DRDY_Enable_Interrupt(uint32_t Instance, uint32_t 
 }
 
 /**
- * @brief  Disable DRDY on selected interrupt pin (available only for LSM6DSO sensor)
- * @param  Instance the device instance
- * @param  Function Motion sensor function. Could be:
- *         - MOTION_GYRO or MOTION_ACCELERO for LSM6DSO
- * @param  IntPin the interrupt pin to be used
- * @retval BSP status
- */
-int32_t IKS01A3_MOTION_SENSOR_DRDY_Disable_Interrupt(uint32_t Instance, uint32_t Function, IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
+  * @brief  Disable DRDY on selected interrupt pin (available only for LSM6DSO sensor)
+  * @param  Instance the device instance
+  * @param  Function Motion sensor function. Could be:
+  *         - MOTION_GYRO or MOTION_ACCELERO for LSM6DSO
+  * @param  IntPin the interrupt pin to be used
+  * @retval BSP status
+  */
+int32_t IKS01A3_MOTION_SENSOR_DRDY_Disable_Interrupt(uint32_t Instance, uint32_t Function,
+                                                     IKS01A3_MOTION_SENSOR_IntPin_t IntPin)
 {
   int32_t ret;
 
@@ -3565,19 +4049,17 @@ int32_t IKS01A3_MOTION_SENSOR_DRDY_Disable_Interrupt(uint32_t Instance, uint32_t
 }
 
 /**
- * @}
- */
+  * @}
+  */
 
 /**
- * @}
- */
+  * @}
+  */
 
 /**
- * @}
- */
+  * @}
+  */
 
 /**
- * @}
- */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+  * @}
+  */

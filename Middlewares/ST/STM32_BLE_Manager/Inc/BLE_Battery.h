@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_Battery.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Battery info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,8 +26,11 @@
  extern "C" {
 #endif
 
+/* Exported typedef --------------------------------------------------------- */
+typedef void (*CustomNotifyEventBattery_t)(BLE_NotifyEvent_t Battery);
+   
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_Battery_NotifyEvent;
+extern CustomNotifyEventBattery_t CustomNotifyEventBattery;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -44,7 +47,7 @@ extern BleCharTypeDef* BLE_InitBatteryService(void);
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-extern void BLE_SetBatteryAdvertizeData(uint8_t *manuf_data);
+extern void BLE_SetBatteryAdvertiseData(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**

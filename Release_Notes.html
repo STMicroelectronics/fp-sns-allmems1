@@ -22,73 +22,59 @@
 <div class="col-sm-12 col-lg-4">
 <center>
 <h1 id="release-notes-for-fp-sns-allmems1-software-for-stm32"><small>Release Notes for</small> <strong>FP-SNS-ALLMEMS1 Software for STM32</strong></h1>
-<p>Copyright © 2022 STMicroelectronics<br />
+<p>Copyright © 2023 STMicroelectronics<br />
 </p>
 <a href="https://www.st.com" class="logo"><img src="_htmresc/st_logo_2020.png" alt="ST logo" /></a>
 </center>
 <h1 id="purpose">Purpose</h1>
-<p>The <strong>FP-SNS-ALLMEMS1</strong> is an STM32 ODE function pack. Thanks to this package you can connect your IoT node to a smartphone using BLE, and by using a suitable Android or iOS application such as the ST BLE Sensor app (Version 4.13.0 or higher), you can visualize real-time environmental sensor data, motion sensor data, digital microphone levels, and battery level. With this package you can record on SD card the enviromental sensor data, motion sensor data and digital microphone levels. The package also allows to perform advanced functionality such as voice communication over BLE, sound source localization and acoustic beam forming using inputs from multiple microphones, as well sensor data fusion and accelerometer-based real-time activity recognition, gesture recognition, motion Intensity recognition. Moreover provides real-time information about: the user current pose based on data from a device, the user working mode (sitting at the desk or standing desk position), the tilt angles of the user device, the repetition quantity of various fitness activities performed by a user, the vertical movement. This package, together with the suggested combination of STM32 and ST devices can be used, for example, to develop wearable applications, and, more in general smart things applications. The software runs on the STM32 microcontroller and includes all the necessary drivers to recognize the devices on the STM32 Nucleo development board and expansion boards, as well as on the STEVAL-BCNKT01V1, STEVAL-MKS1BOX1 and STEVAL-STLKT01V1 evaluation boards</p>
+<p>The <strong>FP-SNS-ALLMEMS1</strong> is an STM32 ODE function pack. Thanks to this package you can connect your IoT node to a smartphone using BLE, and by using a suitable Android or iOS application such as the ST BLE Sensor app (Version 4.20.0 or higher), you can visualize real-time environmental sensor data, motion sensor data, digital microphone levels, and battery level. The package also allows to perform advanced functionality such as voice communication over BLE, sound source localization and acoustic beam forming using inputs from multiple microphones, as well sensor data fusion and accelerometer-based real-time activity recognition, gesture recognition, motion Intensity recognition. Moreover provides real-time information about: the user current pose based on data from a device, the user working mode (sitting at the desk or standing desk position), the tilt angles of the user device, the repetition quantity of various fitness activities performed by a user, the vertical movement. This package, together with the suggested combination of STM32 and ST devices can be used, for example, to develop wearable applications, and, more in general smart things applications. The software runs on the STM32 microcontroller and includes all the necessary drivers to recognize the devices on the STM32 Nucleo development board and expansion boards, as well as on the STEVAL-BCNKT01V1 and STEVAL-MKS1BOX1 evaluation boards</p>
 <p>The expansion is built on STM32Cube software technology to ease portability across different STM32 microcontrollers.</p>
 <h1 id="fp-sns-allmems1-software-features">FP-SNS-ALLMEMS1 software features:</h1>
 <ul>
 <li><p>Complete applications to develop node with BLE connectivity, microphone, environmental and motion sensors, and perform real-time monitoring of sensors and audio data</p></li>
 <li><p>MotionAR software provides real-time activity recognition</p></li>
-<li><p>MotionCP software provides real-time carry position recognition (feature not available on NUCLEO-F401RE, NUCLEO-F446RE and STEVAL-BCNKT01V1)</p></li>
-<li><p>MotionFA software provides real-time information about the repetition quantity of various fitness activities performed by a user (feature not available on NUCLEO-F446RE, NUCLEO-F401RE and STEVAL-BCNKT01V1)</p></li>
+<li><p>MotionCP software provides real-time carry position recognition (feature not available on NUCLEO-F446RE and STEVAL-BCNKT01V1)</p></li>
+<li><p>MotionFA software provides real-time information about the repetition quantity of various fitness activities performed by a user (feature not available on NUCLEO-F446RE and STEVAL-BCNKT01V1)</p></li>
 <li><p>MotionFX (iNEMOEngine PRO) real-time motion-sensor data fusion</p></li>
-<li><p>MotionGR software provides real-time gesture recognition (feature not available on NUCLEO-F401RE, NUCLEO-F446RE and STEVAL-BCNKT01V1)</p></li>
-<li><p>MotionID software provides real-time Motion Intensity recognition (feature not available on NUCLEO-F446RE, NUCLEO-F401RE and STEVAL-BCNKT01V1)</p></li>
-<li><p>MotionPE software provides real-time information about the user current pose based on data from a device (feature not available on NUCLEO-F446RE, NUCLEO-F401RE and STEVAL-BCNKT01V1)</p></li>
-<li><p>MotionSD software provides real-time information about the user working mode (sitting at the desk or standing desk position) (feature not available on NUCLEO-F446RE, NUCLEO-F401RE and STEVAL-BCNKT01V1)</p></li>
-<li><p>MotionTL software provides real-time information about the tilt angles of the user device (feature not available on NUCLEO-F446RE, NUCLEO-F401RE and STEVAL-BCNKT01V1)</p></li>
-<li><p>MotionVC software provides real-time information about the vertical movement (feature not available on NUCLEO-F446RE, NUCLEO-F401RE and STEVAL-BCNKT01V1)</p></li>
-<li><p>AcousticSL software provides real-time audio source localization software that estimates the direction of arrival of audio sources using data acquired by two digital MEMS microphones (feature not available on STEVAL-STLKT01V1 and STEVAL-MKSBOX1V1)</p></li>
+<li><p>MotionGR software provides real-time gesture recognition (feature not available on NUCLEO-F446RE and STEVAL-BCNKT01V1)</p></li>
+<li><p>MotionID software provides real-time Motion Intensity recognition (feature not available on NUCLEO-F446RE and STEVAL-BCNKT01V1)</p></li>
+<li><p>MotionPE software provides real-time information about the user current pose based on data from a device (feature not available on NUCLEO-F446RE and STEVAL-BCNKT01V1)</p></li>
+<li><p>MotionSD software provides real-time information about the user working mode (sitting at the desk or standing desk position) (feature not available on NUCLEO-F446RE and STEVAL-BCNKT01V1)</p></li>
+<li><p>MotionTL software provides real-time information about the tilt angles of the user device (feature not available on NUCLEO-F446RE and STEVAL-BCNKT01V1)</p></li>
+<li><p>MotionVC software provides real-time information about the vertical movement (feature not available on NUCLEO-F446RE and STEVAL-BCNKT01V1)</p></li>
+<li><p>AcousticSL software provides real-time audio source localization software that estimates the direction of arrival of audio sources using data acquired by two digital MEMS microphones (feature not available on STEVAL-MKSBOX1V1)</p></li>
 <li><p>AcousticBF software provides real-time beam forming software, using the audio signals acquired from two digital MEMS microphones, it creates a virtual directional microphone pointing to a fixed direction in space (feature available on STEVAL-BCNKT01V1)</p></li>
-<li><p>BlueVoiceADPCM software enables real-time half-duplex voice-over-Bluetooth low energy communication profile. It includes one characteristic for audio transmission and one for synchronization and it is responsible for audio encoding and periodical data transmission on Server side and for decoding of received voice data on Client side (feature available on STEVAL-STLKT01V1 and STEVAL-BCNKT01V1)</p></li>
-<li><p>USB device library (for STEVAL-STLKT01V1 and STEVAL-MKSBOX1V1) provides support of multi packet transfer to allow sending big amount of data without split them into max packet size transfers (under MCD-ST Liberty SW License)</p></li>
-<li><p>FatFs generic FAT file system module (for STEVAL-STLKT01V1) provides access the storage devices such as memory card and hard disk (under MCD-ST Liberty SW License)</p></li>
+<li><p>BlueVoiceADPCM software enables real-time half-duplex voice-over-Bluetooth low energy communication profile. It includes one characteristic for audio transmission and one for synchronization and it is responsible for audio encoding and periodical data transmission on Server side and for decoding of received voice data on Client side (feature available on STEVAL-BCNKT01V1)</p></li>
+<li><p>USB device library (for STEVAL-MKSBOX1V1) provides support of multi packet transfer to allow sending big amount of data without split them into max packet size transfers (under MCD-ST Liberty SW License)</p></li>
 <li><p>Compatible with STBLESensor application for Android/iOS, to perform sensor data reading, audio and motion algorithm feature demo, and firmware update over the air (FOTA)</p></li>
 <li><p>Easy portability across different MCU families, thanks to STM32Cube</p></li>
 <li><p>Free, user-friendly license terms</p></li>
 </ul>
 <p>This firmware package includes Components Device Drivers, Board Support Package and example application for the STMicroelectronics:</p>
 <ul>
-<li>NUCLEO-F401RE nucleo development board and expansion boards:
-<ul>
-<li>X-NUCLEO-BNRG2A1 Bluetooth Low energy expansion boards</li>
-<li>X-NUCLEO-IKS01A2 Expansion board for four MEMS sensor devices:
-<ul>
-<li>HTS221, LPS22HB, LSM6DSL, LSM303AGR</li>
-</ul></li>
-<li>X-NUCLEO-IKS01A3 Expansion board for four MEMS sensor devices:
-<ul>
-<li>HTS221, LPS22HH, LSM6DSO, LIS2MDL</li>
-</ul></li>
-<li>X-NUCLEO-CCA02M2 Digital MEMS microphones expansion board</li>
-</ul></li>
 <li>NUCLEO-F446RE nucleo development board and expansion boards:
 <ul>
 <li>X-NUCLEO-BNRG2A1 Bluetooth Low energy expansion boards</li>
-<li>X-NUCLEO-IKS01A2 Expansion board for four MEMS sensor devices:
-<ul>
-<li>HTS221, LPS22HB, LSM6DSL, LSM303AGR</li>
-</ul></li>
 <li>X-NUCLEO-IKS01A3 Expansion board for four MEMS sensor devices:
 <ul>
 <li>HTS221, LPS22HH, LSM6DSO, LIS2MDL</li>
+</ul></li>
+<li>X-NUCLEO-IKS4A1 Expansion board for four MEMS sensor devices:
+<ul>
+<li>STTS22H, SHT40AD1B, LPS22DF, LSM6DSV16X, LIS2MDL</li>
 </ul></li>
 <li>X-NUCLEO-CCA02M2 Digital MEMS microphones expansion board</li>
 </ul></li>
 <li>NUCLEO-L476RG nucleo development board and expansion boards:
 <ul>
 <li>X-NUCLEO-BNRG2A1 Bluetooth Low energy expansion boards</li>
-<li>X-NUCLEO-IKS01A2 Expansion board for four MEMS sensor devices:
-<ul>
-<li>HTS221, LPS22HB, LSM6DSL, LSM303AGR</li>
-</ul></li>
 <li>X-NUCLEO-IKS01A3 Expansion board for four MEMS sensor devices:
 <ul>
 <li>HTS221, LPS22HH, LSM6DSO, LIS2MDL</li>
+</ul></li>
+<li>X-NUCLEO-IKS4A1 Expansion board for four MEMS sensor devices:
+<ul>
+<li>STTS22H, SHT40AD1B, LPS22DF, LSM6DSV16X, LIS2MDL</li>
 </ul></li>
 <li>X-NUCLEO-CCA02M2 Digital MEMS microphones expansion board</li>
 </ul></li>
@@ -99,17 +85,6 @@
 <li>LPS22HB, LSM303AGR, LSM6DSM</li>
 </ul></li>
 <li>digital microphone: 4 x MP34DT04-C1</li>
-<li>BlueNRG-MS Bluetooth Low Energy System On Chip</li>
-</ul></li>
-<li>STEVAL-STLKT01V1 (SensorTile) evaluation board that contains the following components:
-<ul>
-<li>MEMS sensor devices:
-<ul>
-<li>HTS221, LPS22HB, LSM303AGR, LSM6DSM</li>
-</ul></li>
-<li>digital microphone: 1 x MP34DT04</li>
-<li>STC3115 Gas Gauge IC with alarm output</li>
-<li>BlueNRG-1 Bluetooth Low Energy System On Chip</li>
 <li>BlueNRG-MS Bluetooth Low Energy System On Chip</li>
 </ul></li>
 <li>STEVAL-MKSBOX1V1 (SensorTile.box) evaluation board that contains the following components:
@@ -140,10 +115,481 @@
 <div class="col-sm-12 col-lg-8">
 <h1 id="update-history">Update History</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section14" checked aria-hidden="true"> <label for="collapse-section14" aria-hidden="true">V4.2.0 / 10-February-2022</label>
+<input type="checkbox" id="collapse-section15" checked aria-hidden="true"> <label for="collapse-section15" aria-hidden="true">V4.3.0 / 30-June-2023</label>
 <div>
 <h2 id="main-changes">Main Changes</h2>
 <h3 id="maintenance-release">Maintenance release</h3>
+<ul>
+<li>For STM32F401RE-Nucleo and STM32L476RG-Nucleo:
+<ul>
+<li>Added support for X-NUCLEO-IKS4A1 expansion board</li>
+<li>Removed support for X-NUCLEO-IKS01A2 expansion board</li>
+</ul></li>
+<li>Removed support for STM32F401RE-Nucleo board</li>
+<li>Removed support for STEVAL-STLKT01V1 (SensorTile) evaluation board</li>
+<li>Maintenance release</li>
+</ul>
+<h2 id="contents">Contents</h2>
+<p>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</p>
+<table>
+<caption>Documentation<br />
+</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Document</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">FP-SNS-ALLMEMS1_STM32F446RE-Nucleo Doxygen documentation</td>
+<td style="text-align: left;">4.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Documentation\FP-SNS-ALLMEMS1_STM32F446RE-Nucleo.chm">CHM</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FP-SNS-ALLMEMS1_STM32L476RG-Nucleo Doxygen documentation</td>
+<td style="text-align: left;">4.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Documentation\FP-SNS-ALLMEMS1_STM32L476RG-Nucleo.chm">CHM</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FP-SNS-ALLMEMS1_STM32F446ME-BlueCoin Doxygen documentation</td>
+<td style="text-align: left;">4.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Documentation\FP-SNS-ALLMEMS1_STM32F446ME-BlueCoin.chm">CHM</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FP-SNS-ALLMEMS1_STM32L4R9ZI-SensorTile.box Doxygen documentation</td>
+<td style="text-align: left;">4.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Documentation\FP-SNS-ALLMEMS1_STM32L4R9ZI-SensorTile.box.chm">CHM</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Projects<br />
+</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Document</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">STM32F446RE-Nucleo/Applications/IKS01A3/ALLMEMS1</td>
+<td style="text-align: left;">4.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Projects/STM32F446RE-Nucleo/Applications/IKS01A3/ALLMEMS1/readme.html">Read Me</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32F446RE-Nucleo/Applications/IKS4A1/ALLMEMS1</td>
+<td style="text-align: left;">4.3.0 <span class="icon-st-add"></span></td>
+<td style="text-align: left;"><a href="Projects/STM32F446RE-Nucleo/Applications/IKS4A1/ALLMEMS1/readme.html">Read Me</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32L476RG-Nucleo/Applications/IKS01A3/ALLMEMS1</td>
+<td style="text-align: left;">4.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Projects/STM32L476RG-Nucleo/Applications/IKS01A3/ALLMEMS1/readme.html">Read Me</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32L476RG-Nucleo/Applications/IKS4A1/ALLMEMS1</td>
+<td style="text-align: left;">4.3.0 <span class="icon-st-add"></span></td>
+<td style="text-align: left;"><a href="Projects/STM32L476RG-Nucleo/Applications/IKS4A1/ALLMEMS1/readme.html">Read Me</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32F446ME-BlueCoin/Applications/ALLMEMS1</td>
+<td style="text-align: left;">4.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Projects/STM32F446ME-BlueCoin/Applications/ALLMEMS1/readme.html">Read Me</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1</td>
+<td style="text-align: left;">4.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Projects/STM32L4R9ZI-SensorTile.box/Applications/ALLMEMS1/readme.html">Read Me</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Middlewares<br />
+</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: center;">Document</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">MotionAR Activity recognition Lib</td>
+<td style="text-align: left;">3.2.1</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MotionAR_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MotionCP Carry Position Lib</td>
+<td style="text-align: left;">2.2.1</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MotionCP_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MotionFA Sensor Fusion Lib</td>
+<td style="text-align: left;">1.3.1</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MotionFA_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MotionFX Sensor Fusion Lib</td>
+<td style="text-align: left;">2.8.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MotionFX_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MotionGR Gesture recognition Lib</td>
+<td style="text-align: left;">2.2.1</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MotionGR_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MotionID Gesture recognition Lib</td>
+<td style="text-align: left;">2.4.1</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MotionID_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MotionPE Gesture recognition Lib</td>
+<td style="text-align: left;">2.2.1</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MotionPE_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MotionSD Gesture recognition Lib</td>
+<td style="text-align: left;">1.2.1</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MotionSD_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MotionTL Gesture recognition Lib</td>
+<td style="text-align: left;">1.5.1 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MotionTL_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MotionVC Gesture recognition Lib</td>
+<td style="text-align: left;">1.2.1</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MotionVC_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AcousticSL Sound Source Localization Lib</td>
+<td style="text-align: left;">2.2.0</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_AcousticSL_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AcousticBF Beam Forming Lib</td>
+<td style="text-align: left;">2.2.1</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_AcousticBF_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BlueVoiceADPCM half-duplex voice-over-Bluetooth low energy Lib</td>
+<td style="text-align: left;">2.0.0</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_BlueVoiceADPCM_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32 Audio PDM Library</td>
+<td style="text-align: left;">3.3.0</td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_Audio\Addons\PDM\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BlueNRG-MS</td>
+<td style="text-align: left;">5.1.3 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares\ST\BlueNRG-MS\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BlueNRG-2</td>
+<td style="text-align: left;">3.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares\ST\BlueNRG-2\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32 USB Device Lib</td>
+<td style="text-align: left;">2.11.1 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_USB_Device_Library\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FatFs</td>
+<td style="text-align: left;">2.1.4</td>
+<td style="text-align: center;"><a href="Middlewares\Third_Party\FatFs\source\st_readme.txt">Read Me</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Meta Data Manager</td>
+<td style="text-align: left;">1.7.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_MetaDataManager\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BLE_Manager Lib</td>
+<td style="text-align: left;">1.8.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares\ST\STM32_BLE_Manager\Release_Notes.html">Release Note</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">parson</td>
+<td style="text-align: left;">1.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares\Third_Party\parson\Release_Notes.html">Release Note</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Drivers<br />
+</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: center;">Document</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">STM32F4xx CMSIS</td>
+<td style="text-align: left;">2.6.8 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\CMSIS\Device\ST\STM32F4xx\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32L4xx CMSIS</td>
+<td style="text-align: left;">1.7.3 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\CMSIS\Device\ST\STM32L4xx\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32F4xx HAL</td>
+<td style="text-align: left;">1.8.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\STM32F4xx_HAL_Driver\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32L4xx HAL</td>
+<td style="text-align: left;">1.13.4 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\STM32L4xx_HAL_Driver\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32F4xx_NUCLEO</td>
+<td style="text-align: left;">1.2.8 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\STM32F4xx-Nucleo\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32L4xx_NUCLEO</td>
+<td style="text-align: left;">2.1.8 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\STM32L4xx_Nucleo\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP X-NUCLEO-IKS4A1</td>
+<td style="text-align: left;">1.0.0 <span class="icon-st-add"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\IKS4A1\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP X-NUCLEO-IKS01A3</td>
+<td style="text-align: left;">1.11.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\IKS01A3\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP X-NUCLEO-CCA02M2</td>
+<td style="text-align: left;">1.1.2</td>
+<td style="text-align: center;"><a href="Drivers\BSP\CCA02M2\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP BlueCoin</td>
+<td style="text-align: left;">2.2.3 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\BlueCoin\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP SensorTile.box</td>
+<td style="text-align: left;">1.3.5</td>
+<td style="text-align: center;"><a href="Drivers\BSP\SensorTile.box\Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Components<br />
+</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: center;">Document</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">lps22df</td>
+<td style="text-align: left;">1.3.0 <span class="icon-st-add"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lps22df\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lsm6dsv16x</td>
+<td style="text-align: left;">1.4.0 <span class="icon-st-add"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lsm6dsv16x\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stts22h</td>
+<td style="text-align: left;">1.3.0 <span class="icon-st-add"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\stts22h\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sht40ad1b</td>
+<td style="text-align: left;">1.1.0 <span class="icon-st-add"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\sht40ad1b\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stts751</td>
+<td style="text-align: left;">1.3.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\stts751\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lsm6dsl</td>
+<td style="text-align: left;">5.5.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lsm6dsl\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lsm6dsm</td>
+<td style="text-align: left;">2.0.2</td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lsm6dsm\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lsm6dso</td>
+<td style="text-align: left;">1.8.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lsm6dso\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lsm6dsox</td>
+<td style="text-align: left;">1.8.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lsm6dsox\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lps22hb</td>
+<td style="text-align: left;">5.5.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lps22hb\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lps22hh</td>
+<td style="text-align: left;">1.5.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lps22hh\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lis3dhh</td>
+<td style="text-align: left;">1.1.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lis3dhh\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lis2mdl</td>
+<td style="text-align: left;">1.6.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lis2mdl\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lis2dw12</td>
+<td style="text-align: left;">1.4.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lis2dw12\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lsm303agr</td>
+<td style="text-align: left;">5.5.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\lsm303agr\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hts221</td>
+<td style="text-align: left;">5.5.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\hts221\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stc3115</td>
+<td style="text-align: left;">1.1.0 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\stc3115\Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pcm1774</td>
+<td style="text-align: left;">3.0.0</td>
+<td style="text-align: center;"><a href="Drivers\BSP\Components\pcm1774\Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="known-limitations">Known Limitations</h2>
+<ul>
+<li>Even if FP-SNS-ALLMEMS1 send 100 quaternions/second with Bluetooth, the mobile devices could render only 60 frames/second</li>
+<li>For NUCLEO-F401RE and NUCLEO-F446RE boards, there is an hardware conflict between the boards X-NUCLEO-IKS4A1/X-NUCLEO-IKS01A3 and the X-NUCLEO-CCA02M2. The hardware features of the LSM6DSV16X/LSM6DSO are disabled.</li>
+<li>Due to flash size constraints, FOTA is not available using binary generated by Integrated Development Environment for STM32 (STM32CubeIDE) BlueCoin (STEVAL-BCNKT01V1)</li>
+</ul>
+<h2 id="issue">ISSUE</h2>
+<ul>
+<li>Inconsistent wchar_t size compiler warning is generated from STM32 Audio Library middlewares when using the library in IAR v 9.x for BlueCoin (STEVAL-BCNKT01V1). It doesn’t affect library performances.</li>
+<li>For NUCLEO-L476RG and SensorTile.box (STEVAL-MKSBOX1V1) a compiler warning “L6989W: Could not apply patch sdcomp-29491-629360 to instruction VPOP” is generated from µVision toolchain. Some members of the STM32L4 family have an eratta for the FMC (Flexible Memory Controller) where a read burst access of 9 words or more is not supported by FMC. To prevent burst accesses that are greater than 8 words, a special linker patch was developed to patch certain instructions that result in burst accesses of greaterthan 8 words. The patch can be applied in most cases with a few exceptions. One of these exceptions is when the instruction to be patched is inside an IT (If-Then) block and is not the last instruction in that block. In this case this warning will be generated. Since the FMC is only used for external memory, you can ignore this warning if you are only using internal memory.</li>
+</ul>
+<h2 id="important-hardware-additional-information">Important Hardware Additional Information</h2>
+<ol type="1">
+<li>For F4xx STM32 Nucleo motherboard, there is an hardware conflict between the X-NUCLEO-IKS4A1 expansion board and the X-NUCLEO-CCA02M2 expansion board through the Arduino UNO R3 extension connector. The hardware conflict is onto 5,6 and 7 pin of the CN9 arduido connector.
+<ul>
+<li>For X-NUCLEO-IKS4A1:
+<ul>
+<li>In the pin 5 (SB8) and 6 (SB10) there are the interrupts INT2 and INT1 for LSM6DSV16X component (used for the feature hardware)</li>
+<li>In the pin 7 (SB11) there is the interrupt for LPS22DF component</li>
+</ul></li>
+<li>For X-NUCLEO-CCA02M2:
+<ul>
+<li>In the pin 5 (SB7) there is the clock for the Microphones</li>
+<li>In the pin 6 (SB15) there is the clock x2 for the Microphones</li>
+<li>In the pin 7 (SB17) there is the connection for the microphone PDM34 (solder bridge open as default)</li>
+</ul></li>
+</ul>
+<p>For this reason the hardware features are not available for F4xx STM32 Nucleo motherboard (The related gpio pins is not configured).</p></li>
+<li>For F4xx STM32 Nucleo motherboard, there is an hardware conflict between the X-NUCLEO-IKS01A3 expansion board and the X-NUCLEO-CCA02M2 expansion board through the Arduino UNO R3 extension connector. The hardware conflict is onto 5,6 and 7 pin of the CN9 arduido connector.
+<ul>
+<li>For X-NUCLEO-IKS01A3:
+<ul>
+<li>In the pin 5 (SB43) and 6 (SB45) there are the interrupts INT1 and INT2 for LSM6DSO component (used for the feature hardware)</li>
+<li>In the pin 7 (SB47) there is the interrupt for LPS22HH component</li>
+</ul></li>
+<li>For X-NUCLEO-CCA02M2:
+<ul>
+<li>In the pin 5 (SB7) there is the clock for the Microphones</li>
+<li>In the pin 6 (SB15) there is the clock x2 for the Microphones</li>
+<li>In the pin 7 (SB17) there is the connection for the microphone PDM34 (solder bridge open as default)</li>
+</ul></li>
+</ul>
+<p>For this reason the hardware features are not available for F4xx STM32 Nucleo motherboard (The related gpio pins is not configured).</p></li>
+<li>With L4 STM32 Nucleo motherboard:
+<ul>
+<li>before to connect the board X-NUCLEO-CCA02M2 with the STM32 L4 Nucleo motherboard through the Morpho connector layout onto X-NUCLEO-CCA02M2 board:
+<ul>
+<li>close the solder bridges SB12, SB16 and open the solder bridges SB7, SB15 and SB17 (To enable the signal clock from L4 Nucleo motherboard)</li>
+<li>if additional microphones are plugged in the board, close the solder bridge SB17.</li>
+</ul></li>
+<li>before to connect the X-NUCLEO-IKS4A1 expansion board with the X-NUCLEO-CCA02M2 expansion board:
+<ul>
+<li>remove the solder bridge SB11 if additional microphones are plugged onto X-NUCLEO-CCA02M2 board</li>
+</ul></li>
+<li>before to connect the X-NUCLEO-IKS01A3 expansion board with the X-NUCLEO-CCA02M2 expansion board:
+<ul>
+<li>remove the solder bridge SB47 if additional microphones are plugged onto X-NUCLEO-CCA02M2 board</li>
+</ul></li>
+</ul></li>
+<li>BlueNRG-2 library does not work with the stock firmware that is loaded in the BLE module of X-NUCLEO-BNRG2A1 expansion board. For this reason:
+<ul>
+<li>first of all, it is needed to solder on X-NUCLEO-BNRG2A1, if it is not soldered, a 0 Ohm resistor at R117</li>
+<li>then you can use a standard ST-Link V2-1 with 5 jumper wires female-female together with STSW-BNRGFLASHER software tool (currently available only for Windows PC) in order to update the firmware of the BLE module of X-NUCLEO-BNRG2A1.</li>
+</ul>
+<p>Read user manual for more details.</p></li>
+</ol>
+<h2 id="development-toolchains-and-compilers">Development Toolchains and Compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM) toolchain V9.20.1 + STLink/V2</li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.37.0 + ST-LINK/V2</li>
+<li>Integrated Development Environment for STM32 (STM32CubeIDE) V1.12.1 + ST-LINK/V2</li>
+</ul>
+<h2 id="supported-devices-and-boards">Supported Devices and Boards</h2>
+<ul>
+<li>NUCLEO-F446RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f446re.html">NUCLEO-F446RE</a>]</li>
+<li>NUCLEO-L476RG STM32 Nucleo-64 development board with STM32L476RG MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l476rg.html">NUCLEO-L476RG</a>]</li>
+<li>BlueCoin Starter kit [<a href="https://www.st.com/en/evaluation-tools/steval-bcnkt01v1.html">STEVAL-BCNKT01V1</a>]</li>
+<li>SensorTile.box wireless multi sensor development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mems-motion-sensor-eval-boards/steval-mksbox1v1.html">STEVAL-MKSBOX1V1</a>]</li>
+</ul>
+<h2 id="backward-compatibility">Backward Compatibility</h2>
+<p>None</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>This software release is compatible with:</p>
+<ul>
+<li><a href="https://play.google.com/store/apps/details?id=com.st.bluems"><strong>ST BLE Sensor Android application</strong></a> V4.20.0 (or higher)</li>
+<li><a href="https://apps.apple.com/it/app/st-ble-sensor/id993670214"><strong>ST BLE Sensor iOS application</strong></a> V4.20.0 (or higher)</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section14" aria-hidden="true"> <label for="collapse-section14" aria-hidden="true">V4.2.0 / 10-February-2022</label>
+<div>
+<h2 id="main-changes-1">Main Changes</h2>
+<h3 id="maintenance-release-1">Maintenance release</h3>
 <ul>
 <li>Source Code Refactoring according to STM32CubeMX code generation using .ioc file (not available on STEVAL-STLKT01V1 and STEVAL-MKSBOX1V1)</li>
 <li>Added STM32_BLE_Manager middleware (not used for STEVAL-STLKT01V1 and STEVAL-BCNKT01V1)</li>
@@ -160,7 +606,7 @@
 <li>Updated Development Toolchains and Compilers version</li>
 <li>Bugs fixed</li>
 </ul>
-<h2 id="contents">Contents</h2>
+<h2 id="contents-1">Contents</h2>
 <p>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</p>
 <table>
 <caption>Documentation<br />
@@ -537,19 +983,19 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations">Known Limitations</h2>
+<h2 id="known-limitations-1">Known Limitations</h2>
 <ul>
 <li>Even if FP-SNS-ALLMEMS1 send 100 quaternions/second with Bluetooth, the mobile devices could render only 60 frames/second</li>
 <li>For NUCLEO-F401RE and NUCLEO-F446RE boards, there is an hardware conflict between the boards X-NUCLEO-IKS01A2/X-NUCLEO-IKS01A3 and the X-NUCLEO-CCA02M2. The hardware features of the LSM6DSL/LSM6DSO are disabled.</li>
 <li>Due to flash size constraints, FOTA is not available using binary generated by Integrated Development Environment for STM32 (STM32CubeIDE) BlueCoin (STEVAL-BCNKT01V1)</li>
 </ul>
-<h2 id="issue">ISSUE</h2>
+<h2 id="issue-1">ISSUE</h2>
 <ul>
 <li>Led features is not enabled for SensorTile when SD card logging feature is enabled and during the recording only - The led will blink during the data logging only.</li>
 <li>Inconsistent wchar_t size compiler warning is generated from STM32 Audio Library middlewares when using the library in IAR v 9.x for SensorTile (STEVAL-STLKT01V1) and BlueCoin (STEVAL-BCNKT01V1). It doesn’t affect library performances.</li>
 <li>For NUCLEO-L476RG, SensorTile (STEVAL-STLKT01V1) and SensorTile.box (STEVAL-MKSBOX1V1) a compiler warning “L6989W: Could not apply patch sdcomp-29491-629360 to instruction VPOP” is generated from µVision toolchain. Some members of the STM32L4 family have an eratta for the FMC (Flexible Memory Controller) where a read burst access of 9 words or more is not supported by FMC. To prevent burst accesses that are greater than 8 words, a special linker patch was developed to patch certain instructions that result in burst accesses of greaterthan 8 words. The patch can be applied in most cases with a few exceptions. One of these exceptions is when the instruction to be patched is inside an IT (If-Then) block and is not the last instruction in that block. In this case this warning will be generated. Since the FMC is only used for external memory, you can ignore this warning if you are only using internal memory.</li>
 </ul>
-<h2 id="important-hardware-additional-information">Important Hardware Additional Information</h2>
+<h2 id="important-hardware-additional-information-1">Important Hardware Additional Information</h2>
 <ol type="1">
 <li>For F4xx STM32 Nucleo motherboard, there is an hardware conflict between the X-NUCLEO-IKS01A2 expansion board and the X-NUCLEO-CCA02M2 expansion board through the Arduino UNO R3 extension connector. The hardware conflict is onto 5,6 and 7 pin of the CN9 arduido connector.
 <ul>
@@ -604,13 +1050,13 @@
 </ul>
 <p>Read user manual for more details.</p></li>
 </ol>
-<h2 id="development-toolchains-and-compilers">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-1">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V9.20.1 + STLink/V2</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.32.0 + ST-LINK/V2</li>
 <li>Integrated Development Environment for STM32 (STM32CubeIDE) V1.8.0 + ST-LINK/V2</li>
 </ul>
-<h2 id="supported-devices-and-boards">Supported Devices and Boards</h2>
+<h2 id="supported-devices-and-boards-1">Supported Devices and Boards</h2>
 <ul>
 <li>NUCLEO-F401RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f401re.html">NUCLEO-F401RE</a>]</li>
 <li>NUCLEO-F446RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f446re.html">NUCLEO-F446RE</a>]</li>
@@ -619,9 +1065,9 @@
 <li>SensorTile development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/sensor-solution-eval-boards/steval-stlkt01v1.html">STEVAL-STLKT01V1</a>]</li>
 <li>SensorTile.box wireless multi sensor development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mems-motion-sensor-eval-boards/steval-mksbox1v1.html">STEVAL-MKSBOX1V1</a>]</li>
 </ul>
-<h2 id="backward-compatibility">Backward Compatibility</h2>
+<h2 id="backward-compatibility-1">Backward Compatibility</h2>
 <p>None</p>
-<h2 id="dependencies">Dependencies</h2>
+<h2 id="dependencies-1">Dependencies</h2>
 <p>This software release is compatible with:</p>
 <ul>
 <li><a href="https://play.google.com/store/apps/details?id=com.st.bluems"><strong>ST BLE Sensor Android application</strong></a> V4.14.4 (or higher)</li>
@@ -632,8 +1078,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section13" aria-hidden="true"> <label for="collapse-section13" aria-hidden="true">V4.1.0 / 26-May-2020</label>
 <div>
-<h2 id="main-changes-1">Main Changes</h2>
-<h3 id="maintenance-release-1">Maintenance release</h3>
+<h2 id="main-changes-2">Main Changes</h2>
+<h3 id="maintenance-release-2">Maintenance release</h3>
 <ul>
 <li>For STM32F401RE-Nucleo, STM32F446RE-Nucleo and STM32L476RG-Nucleo:
 <ul>
@@ -656,7 +1102,7 @@
 <li>Updated Development Toolchains and Compilers version</li>
 <li>Bugs fixed</li>
 </ul>
-<h2 id="contents-1">Contents</h2>
+<h2 id="contents-2">Contents</h2>
 <table>
 <caption>Documentation<br />
 </caption>
@@ -1069,19 +1515,19 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-1">Known Limitations</h2>
+<h2 id="known-limitations-2">Known Limitations</h2>
 <ul>
 <li>Even if FP-SNS-ALLMEMS1 send 100 quaternions/second with Bluetooth, the mobile devices could render only 60 frames/second</li>
 <li>For NUCLEO-F401RE and NUCLEO-F446RE boards, there is an hardware conflict between the boards X-NUCLEO-IKS01A2/X-NUCLEO-IKS01A3 and the X-NUCLEO-CCA02M2. The hardware features of the LSM6DSL/LSM6DSO are disabled.</li>
 <li>Due to flash size constraints, FOTA is not available using binary generated by Integrated Development Environment for STM32 (STM32CubeIDE) BlueCoin (STEVAL-BCNKT01V1)</li>
 </ul>
-<h2 id="issue-1">ISSUE</h2>
+<h2 id="issue-2">ISSUE</h2>
 <ul>
 <li>Led features is not enabled for SensorTile when SD card logging feature is enabled and during the recording only - The led will blink during the data logging only.</li>
 <li>Inconsistent wchar_t size compiler warning is generated from STM32 Audio Library middlewares when using the library in IAR v 8.x for SensorTile (STEVAL-STLKT01V1) and BlueCoin (STEVAL-BCNKT01V1). It doesn’t affect library performances.</li>
 <li>For NUCLEO-L476RG, SensorTile (STEVAL-STLKT01V1) and SensorTile.box (STEVAL-MKSBOX1V1) a compiler warning “L6989W: Could not apply patch sdcomp-29491-629360 to instruction VPOP” is generated from µVision toolchain. Some members of the STM32L4 family have an eratta for the FMC (Flexible Memory Controller) where a read burst access of 9 words or more is not supported by FMC. To prevent burst accesses that are greater than 8 words, a special linker patch was developed to patch certain instructions that result in burst accesses of greaterthan 8 words. The patch can be applied in most cases with a few exceptions. One of these exceptions is when the instruction to be patched is inside an IT (If-Then) block and is not the last instruction in that block. In this case this warning will be generated. Since the FMC is only used for external memory, you can ignore this warning if you are only using internal memory.</li>
 </ul>
-<h2 id="important-hardware-additional-information-1">Important Hardware Additional Information</h2>
+<h2 id="important-hardware-additional-information-2">Important Hardware Additional Information</h2>
 <ol type="1">
 <li>For F4xx STM32 Nucleo motherboard, there is an hardware conflict between the X-NUCLEO-IKS01A2 expansion board and the X-NUCLEO-CCA02M2 expansion board through the Arduino UNO R3 extension connector. The hardware conflict is onto 5,6 and 7 pin of the CN9 arduido connector.
 <ul>
@@ -1136,13 +1582,13 @@
 </ul>
 <p>Read user manual for more details.</p></li>
 </ol>
-<h2 id="development-toolchains-and-compilers-1">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-2">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V8.32.3 + STLink/V2</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.29.0 + ST-LINK/V2</li>
 <li>Integrated Development Environment for STM32 (STM32CubeIDE) V1.3.1 + ST-LINK/V2</li>
 </ul>
-<h2 id="supported-devices-and-boards-1">Supported Devices and Boards</h2>
+<h2 id="supported-devices-and-boards-2">Supported Devices and Boards</h2>
 <ul>
 <li>NUCLEO-F401RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f401re.html">NUCLEO-F401RE</a>]</li>
 <li>NUCLEO-F446RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f446re.html">NUCLEO-F446RE</a>]</li>
@@ -1151,9 +1597,9 @@
 <li>SensorTile development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/sensor-solution-eval-boards/steval-stlkt01v1.html">STEVAL-STLKT01V1</a>]</li>
 <li>SensorTile.box wireless multi sensor development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mems-motion-sensor-eval-boards/steval-mksbox1v1.html">STEVAL-MKSBOX1V1</a>]</li>
 </ul>
-<h2 id="backward-compatibility-1">Backward Compatibility</h2>
+<h2 id="backward-compatibility-2">Backward Compatibility</h2>
 <p>None</p>
-<h2 id="dependencies-1">Dependencies</h2>
+<h2 id="dependencies-2">Dependencies</h2>
 <p>This software release is compatible with:</p>
 <ul>
 <li><a href="https://play.google.com/store/apps/details?id=com.st.bluems"><strong>ST BLE Sensor Android application</strong></a> V4.4.4 (or higher)</li>
@@ -1164,8 +1610,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section12" aria-hidden="true"> <label for="collapse-section12" aria-hidden="true">V4.0.0 / 20-September-2019</label>
 <div>
-<h2 id="main-changes-2">Main Changes</h2>
-<h3 id="maintenance-release-2">Maintenance release</h3>
+<h2 id="main-changes-3">Main Changes</h2>
+<h3 id="maintenance-release-3">Maintenance release</h3>
 <ul>
 <li>Source Code Refactoring according new BSP v2.5 specifications</li>
 <li>Added support to X-NUCLEO-IKS01A3</li>
@@ -1194,7 +1640,7 @@
 <li>Updated FatFS middleware</li>
 <li>Updated Development Toolchains and Compilers version</li>
 </ul>
-<h2 id="contents-2">Contents</h2>
+<h2 id="contents-3">Contents</h2>
 <table>
 <caption>Documentation<br />
 </caption>
@@ -1613,18 +2059,18 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-2">Known Limitations</h2>
+<h2 id="known-limitations-3">Known Limitations</h2>
 <ul>
 <li>Even if FP-SNS-ALLMEMS1 send 100 quaternions/second with Bluetooth, the mobile devices could render only 60 frames/second</li>
 <li>For NUCLEO-F401RE board and NUCLEO-F446RE board, there is an hardware conflict between the boards X-NUCLEO-IKS01A2/X-NUCLEO-IKS01A3 and the X-NUCLEO-CCA02M1. The hardware features of the LSM6DSL/LSM6DSO are disabled.</li>
 <li>Due to flash size constraints, FOTA is not available using binary generated by System Workbench for STM32 for NUCLEO-F446RE and BlueCoin (STEVAL-BCNKT01V1)</li>
 </ul>
-<h2 id="issue-2">ISSUE</h2>
+<h2 id="issue-3">ISSUE</h2>
 <ul>
 <li>Led features is not enabled for SensorTile when SD card logging feature is enabled and during the recording only - The led will blink during the data logging only.</li>
 <li>Inconsistent wchar_t size compiler warning is generated from STM32 Audio Library middlewares when using the library in IAR v 8.x. and Open System Workbench for STM32. It doesn’t affect library performances.</li>
 </ul>
-<h2 id="important-hardware-additional-information-2">Important Hardware Additional Information</h2>
+<h2 id="important-hardware-additional-information-3">Important Hardware Additional Information</h2>
 <ul>
 <li>For F4xx STM32 Nucleo motherboard, there is an hardware conflict between the X-NUCLEO-IKS01A2 expansion board and the X-NUCLEO-CCA02M1 expansion board through the Arduino UNO R3 extension connector. The hardware conflict is onto 5,6 and 7 pin of the CN9 arduido connector.
 <ul>
@@ -1673,13 +2119,13 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="development-toolchains-and-compilers-2">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-3">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V8.32.3 + STLink/V2</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.27.1 + ST-LINK/V2</li>
 <li>Integrated Development Environment for STM32 (STM32CubeIDE) V1.0.2 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-boards-2">Supported Devices and Boards</h2>
+<h2 id="supported-devices-and-boards-3">Supported Devices and Boards</h2>
 <ul>
 <li>NUCLEO-F401RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f401re.html">NUCLEO-F401RE</a>]</li>
 <li>NUCLEO-F446RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f446re.html">NUCLEO-F446RE</a>]</li>
@@ -1688,9 +2134,9 @@
 <li>SensorTile development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/sensor-solution-eval-boards/steval-stlkt01v1.html">STEVAL-STLKT01V1</a>]</li>
 <li>SensorTile.box wireless multi sensor development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mems-motion-sensor-eval-boards/steval-mksbox1v1.html">STEVAL-MKSBOX1V1</a>]</li>
 </ul>
-<h2 id="backward-compatibility-2">Backward Compatibility</h2>
+<h2 id="backward-compatibility-3">Backward Compatibility</h2>
 <p>None</p>
-<h2 id="dependencies-2">Dependencies</h2>
+<h2 id="dependencies-3">Dependencies</h2>
 <p>This software release is compatible with:</p>
 <ul>
 <li><a href="https://play.google.com/store/apps/details?id=com.st.bluems"><strong>ST BLE Sensor Android application</strong></a> V4.4.4 (or higher)</li>
@@ -1701,8 +2147,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section11" aria-hidden="true"> <label for="collapse-section11" aria-hidden="true">V3.4.0 / 20-April-2018</label>
 <div>
-<h2 id="main-changes-3">Main Changes</h2>
-<h3 id="maintenance-release-3">Maintenance release</h3>
+<h2 id="main-changes-4">Main Changes</h2>
+<h3 id="maintenance-release-4">Maintenance release</h3>
 <ul>
 <li>Bug fixed for RTC date and time setting before SD Card data logging</li>
 <li>Updated STEVAL-BCNKT01V1 (BlueCoin) drivers</li>
@@ -1719,7 +2165,7 @@
 <li>Updated FatFS middleware</li>
 <li>Updated Development Toolchains and Compilers version</li>
 </ul>
-<h2 id="contents-3">Contents</h2>
+<h2 id="contents-4">Contents</h2>
 <table>
 <caption>Documentation<br />
 </caption>
@@ -2060,20 +2506,20 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-3">Known Limitations</h2>
+<h2 id="known-limitations-4">Known Limitations</h2>
 <ul>
 <li>Even if FP-SNS-ALLMEMS1 send 100 quaternions/second with Bluetooth, the mobile devices could render only 60 frames/second</li>
 <li>For NUCLEO-F401RE board and NUCLEO-F446RE board, there is an hardware conflict between the boards X-NUCLEO-IKS01A2 and the X-NUCLEO-CCA02M1. The hardware features of the LSM6DSL are disabled.</li>
 <li>Due to flash size constraints, FOTA is not available using binary generated by System Workbench for STM32 for NUCLEO-F446RE and BlueCoin (STEVAL-BCNKT01V1)</li>
 </ul>
-<h2 id="issue-3">ISSUE</h2>
+<h2 id="issue-4">ISSUE</h2>
 <ul>
 <li>FOTA is not available on NUCLEO-F401RE, NUCLEO-F446RE and STEVAL-BCNKT01V1 using binary generated by System Workbench for STM32 (due to flash size constraints).</li>
 <li>Led features is not enabled for SensorTile when SD card logging feature is enabled and during the recording only - The led will blink during the data logging only.</li>
 <li>A compiler warning “Inconsistent wchar_t size” is generated from Audio middlewares when using the library in IAR v 8.x. It doesn’t affect library performances.</li>
 <li>For L4 STM32 Nucleo motherboard and STEVAL-STLCS01V1 Board, a compiler warning is generated from MotionFX middleware when using the library in MDK-ARM v 5.24. It doesn’t affect library performances.</li>
 </ul>
-<h2 id="important-hardware-additional-information-3">Important Hardware Additional Information</h2>
+<h2 id="important-hardware-additional-information-4">Important Hardware Additional Information</h2>
 <ul>
 <li>For F4xx STM32 Nucleo motherboard, there is an hardware conflict between the X-NUCLEO-IKS01A2 expansion board and the X-NUCLEO-CCA02M1 expansion board through the Arduino UNO R3 extension connector. The hardware conflict is onto 5,6 and 7 pin of the CN9 arduido connector.
 <ul>
@@ -2107,13 +2553,13 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="development-toolchains-and-compilers-3">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-4">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V8.20.2 + STLink/V2</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.24.0 + ST-LINK/V2</li>
 <li>System Workbench for STM32 2.4.0.201801120948 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-boards-3">Supported Devices and Boards</h2>
+<h2 id="supported-devices-and-boards-4">Supported Devices and Boards</h2>
 <ul>
 <li>NUCLEO-F401RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f401re.html">NUCLEO-F401RE</a>]</li>
 <li>NUCLEO-F446RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f446re.html">NUCLEO-F446RE</a>]</li>
@@ -2121,9 +2567,9 @@
 <li>BlueCoin Starter kit [<a href="https://www.st.com/en/evaluation-tools/steval-bcnkt01v1.html">STEVAL-BCNKT01V1</a>]</li>
 <li>SensorTile development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/sensor-solution-eval-boards/steval-stlkt01v1.html">STEVAL-STLKT01V1</a>]</li>
 </ul>
-<h2 id="backward-compatibility-3">Backward Compatibility</h2>
+<h2 id="backward-compatibility-4">Backward Compatibility</h2>
 <p>None</p>
-<h2 id="dependencies-3">Dependencies</h2>
+<h2 id="dependencies-4">Dependencies</h2>
 <p>This software release is compatible with:</p>
 <ul>
 <li><a href="https://play.google.com/store/apps/details?id=com.st.bluems"><strong>ST BLE Sensor Android application</strong></a> V3.5.0 (or higher)</li>
@@ -2134,8 +2580,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section10" aria-hidden="true"> <label for="collapse-section10" aria-hidden="true">V3.3.0 / 30-November-2017</label>
 <div>
-<h2 id="main-changes-4">Main Changes</h2>
-<h3 id="maintenance-release-4">Maintenance release</h3>
+<h2 id="main-changes-5">Main Changes</h2>
+<h3 id="maintenance-release-5">Maintenance release</h3>
 <ul>
 <li>Updated X-NUCLEO-BLE1 driver</li>
 <li>Updated Meta Data Manager middleware</li>
@@ -2146,7 +2592,7 @@
 <li>Added data logging management (range time and data selection) on SD card for enviromental and MEMS data on SensorTile</li>
 <li>RTC alarm is used to manage the SD Card data logging with fixed range time</li>
 </ul>
-<h2 id="contents-4">Contents</h2>
+<h2 id="contents-5">Contents</h2>
 <table>
 <caption>Documentation<br />
 </caption>
@@ -2487,13 +2933,13 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-4">Known Limitations</h2>
+<h2 id="known-limitations-5">Known Limitations</h2>
 <ul>
 <li>Even if FP-SNS-ALLMEMS1 send 100 quaternions/second with Bluetooth, the mobile devices could render only 60 frames/second</li>
 <li>For NUCLEO-F401RE board and NUCLEO-F446RE board, there is an hardware conflict between the boards X-NUCLEO-IKS01A2 and the X-NUCLEO-CCA02M1. The hardware features of the LSM6DSL are disabled.</li>
 <li>Due to flash size constraints, FOTA is not available using binary generated by System Workbench for STM32 for NUCLEO-F446RE and BlueCoin (STEVAL-BCNKT01V1)</li>
 </ul>
-<h2 id="issue-4">ISSUE</h2>
+<h2 id="issue-5">ISSUE</h2>
 <ul>
 <li>FOTA is not available on NUCLEO-F401RE, NUCLEO-F446RE and STEVAL-BCNKT01V1 using binary generated by System Workbench for STM32 (due to flash size constraints).</li>
 <li>Led features is not enabled for SensorTile when SD card logging feature is enabled and during the recording only - The led will blink during the data logging only.</li>
@@ -2502,7 +2948,7 @@
 <li>For L4 STM32 Nucleo motherboard and STEVAL-STLCS01V1 Board, a compiler warning is generated from MotionFX middleware when using the library in MDK-ARM v 5.22. It doesn’t affect library performances.</li>
 <li>A compiler warning is generated from STM32 F4xx and STM32 L4xx HAL when using the library in System Workbench for STM32 IDE. It doesn’t affect FW performances.</li>
 </ul>
-<h2 id="important-hardware-additional-information-4">Important Hardware Additional Information</h2>
+<h2 id="important-hardware-additional-information-5">Important Hardware Additional Information</h2>
 <ul>
 <li>For F4xx STM32 Nucleo motherboard, there is an hardware conflict between the X-NUCLEO-IKS01A2 expansion board and the X-NUCLEO-CCA02M1 expansion board through the Arduino UNO R3 extension connector. The hardware conflict is onto 5,6 and 7 pin of the CN9 arduido connector.
 <ul>
@@ -2536,13 +2982,13 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="development-toolchains-and-compilers-4">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-5">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.4 + STLink/V2</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.22.0 + ST-LINK/V2</li>
 <li>System Workbench for STM32 2.3.1.201711101414 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-boards-4">Supported Devices and Boards</h2>
+<h2 id="supported-devices-and-boards-5">Supported Devices and Boards</h2>
 <ul>
 <li>NUCLEO-F401RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f401re.html">NUCLEO-F401RE</a>]</li>
 <li>NUCLEO-F446RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f446re.html">NUCLEO-F446RE</a>]</li>
@@ -2550,9 +2996,9 @@
 <li>BlueCoin Starter kit [<a href="https://www.st.com/en/evaluation-tools/steval-bcnkt01v1.html">STEVAL-BCNKT01V1</a>]</li>
 <li>SensorTile development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/sensor-solution-eval-boards/steval-stlkt01v1.html">STEVAL-STLKT01V1</a>]</li>
 </ul>
-<h2 id="backward-compatibility-4">Backward Compatibility</h2>
+<h2 id="backward-compatibility-5">Backward Compatibility</h2>
 <p>None</p>
-<h2 id="dependencies-4">Dependencies</h2>
+<h2 id="dependencies-5">Dependencies</h2>
 <p>This software release is compatible with:</p>
 <ul>
 <li><a href="https://play.google.com/store/apps/details?id=com.st.bluems"><strong>ST BLE Sensor Android application</strong></a> V3.5.0 (or higher)</li>
@@ -2563,8 +3009,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section9" aria-hidden="true"> <label for="collapse-section9" aria-hidden="true">V3.2.0 / 30-September-2017</label>
 <div>
-<h2 id="main-changes-5">Main Changes</h2>
-<h3 id="maintenance-release-5">Maintenance release</h3>
+<h2 id="main-changes-6">Main Changes</h2>
+<h3 id="maintenance-release-6">Maintenance release</h3>
 <ul>
 <li>Updated STM32L4xx HAL drivers</li>
 <li>Updated X-NUCLEO-BLE1 driver</li>
@@ -2575,7 +3021,7 @@
 <li>Added Accellerometer Multi Events</li>
 <li>Add Motion library for EWARM 8 IDE. Due to the changes in EWARM 8 dedicated library for this environment must be used. The name of the library for EWARM 8 ends by _IAR8_ot.</li>
 </ul>
-<h2 id="contents-5">Contents</h2>
+<h2 id="contents-6">Contents</h2>
 <table>
 <caption>Documentation<br />
 </caption>
@@ -2916,19 +3362,19 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-5">Known Limitations</h2>
+<h2 id="known-limitations-6">Known Limitations</h2>
 <ul>
 <li>Even if FP-SNS-ALLMEMS1 send 100 quaternions/second with Bluetooth, the mobile devices could render only 60 frames/second</li>
 <li>For NUCLEO-F401RE board and NUCLEO-F446RE board, there is an hardware conflict between the boards X-NUCLEO-IKS01A2 and the X-NUCLEO-CCA02M1. The hardware features of the LSM6DSL are disabled.</li>
 <li>Due to flash size constraints, FOTA is not available using binary generated by System Workbench for STM32 for NUCLEO-F446RE and BlueCoin (STEVAL-BCNKT01V1)</li>
 <li>A compiler warning is generated from AcousticSL and AcousticBF middlewares when using the library in IAR v 7.x. It doesn’t affect library performances.</li>
 </ul>
-<h2 id="issue-5">ISSUE</h2>
+<h2 id="issue-6">ISSUE</h2>
 <ul>
 <li>FOTA is not available on NUCLEO-F401RE, NUCLEO-F446RE and STEVAL-BCNKT01V1 using binary generated by System Workbench for STM32 (due to flash size constraints).</li>
 <li>Led features is not enabled for SensorTile when SD card logging feature is enabled - The led is on during the recording only(default).</li>
 </ul>
-<h2 id="important-hardware-additional-information-5">Important Hardware Additional Information</h2>
+<h2 id="important-hardware-additional-information-6">Important Hardware Additional Information</h2>
 <ul>
 <li>For F4xx STM32 Nucleo motherboard, there is an hardware conflict between the X-NUCLEO-IKS01A2 expansion board and the X-NUCLEO-CCA02M1 expansion board through the Arduino UNO R3 extension connector. The hardware conflict is onto 5,6 and 7 pin of the CN9 arduido connector.
 <ul>
@@ -2962,13 +3408,13 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="development-toolchains-and-compilers-5">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-6">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.4 + STLink/V2</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.22.0 + ST-LINK/V2</li>
 <li>System Workbench for STM32 2.1.2.201709081530 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-boards-5">Supported Devices and Boards</h2>
+<h2 id="supported-devices-and-boards-6">Supported Devices and Boards</h2>
 <ul>
 <li>NUCLEO-F401RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f401re.html">NUCLEO-F401RE</a>]</li>
 <li>NUCLEO-F446RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f446re.html">NUCLEO-F446RE</a>]</li>
@@ -2976,9 +3422,9 @@
 <li>BlueCoin Starter kit [<a href="https://www.st.com/en/evaluation-tools/steval-bcnkt01v1.html">STEVAL-BCNKT01V1</a>]</li>
 <li>SensorTile development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/sensor-solution-eval-boards/steval-stlkt01v1.html">STEVAL-STLKT01V1</a>]</li>
 </ul>
-<h2 id="backward-compatibility-5">Backward Compatibility</h2>
+<h2 id="backward-compatibility-6">Backward Compatibility</h2>
 <p>None</p>
-<h2 id="dependencies-5">Dependencies</h2>
+<h2 id="dependencies-6">Dependencies</h2>
 <p>This software release is compatible with:</p>
 <ul>
 <li><a href="https://play.google.com/store/apps/details?id=com.st.bluems"><strong>ST BLE Sensor Android application</strong></a> V3.5.0 (or higher)</li>
@@ -2989,8 +3435,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section8" aria-hidden="true"> <label for="collapse-section8" aria-hidden="true">V3.1.0 / 23-June-2017</label>
 <div>
-<h2 id="main-changes-6">Main Changes</h2>
-<h3 id="maintenance-release-6">Maintenance release</h3>
+<h2 id="main-changes-7">Main Changes</h2>
+<h3 id="maintenance-release-7">Maintenance release</h3>
 <ul>
 <li>Updated the STM32F4xx and STM32L4xx HAL drivers</li>
 <li>Updated X-NUCLEO-BLE1 driver</li>
@@ -3002,7 +3448,7 @@
 <li>Fixed bug in the debug mode for System Workbench for STM32</li>
 <li>Compatible with the Android/iOS application BlueMS Version 3.5.0 and higher</li>
 </ul>
-<h2 id="contents-6">Contents</h2>
+<h2 id="contents-7">Contents</h2>
 <table>
 <caption>Documentation<br />
 </caption>
@@ -3337,18 +3783,18 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-6">Known Limitations</h2>
+<h2 id="known-limitations-7">Known Limitations</h2>
 <ul>
 <li>Even if FP-SNS-ALLMEMS1 send 100 quaternions/second with Bluetooth, the mobile devices could render only 60 frames/second</li>
 <li>For NUCLEO-F401RE board and NUCLEO-F446RE board, there is an hardware conflict between the boards X-NUCLEO-IKS01A2 and the X-NUCLEO-CCA02M1. The hardware features of the LSM6DSL are disabled.</li>
 <li>Due to flash size constraints, FOTA is not available using binary generated by System Workbench for STM32 for NUCLEO-F446RE and BlueCoin (STEVAL-BCNKT01V1)</li>
 <li>A compiler warning is generated from AcousticSL and AcousticBF middlewares when using the library in IAR v 7.x. It doesn’t affect library performances.</li>
 </ul>
-<h2 id="issue-6">ISSUE</h2>
+<h2 id="issue-7">ISSUE</h2>
 <ul>
 <li>FOTA is not available on NUCLEO-F401RE, NUCLEO-F446RE and STEVAL-BCNKT01V1 using binary generated by System Workbench for STM32 (due to flash size constraints).</li>
 </ul>
-<h2 id="important-hardware-additional-information-6">Important Hardware Additional Information</h2>
+<h2 id="important-hardware-additional-information-7">Important Hardware Additional Information</h2>
 <ul>
 <li>For F4xx STM32 Nucleo motherboard, there is an hardware conflict between the X-NUCLEO-IKS01A2 expansion board and the X-NUCLEO-CCA02M1 expansion board through the Arduino UNO R3 extension connector. The hardware conflict is onto 5,6 and 7 pin of the CN9 arduido connector.
 <ul>
@@ -3382,13 +3828,13 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="development-toolchains-and-compilers-6">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-7">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.4 + STLink/V2</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.22.0 + ST-LINK/V2</li>
 <li>System Workbench for STM32 2.1.2.201709081530 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-boards-6">Supported Devices and Boards</h2>
+<h2 id="supported-devices-and-boards-7">Supported Devices and Boards</h2>
 <ul>
 <li>NUCLEO-F401RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f401re.html">NUCLEO-F401RE</a>]</li>
 <li>NUCLEO-F446RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f446re.html">NUCLEO-F446RE</a>]</li>
@@ -3396,9 +3842,9 @@
 <li>BlueCoin Starter kit [<a href="https://www.st.com/en/evaluation-tools/steval-bcnkt01v1.html">STEVAL-BCNKT01V1</a>]</li>
 <li>SensorTile development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/sensor-solution-eval-boards/steval-stlkt01v1.html">STEVAL-STLKT01V1</a>]</li>
 </ul>
-<h2 id="backward-compatibility-6">Backward Compatibility</h2>
+<h2 id="backward-compatibility-7">Backward Compatibility</h2>
 <p>None</p>
-<h2 id="dependencies-6">Dependencies</h2>
+<h2 id="dependencies-7">Dependencies</h2>
 <p>This software release is compatible with:</p>
 <ul>
 <li><a href="https://play.google.com/store/apps/details?id=com.st.bluems"><strong>ST BLE Sensor Android application</strong></a> V3.5.0 (or higher)</li>
@@ -3409,8 +3855,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section7" aria-hidden="true"> <label for="collapse-section7" aria-hidden="true">V3.0.0 / 12-May-2017</label>
 <div>
-<h2 id="main-changes-7">Main Changes</h2>
-<h3 id="maintenance-release-7">Maintenance release</h3>
+<h2 id="main-changes-8">Main Changes</h2>
+<h3 id="maintenance-release-8">Maintenance release</h3>
 <ul>
 <li>Added support for STM32F446RE Nucleo Board</li>
 <li>Added MotionAR Activity recognition Library</li>
@@ -3421,7 +3867,7 @@
 <li>Added AcousticSL Sound Source Localization Library</li>
 <li>Added BlueVoiceADPCM half-duplex voice-over-Bluetooth low energy Library</li>
 </ul>
-<h2 id="contents-7">Contents</h2>
+<h2 id="contents-8">Contents</h2>
 <table>
 <caption>Documentation<br />
 </caption>
@@ -3652,12 +4098,12 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-7">Known Limitations</h2>
+<h2 id="known-limitations-8">Known Limitations</h2>
 <ul>
 <li>Even if FP-SNS-ALLMEMS1 send 100 quaternions/second with Bluetooth, the mobile devices could render only 60 frames/second</li>
 <li>For NUCLEO-F401RE board and NUCLEO-F446RE board, there is an hardware conflict between the boards X-NUCLEO-IKS01A2 and the X-NUCLEO-CCA02M1. The hardware features of the LSM6DSL are disabled.</li>
 </ul>
-<h2 id="important-hardware-additional-information-7">Important Hardware Additional Information</h2>
+<h2 id="important-hardware-additional-information-8">Important Hardware Additional Information</h2>
 <ul>
 <li>For F4xx STM32 Nucleo motherboard, there is an hardware conflict between the X-NUCLEO-IKS01A2 expansion board and the X-NUCLEO-CCA02M1 expansion board through the Arduino UNO R3 extension connector. The hardware conflict is onto 5,6 and 7 pin of the CN9 arduido connector.
 <ul>
@@ -3691,22 +4137,22 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="development-toolchains-and-compilers-7">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-8">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.70.2 + STLink/V2</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.21.1 + ST-LINK/V2</li>
 <li>System Workbench for STM32 1.14.0.201703061529 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-boards-7">Supported Devices and Boards</h2>
+<h2 id="supported-devices-and-boards-8">Supported Devices and Boards</h2>
 <ul>
 <li>NUCLEO-F401RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f401re.html">NUCLEO-F401RE</a>]</li>
 <li>NUCLEO-F446RE STM32 Nucleo-64 development board with STM32F446RE MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f446re.html">NUCLEO-F446RE</a>]</li>
 <li>NUCLEO-L476RG STM32 Nucleo-64 development board with STM32L476RG MCU, supports Arduino and ST morpho connectivity [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l476rg.html">NUCLEO-L476RG</a>]</li>
 <li>SensorTile development kit [<a href="https://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/sensor-solution-eval-boards/steval-stlkt01v1.html">STEVAL-STLKT01V1</a>]</li>
 </ul>
-<h2 id="backward-compatibility-7">Backward Compatibility</h2>
+<h2 id="backward-compatibility-8">Backward Compatibility</h2>
 <p>None</p>
-<h2 id="dependencies-7">Dependencies</h2>
+<h2 id="dependencies-8">Dependencies</h2>
 <p>This software release is compatible with:</p>
 <ul>
 <li><a href="https://play.google.com/store/apps/details?id=com.st.bluems"><strong>ST BLE Sensor Android application</strong></a> V3.0.0 (or higher)</li>
@@ -3717,8 +4163,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section6" aria-hidden="true"> <label for="collapse-section6" aria-hidden="true">V2.2.0 / 30-November-2016</label>
 <div>
-<h2 id="main-changes-8">Main Changes</h2>
-<h3 id="maintenance-release-8">Maintenance release</h3>
+<h2 id="main-changes-9">Main Changes</h2>
+<h3 id="maintenance-release-9">Maintenance release</h3>
 <ul>
 <li>Updated X-NUCLEO-MEMS1 driver</li>
 <li>Updated STEVAL-STLCS01V1 driver</li>
@@ -3734,8 +4180,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section5" aria-hidden="true"> <label for="collapse-section5" aria-hidden="true">V2.1.2 / 31-October-2016</label>
 <div>
-<h2 id="main-changes-9">Main Changes</h2>
-<h3 id="maintenance-release-9">Maintenance release</h3>
+<h2 id="main-changes-10">Main Changes</h2>
+<h3 id="maintenance-release-10">Maintenance release</h3>
 <ul>
 <li>Minor fix</li>
 </ul>
@@ -3744,8 +4190,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section4" aria-hidden="true"> <label for="collapse-section4" aria-hidden="true">V2.1.0 / 13-October-2016</label>
 <div>
-<h2 id="main-changes-10">Main Changes</h2>
-<h3 id="maintenance-release-10">Maintenance release</h3>
+<h2 id="main-changes-11">Main Changes</h2>
+<h3 id="maintenance-release-11">Maintenance release</h3>
 <ul>
 <li>Fixed bug in the binary file .hex without boot loader</li>
 </ul>
@@ -3754,8 +4200,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section3" aria-hidden="true"> <label for="collapse-section3" aria-hidden="true">V2.1.0 / 20-September-2016</label>
 <div>
-<h2 id="main-changes-11">Main Changes</h2>
-<h3 id="maintenance-release-11">Maintenance release</h3>
+<h2 id="main-changes-12">Main Changes</h2>
+<h3 id="maintenance-release-12">Maintenance release</h3>
 <ul>
 <li>Added Gas gauge for STEVAL-STLCS01V1 (SensorTile) board (BlueMS - Version 3.2.0 or higher)</li>
 <li>Added Virtual COM for SensorTile (for IAR and System Workbench IDE)</li>
@@ -3771,8 +4217,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true">V2.0.0 / 01-June-2016</label>
 <div>
-<h2 id="main-changes-12">Main Changes</h2>
-<h3 id="maintenance-release-12">Maintenance release</h3>
+<h2 id="main-changes-13">Main Changes</h2>
+<h3 id="maintenance-release-13">Maintenance release</h3>
 <ul>
 <li>Added the support to STEVAL-STLCS01V1 (SensorTile)</li>
 <li>For only X-NUCLEO-IDB05A1 Bluetooth Low energy expansion boards, added the possibility make the ALLMEMS1 Firmware Over The Air (FOTA) update using BlueMS Android/iOS application (BlueMS - Version 3.0.0 or higher)</li>
@@ -3797,7 +4243,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true">V1.0.0 / 29-February-2016</label>
 <div>
-<h2 id="main-changes-13">Main Changes</h2>
+<h2 id="main-changes-14">Main Changes</h2>
 <h3 id="first-release">First release</h3>
 <p>First Official Release</p>
 </div>

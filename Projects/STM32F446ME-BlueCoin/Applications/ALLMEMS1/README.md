@@ -1,28 +1,15 @@
-# ALLMEMS1 Application Description for STM32F446RE with X-NUCLEO-IKS01A2 expansion board
+## <b>ALLMEMS1 Application Description</b>
 
-The ALLMEMS1 is an STM32 ODE function pack which lets you connect your IoT node to a smartphone via BLEand use a suitable AndroidT or iOST like the ST BLE Sensor app (Version 4.13.0 or higher),
+Application for STEVAL-BCNKT01V1 (BlueCoin) evaluation board
+
+Example Description:
+
+The ALLMEMS1 is an STM32 ODE function pack which lets you connect your IoT node to a smartphone via BLEand use a suitable AndroidT or iOST like the ST BLE Sensor app,
 you can visualize real-time environmental sensor data, motion sensor data and digital microphone levels.
 The package also allows to perform advanced functionality such as voice communication over BLE, sound source localization and acoustic beam forming using inputs from multiple microphones, well sensor data fusion and accelerometer-based real-time activity recognition. 
 
-This firmware package includes Components Device Drivers, Board Support Package
-and example application for the following STMicroelectronics elements:
- - STEVAL-BCNKT01V1 (BlueCoin) evaluation board that contains the following components:
-   - MEMS sensor devices: LPS22HB, LSM303AGR, LSM6DSM
-   - digital microphone: 4 x MP34DT04-C1
- - The MotionFX (iNEMOEngine PRO) suite uses advanced algorithms to integrate outputs
-   from multiple MEMS sensors in a smartway, independent of environmental conditions,
-   to reach optimal performance. Real-time motion-sensor data fusion is set to significantly
-   improve the user experience, increasing accuracy, resolution, stability and response time.
- - MotionAR (iNEMOEngine PRO) software provides real-time activity recognition data 
-   using MEMS accelerometer sensor
- - AcousticSL software provides real-time audio source localization using PCM signal audio
- - AcousticBF software provides real-time beam forming software, using the audio signals acquired from two digital MEMS microphones,
-   it creates a virtual directional microphone pointing to a fixed direction in space
- - BlueVoiceADPCM software enables real-time half-duplex voice-over-Bluetooth low energy communication profile.
-   It includes one characteristic for audio transmission and one for synchronization and it is responsible for audio encoding and periodical data
-   transmission on Server side and for decoding of received voice data on Client side
- 
 The Example application initizializes all the Components and Library creating 3 Custom Bluetooth services:
+
  - The first service exposes all the HW and SW characteristics:
    - HW characteristics related to MEMS sensor devices: Temperature, Humidity, Pressure, Magnetometer, Gyroscope and Accelleromenter,
      Microphones Signal Noise dB level and battery charge level. 
@@ -33,20 +20,20 @@ The Example application initizializes all the Components and Library creating 3 
 	 It uses BlueVoiceADPCM software for real-time half-duplex voice-over-Bluetooth low energy communication profile.
  - The second Service exposes the console services where we have stdin/stdout and stderr capabilities
  - The last Service is used for configuration purpose
-
-This example must be used with the related ST BLE Sensor Android (Version 4.13.0 or higher) or iOS (Version 4.11.0 or higher) application available on Play/itune store,
+ 
+This example must be used with the related ST BLE Sensor Android (Version 4.20.0 or higher) or iOS (Version 4.20.0 or higher) application available on Play/itune store,
 in order to read the sent information by Bluetooth Low Energy protocol
 
-## Very Important
+### <b>Very Important</b> 
 
-a) The implementation allow the Firmware-Over-The-Air (FOTA).
+The implementation allow the Firmware-Over-The-Air (FOTA).
  
- 1) The Firmware-Over-The-Air (FOTA) is done using the ST BLE Sensor Android/iOS application (Version 4.13.0 and above)
+ 1) The Firmware-Over-The-Air (FOTA) is done using the ST BLE Sensor Android/iOS application (Version 4.20.0 and above)
  
  2) This example must run starting at address 0x08004000 in memory and works ONLY if the BootLoader 
-    is saved at the beginning of the FLASH (address 0x08000000)
+ is saved at the beginning of the FLASH (address 0x08000000)
  
- 3) For each IDE (IAR/µVision/STM32CubeIDE) there are some scripts *.bat/*.sh that makes the following operations:
+ 3) In the folder Utilities there is a scripts *.sh that makes the following operations:
     - Full Flash Erase
     - Load the BootLoader on the rigth flash region
     - Load the Program (after the compilation) on the rigth flash region (This could be used for a FOTA)
@@ -54,56 +41,94 @@ a) The implementation allow the Firmware-Over-The-Air (FOTA).
       flashed at the flash beginning (address 0x08000000) (This COULD BE NOT used for FOTA)
     - Reset the board
 	
-b) If the user presses the blue user button on Nucleo board 3 times on less that 2 seconds, he forces a new
-   Calibration for MotionFX Library (For avoiding accidental erasure of the calibration data).
-   The calibration value could be stored on FLASH memory or in RAM for avoiding to do the calibration at each board reset
+	Before to execute the *.sh script, it is necessary to edit it to set the installation path for STM32CubeProgrammer.
+	
+	BootLoaderPath/<BootLoader file name> and BinaryPath as input are required when execute *.sh script
 
-## Dependencies
+### <b>Issue</b>
+
+- Due to ram size constraints Debug is not available with STM32CubeIDE
+
+- A compiler warning is generated from STM32 Audio Library middlewares when using the library in IAR v 9.x and STM32CubeIDE.
+  It doesn't affect library performances.
+
+### <b>Keywords</b>
+
+BLE, BlueNRG-MS, SPI, UART, MEMS, MEMSMIC
+
+### <b>Hardware and Software environment</b>
+
+  - This example runs on STEVAL-BCNKT01V1 (BlueCoin) evaluation board with:
+	- Motion MEMS, environmental and analog microphone sensor on board (STEVAL-BCNKT01V1):
+	  - LPS22HB, LSM303AGR, LSM6DSM
+	  - digital microphone: 4 x MP34DT04-C1
+	  - Gas Gauge IC with alarm output STC3115
+
+ADDITIONAL_BOARD : [STEVAL-BCNKT01V1](https://www.st.com/en/evaluation-tools/steval-bcnkt01v1.html)
+
+ADDITIONAL_COMP : [LPS22HB](https://www.st.com/content/st_com/en/products/mems-and-sensors/pressure-sensors/lps22hb.html)
+
+ADDITIONAL_COMP : [LSM303AGR](https://www.st.com/en/mems-and-sensors/lsm303agr.html)
+
+ADDITIONAL_COMP : [LSM6DSM](https://www.st.com/content/st_com/en/products/mems-and-sensors/accelerometers/lsm6dsm.html)
+
+ADDITIONAL_COMP : [MP34DT04-C1](https://www.st.com/en/audio-ics/mp34dt04-c1.html)
+
+### <b>Dependencies</b>
 
 STM32Cube packages:
-  - STM32F4xx drivers from STM32CubeF4 V1.26.2
+  - STM32F4xx drivers from STM32CubeF4 V1.27.0
   
 X-CUBE packages:
-  - X-CUBE-BLE1 V6.2.2
-  - X-CUBE-MEMS1 V9.1.0
+
+  - X-CUBE-BLE1 V6.2.4
+  - X-CUBE-MEMS1 V10.0.0
+  
 @par STSW packages:
-  - STSW-BCNKT01 V2.1.3
 
-## Hardware and Software environment
+  - STSW-BCNKT01 V2.2.3
 
-- This example runs on STEVAL-BCNKT01V1 (BlueCoin) evaluation board device and development board.
-- This example must be used with the related ST BLE Sensor Android/iOS application available on Play/itune store, in order to read the sent information by Bluetooth Low Energy protocol
-- Inside the Binary Directory there are the following binaries:
-  - STM32F446ME-BlueCoin_ALLMEMS1_v4.2.0.bin     (Program without BootLoader. COULD BE USED     for FOTA)
-  - STM32F446ME-BlueCoin_ALLMEMS1_v4.2.0_BL.bin  (Program with BootLoader.    COULD NOT BE USED for FOTA)
-
-## How to use it ?
+### <b>How to use it?</b>
 
 This package contains projects for 3 IDEs viz. IAR, Keil µVision 5 and Integrated Development Environment for STM32. 
 In order to make the  program work, you must do the following:
+
  - WARNING: before opening the project with any toolchain be sure your folder
    installation path is not too in-depth since the toolchain may report errors
    after building.
 
 For IAR:
+
  - Open IAR toolchain (this firmware has been successfully tested with Embedded Workbench V9.20.1).
  - Open the IAR project file EWARM\Project.eww
- - Rebuild all files and run these script that you find on the same directory:
-   - CleanALLMEMS1_IAR_BC.bat
+ - Rebuild all files and run these script that you find on the directory Utilities and you had installed STM32CubeProgrammer tool:
+   - CleanALLMEMS1.sh
 
 For Keil µVision 5:
- - Open Keil µVision 5 toolchain (this firmware has been successfully tested with MDK-ARM Professional Version: 5.32.0).
+
+ - Open Keil µVision 5 toolchain (this firmware has been successfully tested with MDK-ARM Professional Version: 5.37.0).
  - Open the µVision project file MDK-ARM\STM32F446ME-BlueCoin_ALLMEMS1.uvprojx
- - Rebuild all files and run these script that you find on the same directory:
-   - CleanALLMEMS1_MDK_ARM_BC.bat
+ - Rebuild all files and run these script that you find on the directory Utilities and you had installed STM32CubeProgrammer tool:
+   - CleanALLMEMS1.sh
  
 For Integrated Development Environment for STM32:
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.8.0).
+
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.12.1).
  - Set the default workspace proposed by the IDE (please be sure that there are not spaces in the workspace path).
  - Press "File" -> "Import" -> "Existing Projects into Workspace"; press "Browse" in the "Select root directory" and choose the path where the System
    Workbench project is located (it should be STM32CubeIDE). 
- - Rebuild all files and and run these script that you find on the same directory:
-   - if you are on windows and you had installed the STM32 ST-Link utility:
-	 - CleanALLMEMS1_STM32CubeIDE_BC.bat
-   - Otherwise (Linux/iOS or Windows without the STM32 ST-Link Utility):
-	 - CleanALLMEMS1_STM32CubeIDE_BC.sh
+ - Rebuild all files and run these script that you find on the directory Utilities and you had installed STM32CubeProgrammer tool:
+   - CleanALLMEMS1.sh
+
+### <b>Author</b>
+
+SRA Application Team
+
+### <b>License</b>
+
+Copyright (c) 2023 STMicroelectronics.
+All rights reserved.
+
+This software is licensed under terms that can be found in the LICENSE file
+in the root directory of this software component.
+If no LICENSE file comes with this software, it is provided AS-IS.

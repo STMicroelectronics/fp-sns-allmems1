@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    sensor_service.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Add 4 bluetooth services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -1043,7 +1043,11 @@ void setConnectable(void)
   manuf_data[13] = 0x01U;
 #endif /* BLE_MANAGER_SDKV2 */
   manuf_data[14] = 0x03U; /* Board Type - Board ID*/
-  manuf_data[15] = 0x06U; /* Firmware ID */
+#ifdef BLE_MANAGER_SDKV2
+  manuf_data[15] = FIRMWARE_ID; /* Firmware ID */
+#else /* BLE_MANAGER_SDKV2 */
+  manuf_data[15] = 0x00U;
+#endif /* BLE_MANAGER_SDKV2 */
   manuf_data[16] = 0x03U; /* Option Byte */
   manuf_data[17] = 0x00U; /* Option Byte */
   manuf_data[18] = 0x00U; /* Option Byte */
@@ -1948,7 +1952,7 @@ static uint32_t DebugConsoleCommandParsing(uint8_t * att_data, uint8_t data_leng
         "\tCompiled %s %s"
 #if defined (__IAR_SYSTEMS_ICC__)
         " (IAR)\r\n",
-#elif defined (__CC_ARM)
+#elif defined (__CC_ARM) || (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)) /* For ARM Compiler 5 and 6 */
         " (KEIL)\r\n",
 #elif defined (__GNUC__)
         " (STM32CubeIDE)\r\n",

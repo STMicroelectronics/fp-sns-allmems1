@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_FitnessActivities.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Fitness Activities info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,7 +29,8 @@
 /* Exported defines ---------------------------------------------------------*/
 
 /* Exported typedef --------------------------------------------------------- */
-typedef void (*CustomWriteRequestFitnessActivities_t)(uint8_t FitnessActivitie);
+typedef void (*CustomWriteRequestFitnessActivities_t)(uint8_t FitnessActivities);
+typedef void (*CustomNotifyEventFitnessActivities_t)(BLE_NotifyEvent_t Event);
 
 typedef enum
 {
@@ -40,9 +41,9 @@ typedef enum
 } BLE_FitnessActivitiesType_t;
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_FitnessActivities_NotifyEvent;
 
 extern CustomWriteRequestFitnessActivities_t CustomWriteRequestFitnessActivities;
+extern CustomNotifyEventFitnessActivities_t CustomNotifyEventFitnessActivities;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -52,15 +53,6 @@ extern CustomWriteRequestFitnessActivities_t CustomWriteRequestFitnessActivities
  * @retval BleCharTypeDef* BleCharPointer: Data structure pointer for Fitness Activities info service
  */
 extern BleCharTypeDef* BLE_InitFitnessActivitiesService(void);
-
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting Fitness Activities Advertise Data
- * @param  uint8_t *manuf_data: Advertise Data
- * @retval None
- */
-extern void BLE_SetFitnessActivitiesAdvertizeData(uint8_t *manuf_data);
-#endif /* BLE_MANAGER_SDKV2 */
 
 /**
  * @brief  Update Fitness Activities characteristic

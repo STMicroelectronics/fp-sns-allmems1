@@ -1,41 +1,26 @@
 /**
   ******************************************************************************
   * @file    STC3115_Driver.c
-  * @author  SRA - Central Labs
+  * @author  System Research & Applications Team - Agrate/Catania Lab.
+  * @version V1.1.0
+  * @date    27-March-2023
   * @brief   STC3115 Driver Component Function Vector
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2014 STMicroelectronics</center></h2>
+  * Copyright (c) 2023 STMicroelectronics.
+  * All rights reserved.
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
 #include "STC3115_Driver.h"
-#include "STC3115_Battery.h"
+#include "STC3115_Battery_Conf.h"
 
 /** @addtogroup BSP
   * @{
@@ -89,8 +74,8 @@ static DrvStatusTypeDef STC3115_GetPresence( DrvContextTypeDef*, uint32_t*  );
 static DrvStatusTypeDef STC3115_GetAlarmStatus( DrvContextTypeDef*, uint32_t*  );
 static DrvStatusTypeDef STC3115_GetRemTime( DrvContextTypeDef*, int32_t*  );	// suggested modification
 
-extern uint8_t Sensor_IO_Write( void *handle, uint8_t WriteAddr, uint8_t *pBuffer, uint16_t nBytesToWrite );
-extern uint8_t Sensor_IO_Read( void *handle, uint8_t ReadAddr, uint8_t *pBuffer, uint16_t nBytesToRead );
+extern int32_t Sensor_IO_Write( void *handle, uint8_t WriteAddr, uint8_t *pBuffer, uint16_t nBytesToWrite );
+extern int32_t Sensor_IO_Read( void *handle, uint8_t ReadAddr, uint8_t *pBuffer, uint16_t nBytesToRead );
 
 static int STC3115_Read(DrvContextTypeDef* handle, uint8_t RegAddress, uint8_t *data, uint16_t NumByteToRead);
 static int STC3115_Write(DrvContextTypeDef* handle, uint8_t RegAddress, uint8_t *data, uint16_t NumByteToWrite);
@@ -171,7 +156,6 @@ static DrvStatusTypeDef STC3115_Init( DrvContextTypeDef* handle )
 {
   int32_t res, loop;
   int32_t OCVOffset[16] = OCV_OFFSET_TAB;
-  int vcount = 0;
   uint8_t res8;
   
   STC3115_ConfigData_TypeDef *ConfigData = &(( STC3115_Data_t * )(( GG_Data_t * )handle->pData)->pComponentData)->configData;
@@ -234,57 +218,40 @@ static DrvStatusTypeDef STC3115_Init( DrvContextTypeDef* handle )
   
   /* check RAM data validity */
   STC3115_ReadRamData(handle, RAMData->db);
-  
-  STC3115_Read(handle, STC3115_REG_MODE, &res8, 1);
-  res8 &= STC3115_GG_RUN;
-  if(res8 != 0)   /* GasGauge is running */
+  /*new driver*/
+  if ( (RAMData->reg.TstWord != RAM_TSTWORD) || (STC3115_CalcRamCRC8(RAMData->db,RAM_SIZE)!=0) )
   {
-    STC3115_Read(handle, STC3115_REG_CTRL, &res8, 1);
-    res8 &= (STC3115_BATFAIL | STC3115_PORDET);
-    if(res8 == 0)   /* no GG reset has occurred */
-    {
-      if((RAMData->reg.TstWord == RAM_TSTWORD) && (STC3115_CalcRamCRC8(RAMData->db, RAM_SIZE) == 0))  /* RAM data is consistent */
-      {
-        if(RAMData->reg.STC3115_Status == STC3115_RUNNING)   /* last saved RAM state was for a valid measurement */
-        {
-          /* Recover from last SOC */
-          res = STC3115_Restore(handle, ConfigData);
-          if(res < 0)
-            return COMPONENT_ERROR;
-        }
-      }
-    }
+    /* RAM invalid */
+    STC3115_InitRamData(handle,ConfigData);
+    res=STC3115_Startup(handle,ConfigData);  /* return -1 if I2C error or STC3115 not present */
   }
   
-  /* Startup from known state */
-  STC3115_Reset(handle);
-  STC3115_InitRamData(handle, ConfigData);
+  HAL_Delay(1200);//to avoid false positive
+  STC3115_Read(handle,STC3115_REG_CTRL,&res8,1);
+  /* check STC3115 status */    
+  if ( (res8 & (STC3115_BATFAIL | STC3115_PORDET)) != 0 )
+  {
+    STC3115_Reset(handle);
+    handle->isInitialized = 1;
+    BatteryData->Presence = 0;
+    return COMPONENT_BATT_FAIL ; //no battery
+  } else {        
+     res=STC3115_Startup(handle,ConfigData);  /* return -1 if I2C error or STC3115 not present */
+  }
   
+  if(res<0)
+  { 
+    handle->isInitialized = 0; 
+    return COMPONENT_ERROR;
+  }
+  //Update RAM status
   RAMData->reg.STC3115_Status = STC3115_INIT;
   STC3115_UpdateRamCRC(handle);
-  STC3115_WriteRamData(handle, RAMData->db);
-  
-  /* Configure & Handle delays and Resets */
-  STC3115_SetParam(handle, ConfigData);
-  
-  STC3115_ReadWord(handle, STC3115_REG_COUNTER, &vcount);
-  while(vcount <= VCOUNT)
-  {
-    STC3115_Read(handle, STC3115_REG_MODE, &res8, 1);
-    res8 &= STC3115_GG_RUN;
-    while(res8 == 0)
-    {
-      STC3115_SetParam(handle, ConfigData);
-      GG_Delay(200);
-      STC3115_Read(handle, STC3115_REG_MODE, &res8, 1);
-      res8 &= STC3115_GG_RUN;
-    } 
-    GG_Delay(200);
-    STC3115_ReadWord(handle, STC3115_REG_COUNTER, &vcount);
-  }
-  
+  STC3115_WriteRamData(handle,RAMData->db);
   handle->isInitialized = 1;
+  
   return COMPONENT_OK;
+
 }
 
 
@@ -391,7 +358,7 @@ static DrvStatusTypeDef STC3115_Task( DrvContextTypeDef* handle, uint8_t *vm_mod
   /* check STC3115 running mode*/
   if ((BatteryData->status & STC3115_GG_RUN) == 0)
   {
-    if(RAMData->reg.STC3115_Status == STC3115_RUNNING)
+    if(RAMData->reg.STC3115_Status == (STC3115_RUNNING | STC3115_POWERDN))
     {
       STC3115_Restore(handle, ConfigData);  /* if RUNNING state, restore STC3115*/
     }
@@ -461,8 +428,8 @@ static DrvStatusTypeDef STC3115_Task( DrvContextTypeDef* handle, uint8_t *vm_mod
       /*Remaining time calculation*/
       if(BatteryData->Current < 0)
       {
-        BatteryData->RemTime = (BatteryData->ChargeValue * CAPACITY * 6)/(-BatteryData->Current);
-//        BatteryData->RemTime = (BatteryData->RemTime * 4 + BatteryData->ChargeValue / BatteryData->Current * 60 ) / 5;
+        BatteryData->RemTime = (BatteryData->ChargeValue * CAPACITY * 6)/(-BatteryData->Current);                          //driver sensortile
+//        BatteryData->RemTime = (BatteryData->RemTime * 4 + BatteryData->ChargeValue / BatteryData->Current * 60 ) / 5;  //? new driver
         if(BatteryData->RemTime  < 0)
           BatteryData->RemTime = -1; /* means no estimated time available */
       }
@@ -1074,5 +1041,4 @@ static DrvStatusTypeDef STC3115_SetParam(DrvContextTypeDef* handle, STC3115_Conf
 * @}
 */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_FFT_AlarmSubrangeStatus.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   FFT Alarm Subrange Status info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,7 +26,7 @@
  extern "C" {
 #endif 
 
-/* Exported Types ----------------------------------------------------------- */
+/* Exported typedef --------------------------------------------------------- */
 /**
 * @brief  X-Y-Z Generic Value in float
 */
@@ -35,7 +35,7 @@ typedef struct
   float x;         //!< Generic X Value in float
   float y;         //!< Generic Y Value in float
   float z;         //!< Generic Z Value in float
-} BLE_MANAGER_FFTAlarmSubrangeStatusGenericValue_t;
+} BLE_FFT_AlarmSubrangeStatusGenericValue_t;
 
 /**
  * @brief  Warning Alarm Datatype
@@ -46,20 +46,22 @@ typedef enum
   BLE_WARNING_SUBRANGE       = (uint8_t)0x01,  //!< WARNING STATUS
   BLE_ALARM_SUBRANGE         = (uint8_t)0x02,  //!< ALARM STATUS
   BLE_NONE_SUBRANGE          = (uint8_t)0x03,  //!< RFU STATUS
-} BLE_Manager_FFTAlarmSubrangeStatusAlarmType_t;
+} BLE_FFT_AlarmType_t;
 
 /**
  * @brief  STATUS for FFT Subrange Warning-Alarm
  */
 typedef struct 
 {
-  BLE_Manager_FFTAlarmSubrangeStatusAlarmType_t STATUS_AXIS_X;   //!< X STATUS ALARM
-  BLE_Manager_FFTAlarmSubrangeStatusAlarmType_t STATUS_AXIS_Y;   //!< Y STATUS ALARM
-  BLE_Manager_FFTAlarmSubrangeStatusAlarmType_t STATUS_AXIS_Z;   //!< Z STATUS ALARM
-} sBLE_Manager_FFTAlarmSubrangeStatusAlarm_t;
+  BLE_FFT_AlarmType_t STATUS_AXIS_X;   //!< X STATUS ALARM
+  BLE_FFT_AlarmType_t STATUS_AXIS_Y;   //!< Y STATUS ALARM
+  BLE_FFT_AlarmType_t STATUS_AXIS_Z;   //!< Z STATUS ALARM
+} sBLE_FFT_AlarmSubrangeStatus_t;
+
+typedef void (*CustomNotifyEventFFT_AlarmSubrangeStatus_t)(BLE_NotifyEvent_t Event);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_FFTAlarmSubrangeStatus_NotifyEvent;
+extern CustomNotifyEventFFT_AlarmSubrangeStatus_t CustomNotifyEventFFT_AlarmSubrangeStatus;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -68,27 +70,18 @@ extern BLE_NotifyEnv_t BLE_FFTAlarmSubrangeStatus_NotifyEvent;
  * @param  None
  * @retval BleCharTypeDef* BleCharPointer: Data structure pointer for FFT Alarm Subrange Status info service
  */
-BleCharTypeDef* BLE_InitFFTAlarmSubrangeStatusService(void);
-
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting FFT Alarm Subrange Status Advertize Data
- * @param  uint8_t *manuf_data: Advertize Data
- * @retval None
- */
-void BLE_SetFFTAlarmSubrangeStatusAdvertizeData(uint8_t *manuf_data);
-#endif /* BLE_MANAGER_SDKV2 */
+BleCharTypeDef* BLE_InitFFT_AlarmSubrangeStatusService(void);
 
 /*
  * @brief  Update FFT Alarm Subrange RMS status value
- * @param  sBLE_Manager_FFTAlarmSubrangeStatusAlarm_t              AlarmStatus
- * @param  BLE_MANAGER_FFTAlarmSubrangeStatusGenericValue_t        SubrangeMaxValue
- * @param  BLE_MANAGER_FFTAlarmSubrangeStatusGenericValue_t        SubrangeFreqMaxValue
+ * @param  sBLE_FFT_AlarmSubrangeStatus_t              AlarmStatus
+ * @param  BLE_FFT_AlarmSubrangeStatusGenericValue_t        SubrangeMaxValue
+ * @param  BLE_FFT_AlarmSubrangeStatusGenericValue_t        SubrangeFreqMaxValue
  * @retval tBleStatus   Status
  */
-tBleStatus BLE_FFTAlarmSubrangeStatusUpdate(sBLE_Manager_FFTAlarmSubrangeStatusAlarm_t          AlarmStatus,
-                                            BLE_MANAGER_FFTAlarmSubrangeStatusGenericValue_t    SubrangeMaxValue,
-                                            BLE_MANAGER_FFTAlarmSubrangeStatusGenericValue_t    SubrangeFreqMaxValue);
+tBleStatus BLE_FFT_AlarmSubrangeStatusUpdate(sBLE_FFT_AlarmSubrangeStatus_t          AlarmStatus,
+                                            BLE_FFT_AlarmSubrangeStatusGenericValue_t    SubrangeMaxValue,
+                                            BLE_FFT_AlarmSubrangeStatusGenericValue_t    SubrangeFreqMaxValue);
 
 #ifdef __cplusplus
 }

@@ -1171,7 +1171,7 @@
 
   <Group>
     <GroupName>Middlewares/STM32_MotionAR</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1191,7 +1191,7 @@
 
   <Group>
     <GroupName>Middlewares/STM32_MotionCP</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1211,7 +1211,7 @@
 
   <Group>
     <GroupName>Middlewares/STM32_MotionFA</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1231,7 +1231,7 @@
 
   <Group>
     <GroupName>Middlewares/STM32_MotionFX</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1251,7 +1251,7 @@
 
   <Group>
     <GroupName>Middlewares/STM32_MotionGR</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1271,7 +1271,7 @@
 
   <Group>
     <GroupName>Middlewares/STM32_MotionID</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1291,7 +1291,7 @@
 
   <Group>
     <GroupName>Middlewares/STM32_MotionPE</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1311,7 +1311,7 @@
 
   <Group>
     <GroupName>Middlewares/STM32_MotionSD</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1331,7 +1331,7 @@
 
   <Group>
     <GroupName>Middlewares/STM32_MotionTL</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1351,7 +1351,7 @@
 
   <Group>
     <GroupName>Middlewares/STM32_MotionVC</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1435,7 +1435,7 @@
 
   <Group>
     <GroupName>STM32L4R9ZI-SensorTile.box_ALLMEMS1/MDK-ARM</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    MotionCP_Manager.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   This file includes carry position recognition interface functions
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -21,8 +21,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
 #include "TargetFeatures.h"
-
-#ifdef ALLMEMS1_MOTIONCP
 
 /* Imported Variable -------------------------------------------------------------*/
 extern float sensitivity_Mul;
@@ -90,5 +88,4 @@ void MotionCP_manager_init(void)
  * @}
  */ /* end of group Drv_Sensor          Drv_Sensor*/
 
-#endif /*  ALLMEMS1_MOTIONCP */
 

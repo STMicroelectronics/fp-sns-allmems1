@@ -1,21 +1,20 @@
 /**
- ******************************************************************************
- * @file    stts751.h
- * @author  MEMS Software Solutions Team
- * @brief   STTS751 header driver file
- ******************************************************************************
- * @attention
- *
- * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
- * All rights reserved.</center></h2>
- *
- * This software component is licensed by ST under BSD 3-Clause license,
- * the "License"; You may not use this file except in compliance with the
- * License. You may obtain a copy of the License at:
- *                        opensource.org/licenses/BSD-3-Clause
- *
- ******************************************************************************
- */
+  ******************************************************************************
+  * @file    stts751.h
+  * @author  MEMS Software Solutions Team
+  * @brief   STTS751 header driver file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STTS751_H
@@ -31,24 +30,25 @@ extern "C"
 #include <string.h>
 
 /** @addtogroup BSP BSP
- * @{
- */
+  * @{
+  */
 
 /** @addtogroup Component Component
- * @{
- */
+  * @{
+  */
 
 /** @addtogroup STTS751 STTS751
- * @{
- */
+  * @{
+  */
 
 /** @defgroup STTS751_Exported_Types STTS751 Exported Types
- * @{
- */
+  * @{
+  */
 
 typedef int32_t (*STTS751_Init_Func)(void);
 typedef int32_t (*STTS751_DeInit_Func)(void);
 typedef int32_t (*STTS751_GetTick_Func)(void);
+typedef void    (*STTS751_Delay_Func)(uint32_t);
 typedef int32_t (*STTS751_WriteReg_Func)(uint16_t, uint16_t, uint8_t *, uint16_t);
 typedef int32_t (*STTS751_ReadReg_Func)(uint16_t, uint16_t, uint8_t *, uint16_t);
 
@@ -61,6 +61,7 @@ typedef struct
   STTS751_WriteReg_Func      WriteReg;
   STTS751_ReadReg_Func       ReadReg;
   STTS751_GetTick_Func       GetTick;
+  STTS751_Delay_Func         Delay;
 } STTS751_IO_t;
 
 typedef struct
@@ -77,10 +78,12 @@ typedef struct
   uint8_t Temperature;
   uint8_t Pressure;
   uint8_t Humidity;
+  uint8_t Gas;
   uint8_t LowPower;
   float   HumMaxOdr;
   float   TempMaxOdr;
   float   PressMaxOdr;
+  float   GasMaxOdr;
 } STTS751_Capabilities_t;
 
 typedef struct
@@ -101,12 +104,12 @@ typedef struct
 } STTS751_TEMP_Drv_t;
 
 /**
- * @}
- */
+  * @}
+  */
 
 /** @defgroup STTS751_Exported_Constants STTS751 Exported Constants
- * @{
- */
+  * @{
+  */
 #define STTS751_I2C_BUS           0U
 
 /** STTS751 error codes  **/
@@ -114,12 +117,12 @@ typedef struct
 #define STTS751_ERROR             -1
 
 /**
- * @}
- */
+  * @}
+  */
 
 /** @addtogroup STTS751_Exported_Functions STTS751 Exported Functions
- * @{
- */
+  * @{
+  */
 
 int32_t STTS751_RegisterBusIO(STTS751_Object_t *pObj, STTS751_IO_t *pIO);
 int32_t STTS751_Init(STTS751_Object_t *pObj);
@@ -136,7 +139,8 @@ int32_t STTS751_TEMP_GetTemperature(STTS751_Object_t *pObj, float *Value);
 int32_t STTS751_TEMP_Get_DRDY_Status(STTS751_Object_t *pObj, uint8_t *Status);
 int32_t STTS751_TEMP_SetLowTemperatureThreshold(STTS751_Object_t *pObj, float Value);
 int32_t STTS751_TEMP_SetHighTemperatureThreshold(STTS751_Object_t *pObj, float Value);
-int32_t STTS751_TEMP_GetTemperatureLimitStatus(STTS751_Object_t *pObj, uint8_t *HighLimit, uint8_t *LowLimit, uint8_t *ThermLimit);
+int32_t STTS751_TEMP_GetTemperatureLimitStatus(STTS751_Object_t *pObj, uint8_t *HighLimit, uint8_t *LowLimit,
+                                               uint8_t *ThermLimit);
 int32_t STTS751_TEMP_SetEventPin(STTS751_Object_t *pObj, uint8_t Enable);
 
 int32_t STTS751_Read_Reg(STTS751_Object_t *pObj, uint8_t Reg, uint8_t *Data);
@@ -146,19 +150,19 @@ int32_t STTS751_Set_One_Shot(STTS751_Object_t *pObj);
 int32_t STTS751_Get_One_Shot_Status(STTS751_Object_t *pObj, uint8_t *Status);
 
 /**
- * @}
- */
+  * @}
+  */
 
 /** @addtogroup STTS751_Exported_Variables STTS751 Exported Variables
- * @{
- */
+  * @{
+  */
 
 extern STTS751_CommonDrv_t STTS751_COMMON_Driver;
 extern STTS751_TEMP_Drv_t STTS751_TEMP_Driver;
 
 /**
- * @}
- */
+  * @}
+  */
 
 #ifdef __cplusplus
 }
@@ -167,15 +171,13 @@ extern STTS751_TEMP_Drv_t STTS751_TEMP_Driver;
 #endif
 
 /**
- * @}
- */
+  * @}
+  */
 
 /**
- * @}
- */
+  * @}
+  */
 
 /**
- * @}
- */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+  * @}
+  */

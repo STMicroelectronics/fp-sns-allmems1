@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_GestureRecognition.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add Gesture Recognition service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,10 +26,10 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_GESTURE_REC_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x02,0x00,0x01,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define GESTURE_RECOGNITION_ADVERTIZE_DATA_POSITION  18
+#define GESTURE_RECOGNITION_ADVERTISE_DATA_POSITION  18
 
 /* Exported variables --------------------------------------------------------*/
-BLE_NotifyEnv_t BLE_GestureRecognition_NotifyEvent = BLE_NOTIFY_NOTHING;
+CustomNotifyEventGestureRecognition_t CustomNotifyEventGestureRecognition=NULL;
 CustomReadRequestGestureRecognition_t CustomReadRequestGestureRecognition=NULL;
 
 /* Private variables ---------------------------------------------------------*/
@@ -38,9 +38,9 @@ static BleCharTypeDef BleGestureRecognition;
 
 /* Private functions ---------------------------------------------------------*/
 static void AttrMod_Request_GestureRecognition(void *BleCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data);
-#ifndef BLUENRG_LP
+#if (BLUE_CORE != BLUENRG_LP)
 static void Read_Request_GestureRecognition(void *BleCharPointer,uint16_t handle);
-#else /* BLUENRG_LP */
+#else /* (BLUE_CORE != BLUENRG_LP) */
 static void Read_Request_GestureRecognition(void *BleCharPointer,
                              uint16_t handle,
                              uint16_t Connection_Handle,
@@ -48,7 +48,7 @@ static void Read_Request_GestureRecognition(void *BleCharPointer,
                              uint16_t Attr_Val_Offset,
                              uint8_t Data_Length,
                              uint8_t Data[]);
-#endif /* BLUENRG_LP */
+#endif /* (BLUE_CORE != BLUENRG_LP) */
 
 /**
  * @brief  Init Gesture Recognition service
@@ -89,9 +89,9 @@ BleCharTypeDef* BLE_InitGestureRecognitionService(void)
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-void BLE_SetGestureRecognitionAdvertizeData(uint8_t *manuf_data)
+void BLE_SetGestureRecognitionAdvertiseData(uint8_t *manuf_data)
 {
-  manuf_data[GESTURE_RECOGNITION_ADVERTIZE_DATA_POSITION] |= 0x02U;
+  manuf_data[GESTURE_RECOGNITION_ADVERTISE_DATA_POSITION] |= 0x02U;
 }
 #endif /* BLE_MANAGER_SDKV2 */
 
@@ -136,18 +136,23 @@ tBleStatus BLE_GestureRecognitionUpdate(BLE_GR_output_t GestureRecognitionCode)
  */
 static void AttrMod_Request_GestureRecognition(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_GestureRecognition_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_GestureRecognition_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventGestureRecognition!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventGestureRecognition(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventGestureRecognition(BLE_NOTIFY_UNSUB);
+    }
   }
- 
 #if (BLE_DEBUG_LEVEL>1)
+  else {
+     BLE_MANAGER_PRINTF("CustomNotifyEventGestureRecognition function Not Defined\r\n");
+  }
+  
  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->Gesture Recognition=%s\n", (BLE_GestureRecognition_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+   BytesToWrite = (uint8_t) sprintf((char *)BufferToWrite,"--->Gest Rec=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
    Term_Update(BufferToWrite,BytesToWrite);
  } else {
-   BLE_MANAGER_PRINTF("--->Gesture Recognition=%s", (BLE_GestureRecognition_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+   BLE_MANAGER_PRINTF("--->Gest Rec=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
  }
 #endif
 }
@@ -158,7 +163,7 @@ static void AttrMod_Request_GestureRecognition(void *VoidCharPointer, uint16_t a
  * @param  uint16_t handle Handle of the attribute
  * @retval None
  */
-#ifndef BLUENRG_LP
+#if (BLUE_CORE != BLUENRG_LP)
 static void Read_Request_GestureRecognition(void *VoidCharPointer,uint16_t handle)
 {
   if(CustomReadRequestGestureRecognition != NULL) {
@@ -169,7 +174,7 @@ static void Read_Request_GestureRecognition(void *VoidCharPointer,uint16_t handl
     BLE_MANAGER_PRINTF("\r\n\nRead request Gesture Recognition function not defined\r\n\n");
   }
 }
-#else /* BLUENRG_LP */
+#else /* (BLUE_CORE != BLUENRG_LP) */
 static void Read_Request_GestureRecognition(void *BleCharPointer,
                                            uint16_t handle,
                                            uint16_t Connection_Handle,
@@ -208,5 +213,5 @@ static void Read_Request_GestureRecognition(void *BleCharPointer,
     BLE_MANAGER_PRINTF("aci_gatt_srv_authorize_resp_nwk() failed: 0x%02x\r\n", ret);
   }
 }
-#endif /* BLUENRG_LP */
+#endif /* (BLUE_CORE != BLUENRG_LP) */
 

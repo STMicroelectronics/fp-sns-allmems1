@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    OTA.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Over-the-Air Update API implementation
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -129,11 +129,11 @@ int8_t CheckBootLoaderCompliance(void)
  * @param uint8_t WriteMagicNum 1/0 for writing or not the magic number
  * @retval int8_t Return value for checking purpouse (1/-1 == Ok/Error)
  */
-int8_t UpdateFWBlueMS(uint32_t *SizeOfUpdate,uint8_t * att_data, int32_t data_length,uint8_t WriteMagicNum)
+int8_t UpdateFW(uint32_t *SizeOfUpdate,uint8_t * att_data, int32_t data_length,uint8_t WriteMagicNum)
 {
   int8_t ReturnValue=0;
   /* Save the Packed received */
-  //OTA_PRINTF("What UpdateFWBlueMS receives SizeOfUpdateBlueFW=%d InSizeOfUpdate=%d lenght=%d\r\n",SizeOfUpdateBlueFW,*SizeOfUpdate,data_length);
+  //OTA_PRINTF("What UpdateFW receives SizeOfUpdateBlueFW=%d InSizeOfUpdate=%d lenght=%d\r\n",SizeOfUpdateBlueFW,*SizeOfUpdate,data_length);
   if(data_length>(*SizeOfUpdate)){
     /* Too many bytes...Something wrong... necessity to send it again... */
     //OTA_PRINTF("OTA something wrong data_length=%ld RemSizeOfUpdate=%ld....\r\nPlease Try again\r\n",data_length,(*SizeOfUpdate));
@@ -233,7 +233,7 @@ int8_t UpdateFWBlueMS(uint32_t *SizeOfUpdate,uint8_t * att_data, int32_t data_le
  * @param uint32_t uwCRCValue aspected CRV value
  * @retval None
  */
-void StartUpdateFWBlueMS(uint32_t SizeOfUpdate, uint32_t uwCRCValue)
+void StartUpdateFW(uint32_t SizeOfUpdate, uint32_t uwCRCValue)
 {
   FLASH_EraseInitTypeDef EraseInitStruct;
   uint32_t SectorError = 0;

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_ECompass.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+   * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add E-Compass service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,10 +26,10 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_ECOMPASS_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x40,0x00,0x01,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define ECOMPASS_ADVERTIZE_DATA_POSITION  18
+#define ECOMPASS_ADVERTISE_DATA_POSITION  18
 
 /* Exported variables --------------------------------------------------------*/
-BLE_NotifyEnv_t BLE_ECompass_NotifyEvent = BLE_NOTIFY_NOTHING;
+CustomNotifyECompass_t CustomNotifyECompass=NULL;
 
 /* Private variables ---------------------------------------------------------*/
 /* Data structure pointer for E-Compass service */
@@ -72,15 +72,15 @@ BleCharTypeDef* BLE_InitECompassService(void)
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-void BLE_SetECompassAdvertizeData(uint8_t *manuf_data)
+void BLE_SetECompassAdvertiseData(uint8_t *manuf_data)
 {
-  manuf_data[ECOMPASS_ADVERTIZE_DATA_POSITION] |= 0x40U;
+  manuf_data[ECOMPASS_ADVERTISE_DATA_POSITION] |= 0x40U;
 }
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
  * @brief  Update E-Compass characteristic
- * @param  BLE_CP_output_t ECompassCode E-Compass Recognized
+ * @param  uint16_t Angle measured
  * @retval tBleStatus   Status
  */
 tBleStatus BLE_ECompassUpdate(uint16_t Angle)
@@ -119,18 +119,23 @@ tBleStatus BLE_ECompassUpdate(uint16_t Angle)
  */
 static void AttrMod_Request_ECompass(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_ECompass_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_ECompass_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyECompass!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyECompass(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyECompass(BLE_NOTIFY_UNSUB);
+    }
   }
- 
 #if (BLE_DEBUG_LEVEL>1)
+  else {
+     BLE_MANAGER_PRINTF("CustomNotifyECompass function Not Defined\r\n");
+  }
+  
  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->E-Compass=%s\n", (BLE_ECompass_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+   BytesToWrite = (uint8_t) sprintf((char *)BufferToWrite,"--->E-Compass=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
    Term_Update(BufferToWrite,BytesToWrite);
  } else {
-   BLE_MANAGER_PRINTF("--->E-Compass=%s", (BLE_ECompass_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+   BLE_MANAGER_PRINTF("--->E-Compass=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
  }
 #endif
 }

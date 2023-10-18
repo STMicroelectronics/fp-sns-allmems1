@@ -3,14 +3,14 @@
   ******************************************************************************
   * @file    main.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Header for main.c file.
   *          This file contains the common defines of the application.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -51,13 +51,25 @@ extern "C" {
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
 #define MCR_BLUEMS_F2I_1D(in, out_int, out_dec) {out_int = (int32_t)in; out_dec= (int32_t)((in-out_int)*10);};
 #define MCR_BLUEMS_F2I_2D(in, out_int, out_dec) {out_int = (int32_t)in; out_dec= (int32_t)((in-out_int)*100);};
 
+  /* Exported define ------------------------------------------------------------*/
+/* STM32 board type*/
+#define BLE_STM32_BOARD "STM32L476RG-NUCLEO"
+  
 /* @brief  Scale factor. It is used to scale acceleration from mg to g */ 
 #define FROM_MG_TO_G    0.001f
-/* USER CODE END EM */
+
+/* Feature mask for SourceLocalization */
+#define FEATURE_MASK_DIR_OF_ARRIVAL 0x10000000
+   
+/* W2ST command - SL sensitivity */
+#define W2ST_COMMAND_SL_SENSITIVITY 0xCC
+/* W2ST command - SL sensitivity Low */
+#define W2ST_COMMAND_SL_LOW  0x00
+/* W2ST command - SL sensitivity High */
+#define W2ST_COMMAND_SL_HIGH  0x01
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
@@ -156,6 +168,7 @@ extern uint8_t NodeName[];
 #define MEMS_ACC_INT_Pin GPIO_PIN_5
 #define MEMS_ACC_INT_GPIO_Port GPIOB
 #define MEMS_ACC_INT_EXTI_IRQn EXTI9_5_IRQn
+
 /* USER CODE BEGIN Private defines */
 
 #define ANGLE_MODE MODE_PITCH_ROLL_GRAVITY_INCLINATION

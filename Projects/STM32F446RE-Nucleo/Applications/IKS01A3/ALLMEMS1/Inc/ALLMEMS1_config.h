@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ALLMEMS1_config.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   FP-SNS-ALLMEMS1 configuration
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -23,13 +23,6 @@
 #define __ALLMEMS1_CONFIG_H
 
 /* Exported define ------------------------------------------------------------*/
-/* Define the ALLMEMS1 MAC address, otherwise it will create a Unique MAC */
-//#define MAC_ALLMEMS1 0xFF, 0xEE, 0xDD, 0xAA, 0xAA, 0xAA
-
-#ifndef MAC_ALLMEMS1
-/* For creating one MAC related to STM32 UID, Otherwise the BLE will use it's random MAC */
-#define MAC_STM32UID_ALLMEMS1
-#endif /* MAC_ALLMEMS1 */
 
 /* Define The transmission interval in Multiple of 10ms for quaternions*/
 #define QUAT_UPDATE_MUL_10MS 3
@@ -60,11 +53,8 @@ if QUAT_UPDATE_MUL_10MS!=3, then SEND_N_QUATERNIONS must be ==1
 
 /* Package Version only numbers 0->9 */
 #define ALLMEMS1_VERSION_MAJOR '4'
-#define ALLMEMS1_VERSION_MINOR '2'
+#define ALLMEMS1_VERSION_MINOR '3'
 #define ALLMEMS1_VERSION_PATCH '0'
-
-/* Define the ALLMEMS1 Name MUST be 7 char long */
-#define NAME_BLUEMS 'A','M','1','V',ALLMEMS1_VERSION_MAJOR,ALLMEMS1_VERSION_MINOR,ALLMEMS1_VERSION_PATCH
 
 /* Package Name */
 #define ALLMEMS1_PACKAGENAME "FP-SNS-ALLMEMS1"
@@ -121,19 +111,6 @@ if QUAT_UPDATE_MUL_10MS!=3, then SEND_N_QUATERNIONS must be ==1
 #else /* ALLMEMS1_ENABLE_PRINTF */
   #define ALLMEMS1_PRINTF(...)
 #endif /* ALLMEMS1_ENABLE_PRINTF */
-
-/* STM32 Unique ID */
-#ifdef USE_STM32F4XX_NUCLEO
-#define STM32_UUID ((uint32_t *)0x1FFF7A10)
-#endif /* USE_STM32F4XX_NUCLEO */
-
-#ifdef USE_STM32L4XX_NUCLEO
-#define STM32_UUID ((uint32_t *)0x1FFF7590)
-#endif /* USE_STM32L4XX_NUCLEO */
-
-/* STM32 MCU_ID */
-#define STM32_MCU_ID ((uint32_t *)0xE0042000)
-/* Control Section */
 
 #if ((SEND_N_QUATERNIONS<1) || (SEND_N_QUATERNIONS>3))
   #error "SEND_N_QUATERNIONS could be only 1,2 or 3"

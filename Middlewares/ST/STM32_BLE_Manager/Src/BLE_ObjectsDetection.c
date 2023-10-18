@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_ObjectsDetection.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add Objects Detection info services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -27,11 +27,9 @@
 #define COPY_TOF_MOBJ_CHAR_UUID(uuid_struct)	COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x13,0x00,0x02,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
 
-#define OBJECTS_DETECTION_ADVERTIZE_DATA_POSITION  18
-
 /* Exported variables --------------------------------------------------------*/
-BLE_NotifyEnv_t BLE_ObjectsDetection_NotifyEvent = BLE_NOTIFY_NOTHING;
 CustomWriteRequestObjectsDetection_t CustomWriteRequestObjectsDetection=NULL;
+CustomNotifyEventObjectsDetection_t CustomNotifyEventObjectsDetection=NULL;
 
 /* Private variables ---------------------------------------------------------*/
 /* Data structure pointer for Objects Detection info service */
@@ -74,19 +72,6 @@ BleCharTypeDef* BLE_InitObjectsDetectionService(void)
   
   return BleCharPointer;
 }
-
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting Objects Detection Advertise Data
- * @param  uint8_t *manuf_data: Advertise Data
- * @retval None
- */
-void BLE_SetObjectsDetectionAdvertizeData(uint8_t *manuf_data)
-{
-  /* Setting Objects Detection Advertise Data */
-  manuf_data[OBJECTS_DETECTION_ADVERTIZE_DATA_POSITION] |= 0x12U;
-}
-#endif /* BLE_MANAGER_SDKV2 */
 
 /**
  * @brief  Update number of the objects and related distance value detection (by ToF sensor)
@@ -146,19 +131,24 @@ tBleStatus BLE_ObjectsDetectionStatusUpdate(uint16_t *Distances, uint8_t HumanPr
  */
 static void AttrMod_Request_ObjectsDetection(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_ObjectsDetection_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_ObjectsDetection_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventObjectsDetection!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventObjectsDetection(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventObjectsDetection(BLE_NOTIFY_UNSUB);
+    }
   }
- 
 #if (BLE_DEBUG_LEVEL>1)
- if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite = (uint8_t) sprintf((char *)BufferToWrite,"--->ObjectsDetection=%s\n", (BLE_ObjectsDetection_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
-   Term_Update(BufferToWrite,BytesToWrite);
- } else {
-   BLE_MANAGER_PRINTF("--->ObjectsDetection=%s", (BLE_ObjectsDetection_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
- }
+  else {
+    BLE_MANAGER_PRINTF("CustomNotifyEventObjectsDetection function Not Defined\r\n");
+  }
+
+  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+    BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite,"--->ObjectsDetection=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
+    Term_Update(BufferToWrite,BytesToWrite);
+  } else {
+    BLE_MANAGER_PRINTF("--->ObjectsDetection=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
+  }
 #endif
 }
 

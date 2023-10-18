@@ -10,8 +10,8 @@
       <TargetName>STM32L476RG-Nucleo_IKS01A3_ALLMEMS1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32L476RGTx</Device>
@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>STM32L476RG-Nucleo_IKS01A3_ALLMEMS1\Exe\</OutputDirectory>
-          <OutputName>STM32L476RG-Nucleo_IKS01A3_ALLMEMS1</OutputName>
+          <OutputName>ALLMEMS1</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -82,7 +82,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$K\ARM\ARMCC\bin\fromelf.exe --bin --output=@L.bin !L</UserProg1Name>
+            <UserProg1Name>fromelf #L --bin --output=@L.bin !L</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -186,6 +186,7 @@
             <RvdsVP>2</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -322,13 +323,13 @@
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>2</wLevel>
+            <wLevel>3</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
-            <v6Lang>5</v6Lang>
+            <v6Lang>3</v6Lang>
             <v6LangP>3</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
@@ -336,10 +337,10 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>-Wno-format</MiscControls>
               <Define>USE_HAL_DRIVER,STM32L476xx,USE_STM32L4XX_NUCLEO,STM32_NUCLEO</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../../../../../../Drivers/STM32L4xx_HAL_Driver/Inc;../../../../../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/BlueNRG-2/hci/hci_tl_patterns/Basic;../../../../../../Middlewares/ST/BlueNRG-2/utils;../../../../../../Middlewares/ST/BlueNRG-2/includes;../../../../../../Drivers/BSP/Components/lsm6dso;../../../../../../Drivers/BSP/Components/lis2dw12;../../../../../../Drivers/BSP/Components/lis2mdl;../../../../../../Drivers/BSP/Components/hts221;../../../../../../Drivers/BSP/Components/lps22hh;../../../../../../Drivers/BSP/Components/stts751;../../../../../../Drivers/BSP/IKS01A3;../../../../../../Drivers/BSP/Components/Common;../../../../../../Middlewares/ST/STM32_AcousticSL_Library/Inc;../../../../../../Middlewares/ST/STM32_Audio/Addons/PDM/Inc;../../../../../../Middlewares/ST/STM32_MetaDataManager;../../../../../../Middlewares/ST/STM32_MotionAR_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionFX_Library/Inc;../../../../../../Middlewares/ST/STM32_BLE_Manager/Inc;../../../../../../Middlewares/Third_Party/parson;../../../../../../Middlewares/ST/STM32_MotionCP_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionGR_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionID_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionPE_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionSD_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionVC_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionFA_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionTL_Library/Inc;../Patch</IncludePath>
+              <IncludePath>../Inc;../../../../../../Drivers/STM32L4xx_HAL_Driver/Inc;../../../../../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/BlueNRG-2/hci/hci_tl_patterns/Basic;../../../../../../Middlewares/ST/BlueNRG-2/utils;../../../../../../Middlewares/ST/BlueNRG-2/includes;../../../../../../Drivers/BSP/Components/lsm6dso;../../../../../../Drivers/BSP/Components/lis2dw12;../../../../../../Drivers/BSP/Components/lis2mdl;../../../../../../Drivers/BSP/Components/hts221;../../../../../../Drivers/BSP/Components/lps22hh;../../../../../../Drivers/BSP/Components/stts751;../../../../../../Drivers/BSP/IKS01A3;../../../../../../Drivers/BSP/Components/Common;../../../../../../Middlewares/ST/STM32_AcousticSL_Library/Inc;../../../../../../Middlewares/ST/STM32_Audio/Addons/PDM/Inc;../../../../../../Middlewares/ST/STM32_MetaDataManager;../../../../../../Middlewares/ST/STM32_MotionAR_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionFX_Library/Inc;../../../../../../Middlewares/ST/STM32_BLE_Manager/Inc;../../../../../../Middlewares/Third_Party/parson;../../../../../../Middlewares/ST/STM32_MotionCP_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionGR_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionID_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionPE_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionSD_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionVC_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionFA_Library/Inc;../../../../../../Middlewares/ST/STM32_MotionTL_Library/Inc;..\..\..\..\..\..\Drivers\BSP\CCA02M2</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -501,16 +502,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/User/Patch</GroupName>
-          <Files>
-            <File>
-              <FileName>cca02m2_audio_Patch.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Patch/cca02m2_audio_Patch.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Drivers/BSP/CCA02M2</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -519,7 +510,7 @@
               <RVCTZI>0</RVCTZI>
               <RVCTOtherData>0</RVCTOtherData>
               <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>0</IncludeInBuild>
+              <IncludeInBuild>2</IncludeInBuild>
               <AlwaysBuild>2</AlwaysBuild>
               <GenerateAssemblyFile>2</GenerateAssemblyFile>
               <AssembleAssemblyFile>2</AssembleAssemblyFile>
@@ -1109,8 +1100,8 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.4.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.7.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.6.0" condition="ARMv6_7_8-M Device">
+        <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="STM32L476RG-Nucleo_IKS01A3_ALLMEMS1"/>
         </targetInfos>

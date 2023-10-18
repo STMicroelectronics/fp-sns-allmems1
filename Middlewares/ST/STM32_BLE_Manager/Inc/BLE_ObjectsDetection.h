@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_ObjectsDetection.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Object detection info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -28,10 +28,11 @@
    
 /* Exported typedef --------------------------------------------------------- */
 typedef void (*CustomWriteRequestObjectsDetection_t)(void);
+typedef void (*CustomNotifyEventObjectsDetection_t)(BLE_NotifyEvent_t Event);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_ObjectsDetection_NotifyEvent;
 extern CustomWriteRequestObjectsDetection_t CustomWriteRequestObjectsDetection;
+extern CustomNotifyEventObjectsDetection_t CustomNotifyEventObjectsDetection;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -41,15 +42,6 @@ extern CustomWriteRequestObjectsDetection_t CustomWriteRequestObjectsDetection;
  * @retval BleCharTypeDef* BleCharPointer: Data structure pointer for led info service
  */
 extern BleCharTypeDef* BLE_InitObjectsDetectionService(void);
-
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting Led Advertise Data
- * @param  uint8_t *manuf_data: Advertise Data
- * @retval None
- */
-extern void BLE_SetObjectsDetectionAdvertizeData(uint8_t *manuf_data);
-#endif /* BLE_MANAGER_SDKV2 */
 
 /**
  * @brief  Update number of the objects and related distance value detection (by ToF sensor)

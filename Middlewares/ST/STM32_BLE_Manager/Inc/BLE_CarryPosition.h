@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_CarryPosition.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Carry Position info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -42,10 +42,11 @@ typedef enum
 } BLE_CP_output_t;
 
 typedef void (*CustomReadRequestCarryPosition_t)(BLE_CP_output_t *CarryPositionCode);
+typedef void (*CustomNotifyEventCarryPosition_t)(BLE_NotifyEvent_t Event);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_CarryPosition_NotifyEvent;
 extern CustomReadRequestCarryPosition_t CustomReadRequestCarryPosition;
+extern CustomNotifyEventCarryPosition_t CustomNotifyEventCarryPosition;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -62,7 +63,7 @@ extern BleCharTypeDef* BLE_InitCarryPositionService(void);
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-extern void BLE_SetCarryPositionAdvertizeData(uint8_t *manuf_data);
+extern void BLE_SetCarryPositionAdvertiseData(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**

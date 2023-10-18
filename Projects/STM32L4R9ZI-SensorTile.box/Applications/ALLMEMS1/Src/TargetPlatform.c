@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    TargetPlatform.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Initialization of the Target Platform
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -339,136 +339,6 @@ void LedInitTargetPlatform(void)
 {
   BSP_LED_Init(LED1);
   BSP_LED_Init(LED2);
-}
-
-/**
-  * @brief  Gets the page of a given address
-  * @param  Addr: Address of the FLASH Memory
-  * @retval The page of a given address
-  */
-uint32_t GetPage(uint32_t Addr)
-{
-  uint32_t page = 0;
-  
-  if (Addr < (FLASH_BASE + FLASH_BANK_SIZE))
-  {
-    /* Bank 1 */
-    page = (Addr - FLASH_BASE) / FLASH_PAGE_SIZE;
-  }
-  else
-  {
-    /* Bank 2 */
-    page = (Addr - (FLASH_BASE + FLASH_BANK_SIZE)) / FLASH_PAGE_SIZE;
-  }
-  
-  return page;
-}
-
-/**
-  * @brief  Gets the bank of a given address
-  * @param  Addr: Address of the FLASH Memory
-  * @retval The bank of a given address
-  */
-uint32_t GetBank(uint32_t Addr)
-{
-  uint32_t bank = 0;
-  
-  if (READ_BIT(SYSCFG->MEMRMP, SYSCFG_MEMRMP_FB_MODE) == 0)
-  {
-  	/* No Bank swap */
-    if (Addr < (FLASH_BASE + FLASH_BANK_SIZE))
-    {
-      bank = FLASH_BANK_1;
-    }
-    else
-    {
-      bank = FLASH_BANK_2;
-    }
-  }
-  else
-  {
-  	/* Bank swap */
-    if (Addr < (FLASH_BASE + FLASH_BANK_SIZE))
-    {
-      bank = FLASH_BANK_2;
-    }
-    else
-    {
-      bank = FLASH_BANK_1;
-    }
-  }
-  
-  return bank;
-}
-
-/**
- * @brief User function for Erasing the MDM on Flash
- * @param None
- * @retval uint32_t Success/NotSuccess [1/0]
- */
-uint32_t UserFunctionForErasingFlash(void) {
-  FLASH_EraseInitTypeDef EraseInitStruct;
-  uint32_t SectorError = 0;
-  uint32_t Success=1;
-
-  EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGES;
-  EraseInitStruct.Banks       = GetBank(MDM_FLASH_ADD);
-  EraseInitStruct.Page        = GetPage(MDM_FLASH_ADD);
-  EraseInitStruct.NbPages     = 2;
-
-  /* Unlock the Flash to enable the flash control register access *************/
-  HAL_FLASH_Unlock();
-
-  if(HAL_FLASHEx_Erase(&EraseInitStruct, &SectorError) != HAL_OK){
-    /* Error occurred while sector erase. 
-      User can add here some code to deal with this error. 
-      SectorError will contain the faulty sector and then to know the code error on this sector,
-      user can call function 'HAL_FLASH_GetError()'
-      FLASH_ErrorTypeDef errorcode = HAL_FLASH_GetError(); */
-    Success=0;
-    Error_Handler();
-  }
-
-  /* Lock the Flash to disable the flash control register access (recommended
-  to protect the FLASH memory against possible unwanted operation) *********/
-  HAL_FLASH_Lock();
-
-  return Success;
-}
-
-/**
- * @brief User function for Saving the MDM  on the Flash
- * @param void *InitMetaDataVector Pointer to the MDM beginning
- * @param void *EndMetaDataVector Pointer to the MDM end
- * @retval uint32_t Success/NotSuccess [1/0]
- */
-uint32_t UserFunctionForSavingFlash(void *InitMetaDataVector,void *EndMetaDataVector)
-{
-  uint32_t Success=1;
-
-  /* Store in Flash Memory */
-  uint32_t Address = MDM_FLASH_ADD;
-  uint64_t *WriteIndex;
-
-  /* Unlock the Flash to enable the flash control register access *************/
-  HAL_FLASH_Unlock();
-  for(WriteIndex =((uint64_t *) InitMetaDataVector); WriteIndex<((uint64_t *) EndMetaDataVector); WriteIndex++) {
-    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, Address,*WriteIndex) == HAL_OK){
-      Address = Address + 8;
-    } else {
-      /* Error occurred while writing data in Flash memory.
-         User can add here some code to deal with this error
-         FLASH_ErrorTypeDef errorcode = HAL_FLASH_GetError(); */
-      Error_Handler();
-      Success =0;
-    }
-  }
-
-  /* Lock the Flash to disable the flash control register access (recommended
-   to protect the FLASH memory against possible unwanted operation) *********/
-  HAL_FLASH_Lock();
- 
-  return Success;
 }
 
 #ifdef ALLMEMS1_ENABLE_PRINTF

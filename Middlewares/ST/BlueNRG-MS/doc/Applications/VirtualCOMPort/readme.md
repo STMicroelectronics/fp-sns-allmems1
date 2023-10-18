@@ -58,37 +58,36 @@ BLE, SPI, USART, VCOM, BlueNRG-M0, BlueNRG-MS
 						
  - stm32**xx_nucleo_bus.c Source file for the BSP BUS IO driver
  
- - system_stm32**xx.c     CMSIS Cortex-Mx Device Peripheral Access Layer
-                          System Source File
+ - system_stm32**xx.c     CMSIS Cortex-Mx Device Peripheral Access Layer System Source File
   
 ### <b>Hardware and Software environment</b>
 
   - This example runs on STM32 Nucleo boards with X-NUCLEO-IDB05A2 STM32 expansion board
     (the X-NUCLEO-IDB05A1 expansion board can be also used)
   - This example has been tested with STMicroelectronics:
-    - NUCLEO-F401RE RevC board  
-    - NUCLEO-L053R8 RevC board
     - NUCLEO-L476RG RevC board
     and can be easily tailored to any other supported device and development board.
-    This example runs also on the NUCLEO-F411RE RevC board, even if the chip could
-    be not exploited at its best since the projects are configured for the
-    NUCLEO-F401RE target board.
 
-ADDITIONAL_BOARD : X-NUCLEO-IDB05A2 https://www.st.com/content/st_com/en/products/ecosystems/stm32-open-development-environment/stm32-nucleo-expansion-boards/stm32-ode-connect-hw/x-nucleo-idb05a2.html
-ADDITIONAL_COMP : BlueNRG-M0 https://www.st.com/content/st_com/en/products/wireless-connectivity/short-range/bluetooth-low-energy-network-co-processors/bluenrg-m0.html
+ADDITIONAL_BOARD : X-NUCLEO-IDB05A2 https://www.st.com/en/ecosystems/x-nucleo-idb05a2.html
+ADDITIONAL_COMP : BlueNRG-M0 https://www.st.com/en/wireless-connectivity/bluenrg-m0.html
     
 ### <b>How to use it?</b>
 
 In order to make the program work, you must do the following:
+
  - WARNING: before opening the project with any toolchain be sure your folder
    installation path is not too in-depth since the toolchain may report errors
    after building.
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.7.0).
+
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.10.1).
    Alternatively you can use the Keil uVision toolchain (this firmware
-   has been successfully tested with V5.32.0) or the IAR toolchain (this firmware has 
-   been successfully tested with Embedded Workbench V8.50.9).
+   has been successfully tested with V5.37.0) or the IAR toolchain (this firmware has 
+   been successfully tested with Embedded Workbench V9.20.1).
+
  - Rebuild all files and load your image into target memory.
+
  - Run the example.
+
  - Alternatively, you can download the pre-built binaries in "Binary" 
    folder included in the distributed package.
 
@@ -101,7 +100,7 @@ SRA Application Team
 
 ### <b>License</b>
 
-Copyright (c) 2021 STMicroelectronics.
+Copyright (c) 2022 STMicroelectronics.
 All rights reserved.
 
 This software is licensed under terms that can be found in the LICENSE file

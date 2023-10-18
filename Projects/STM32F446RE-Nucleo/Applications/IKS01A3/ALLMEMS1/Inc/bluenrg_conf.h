@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -36,9 +36,9 @@ extern "C" {
 /*---------- Print messages from BLE2 files at middleware level -----------*/
 #define BLUENRG2_DEBUG      0
 /*---------- Number of Bytes reserved for HCI Read Packet -----------*/
-#define HCI_READ_PACKET_SIZE      255
+#define HCI_READ_PACKET_SIZE      230
 /*---------- Number of Bytes reserved for HCI Max Payload -----------*/
-#define HCI_MAX_PAYLOAD_SIZE      255
+#define HCI_MAX_PAYLOAD_SIZE      230
 /*---------- Number of incoming packets added to the list of packets to read -----------*/
 #define HCI_READ_PACKET_NUM_MAX      15
 /*---------- Scan Interval: time interval from when the Controller started its last scan until it begins the subsequent scan (for a number N, Time = N x 0.625 msec) -----------*/

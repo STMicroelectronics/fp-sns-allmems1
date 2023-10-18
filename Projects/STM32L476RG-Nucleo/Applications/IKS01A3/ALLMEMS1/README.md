@@ -1,33 +1,17 @@
-# ALLMEMS1 Application Description for STM32L476RE with X-NUCLEO-IKS01A3 expansion board
+## <b>ALLMEMS1 Application Description</b>
 
-The ALLMEMS1 is an STM32 ODE function pack which lets you connect your IoT node to a smartphone via BLEand use a suitable AndroidT or iOST like the ST BLE Sensor app (Version 4.13.0 or higher),
+Application for STM32L476RE with X-NUCLEO-BNRG2A1, X-NUCLEO-CCA02M2 and X-NUCLEO-IKS01A3 expansion boards.
+
+Example Description:
+
+The ALLMEMS1 is an STM32 ODE function pack which lets you connect your IoT node to a smartphone via BLEand use a suitable AndroidT or iOST like the ST BLE Sensor app (Version 4.20.0 or higher),
 you can visualize real-time environmental sensor data, motion sensor data and digital microphone levels.
 The package also allows to perform advanced functionality such as sound source localization using inputs from multiple microphones, as well sensor data fusion and accelerometer-based real-time activity recognition,
 gesture recognition, motion Intensity recognition. Moreover provides real-time information about: the user current pose based on data from a device, the user working mode (sitting at the desk or standing desk position),
 the tilt angles of the user device, the repetition quantity of various fitness activities performed by a user, the vertical movement. 
 
-This firmware package includes Components Device Drivers, Board Support Package and example application for the following STMicroelectronics elements:
- - X-NUCLEO-BNRG2A1 Bluetooth Low energy expansion boards
- - X-NUCLEO-IKS01A3 Expansion board for four MEMS sensor devices:
-   - HTS221, LPS22HH, LSM6DSO, LIS2MDL
- - X-NUCLEO-CCA02M2 Digital MEMS microphones expansion board
- - NUCLEO-L476RG Nucleo boards
- - MotionAR software provides real-time activity recognition data using MEMS accelerometer sensor
- - MotionCP software provides carry Position recognition data using MEMS accelerometer sensor (Not enabled as default)
- - MotionFA software provides real-time information about the repetition quantity of various fitness activities performed by a user
- - MotionFX (iNEMOEngine PRO) suite uses advanced algorithms to integrate outputs
-   from multiple MEMS sensors in a smartway, independent of environmental conditions,
-   to reach optimal performance. Real-time motion-sensor data fusion is set to significantly
-   improve the user experience, increasing accuracy, resolution, stability and response time.
- - MotionGR software provides carry Gesture recognition data using MEMS accelerometer sensor
- - MotionID software provides real-time Motion Intensity recognition data using MEMS accelerometer sensor
- - MotionPE software provides real-time information about the user current pose based on data from a device
- - MotionSD software provides real-time information about the user working mode (sitting at the desk or standing desk position)
- - MotionTL software provides real-time information about the tilt angles of the user device
- - MotionVC software provides real-time information about the vertical movement
- - AcousticSL software provides real-time audio source localization using PCM signal audio
- 
 The Example application initizializes all the Components and Library creating 3 Custom Bluetooth services:
+
  - The first service exposes all the HW and SW characteristics:
    - the HW characteristics related to MEMS sensor devices: Temperature, Humidity, Pressure, Magnetometer, Gyroscope and Accelleromenter
      and Microphones Signal Noise dB level. 
@@ -48,38 +32,37 @@ The Example application initizializes all the Components and Library creating 3 
 
 The example application allows the user to control the initialization phase via UART.
 Launch a terminal application and set the UART port to 115200 bps, 8 bit, No Parity, 1 stop bit.
- 
-This example must be used with the related ST BLE Sensor Android (Version 4.13.0 or higher) or iOS (Version 4.11.0 or higher) application available on Play/itune store,
+
+This example must be used with the related ST BLE Sensor Android (Version 4.20.0 or higher) or iOS (Version 4.20.0 or higher) application available on Play/itune store,
 in order to read the sent information by Bluetooth Low Energy protocol
 
-## Important Hardware Additional Information
+### <b>Important Hardware Additional Information</b>
 
 1) With L4 STM32 Nucleo motherboard:
    a) before to connect the board X-NUCLEO-CCA02M2 with the STM32 L4 Nucleo motherboard through the Morpho connector layout onto X-NUCLEO-CCA02M2 board:
       - close the solder bridges SB12, SB16 and open the solder bridges SB7, SB15 and SB17 (To enable the signal clock from L4 Nucleo motherboard)
       - if additional microphones are plugged in the board, close the solder bridge SB17.
-   b) before to connect the X-NUCLEO-IKS01A2 expansion board with the X-NUCLEO-CCA02M2 expansion board:
-      - remove the solder bridge SB25 if additional microphones are plugged onto X-NUCLEO-CCA02M2 board
-   c) before to connect the X-NUCLEO-IKS01A3 expansion board with the X-NUCLEO-CCA02M2 expansion board:
+   b) before to connect the X-NUCLEO-IKS01A3 expansion board with the X-NUCLEO-CCA02M2 expansion board:
       - remove the solder bridge SB47 if additional microphones are plugged onto X-NUCLEO-CCA02M2 board
-	  
+   
 2) BlueNRG-2 library does not work with the stock firmware that is loaded in the BLE module of X-NUCLEO-BNRG2A1 expansion board.
    For this reason:
    - first of all, it is needed to solder on X-NUCLEO-BNRG2A1, if it is not soldered, a 0 Ohm resistor at R117
    - then you can use a standard ST-Link V2-1 with 5 jumper wires female-female together with STSW-BNRGFLASHER software tool
     (currently available only for Windows PC) in order to update the firmware of the BLE module of X-NUCLEO-BNRG2A1.
-   Read user manual for more details. 
-
-## Very Important
+   
+   Read user manual for more details.
+   
+### <b>Very Important</b> 
 
 a) The implementation allow the Firmware-Over-The-Air (FOTA).
  
- 1) The Firmware-Over-The-Air (FOTA) is done using the ST BLE Sensor Android/iOS application (Version 4.13.0 and above)
+ 1) The Firmware-Over-The-Air (FOTA) is done using the ST BLE Sensor Android/iOS application (Version 4.17.0 and above)
  
  2) This example must run starting at address 0x08004000 in memory and works ONLY if the BootLoader 
  is saved at the beginning of the FLASH (address 0x08000000)
  
- 3) For each IDE (IAR/µVision/STM32CubeIDE) there are some scripts *.bat/*.sh that makes the following operations:
+ 3) In the folder Utilities there is a scripts *.sh that makes the following operations:
     - Full Flash Erase
     - Load the BootLoader on the rigth flash region
     - Load the Program (after the compilation) on the rigth flash region (This could be used for a FOTA)
@@ -87,70 +70,113 @@ a) The implementation allow the Firmware-Over-The-Air (FOTA).
       flashed at the flash beginning (address 0x08000000) (This COULD BE NOT used for FOTA)
     - Reset the board
 	
+	Before to execute the *.sh script, it is necessary to edit it to set the installation path for STM32CubeProgrammer.
+	
+	BootLoaderPath/<BootLoader file name> and BinaryPath as input are required when execute *.sh script
+	
 b) If the user presses the blue user button on Nucleo board 3 times on less that 2 seconds, he forces a new
    Calibration for MotionFX Library (For avoiding accidental erasure of the calibration data).
    The calibration value could be stored on FLASH memory or in RAM for avoiding to do the calibration at each board reset
    
-## Issue
+### <b>Issue</b>
 
-- Due to ram size constraints MotionCP is not enable as default (Only if the MotionFA is disabled MotionCP will be enable).
-  For enabling MotionCP library it is necessary to recompile the code comment the line
-    #define ALLMEMS1_MOTIONFA
-  on file:
-	Projects\Multi\Applications\ALLMEMS1\Inc\ALLMEMS1_config.h
 - A compiler warning "L6989W: Could not apply patch sdcomp-29491-629360 to instruction VPOP" is generated from µVision toolchain.
   Some members of the STM32L4 family have an eratta for the FMC (Flexible Memory Controller) where a read burst access of 9 words or more is not supported by FMC.
   To prevent burst accesses that are greater than 8 words, a special linker patch was developed to patch certain instructions that result in burst accesses of greater
-  than 8 words. The patch can be applied in most cases with a few exceptions.
+  than 8 words- The patch can be applied in most cases with a few exceptions.
   One of these exceptions is when the instruction to be patched is inside an IT (If-Then) block and is not the last instruction in that block.
   In this case this warning will be generated.
-  Since the FMC is only used for external memory, you can ignore this warning if you are only using internal memory. 
+  Since the FMC is only used for external memory, you can ignore this warning if you are only using internal memory.
 
-## Dependencies
+### <b>Keywords</b>
+
+BLE, BLE_Manager, BlueNRG-2, SPI, UART, MEMS, MEMSMIC
+
+### <b>Hardware and Software environment</b>
+
+  - This example runs on STM32 Nucleo devices with:
+    - BlueNRG-2 STM32 expansion board (X-NUCLEO-BNRG2A1)
+	- Motion MEMS and environmental sensor expansion board (X-NUCLEO-IKS4A1) for five MEMS sensor devices:
+	  - STTS22H, SHT40AD1B, LPS22DF, LSM6DSV16X, LIS2MDL
+	- Digital MEMS microphone expansion board (X-NUCLEO-CCA02M2) based on MP34DT06J
+  - This example has been tested with STMicroelectronics:
+    - NUCLEO-L476RG RevC board
+
+ADDITIONAL_BOARD : [X-NUCLEO-BNRG2A1](https://www.st.com/en/ecosystems/x-nucleo-bnrg2a1.html)
+
+ADDITIONAL_COMP : [BlueNRG-M2SP](https://www.st.com/en/wireless-connectivity/bluenrg-2.html)
+
+ADDITIONAL_BOARD : [X-NUCLEO-IKS01A3](https://www.st.com/en/ecosystems/x-nucleo-iks01a3.html)
+
+ADDITIONAL_COMP : [LSM6DSO](https://www.st.com/content/st_com/en/products/mems-and-sensors/inemo-inertial-modules/lsm6dso.html)
+
+ADDITIONAL_COMP : [LIS2DW12](https://www.st.com/content/st_com/en/products/mems-and-sensors/accelerometers/lis2dw12.html)
+
+ADDITIONAL_COMP : [LIS2MDL](https://www.st.com/content/st_com/en/products/mems-and-sensors/e-compasses/lis2mdl.html)
+
+ADDITIONAL_COMP : [LPS22HH](https://www.st.com/content/st_com/en/products/mems-and-sensors/pressure-sensors/lps22hh.html)
+
+ADDITIONAL_COMP : [HTS221](https://www.st.com/content/st_com/en/products/mems-and-sensors/humidity-sensors/hts221.html)
+
+ADDITIONAL_COMP : [STTS751](https://www.st.com/content/st_com/en/products/mems-and-sensors/temperature-sensors/stts751.html)
+
+ADDITIONAL_BOARD : [X-NUCLEO-CCA02M2](https://www.st.com/en/ecosystems/x-nucleo-cca02m2.html)
+
+ADDITIONAL_COMP : [MP34DT06J](https://www.st.com/en/mems-and-sensors/mp34dt06j.html)
+
+### <b>Dependencies</b>
 
 STM32Cube packages:
-  - STM32L4xx drivers from STM32CubeL4 V1.17.1
+
+  - STM32L4xx drivers from STM32CubeL4 V1.18.0
   
 X-CUBE packages:
-  - X-CUBE-BLE2 V3.2.2
-  - X-CUBE-MEMS1 V9.1.0
-  - X-CUBE-MEMSMIC1 V5.3.0
 
-## Hardware and Software environment
+  - X-CUBE-BLE2 V3.3.0
+  - X-CUBE-MEMS1 V10.0.0
+  - X-CUBE-MEMSMIC1 V5.4.0
 
-- This example runs on Sensor expansion board attached to STM32L476RG devices can be easily tailored to any other supported device and development board.
-- This example must be used with the related ST BLE Sensor Android/iOS application (Version 4.13.0/4.11.0 or higher) available on Play/itune store, in order to read the sent information by Bluetooth Low Energy protocol.
-- Inside the Binary Directory there are the following binaries:
-  - STM32L476RG-Nucleo_IKS01A3_ALLMEMS1_v4.2.0.bin				(Program without BootLoader. COULD BE USED     for FOTA)
-  - STM32L476RG-Nucleo_IKS01A3_ALLMEMS1_BL_v4.2.0.bin			(Program with BootLoader.    COULD NOT BE USED for FOTA)
-
-## How to use it ?
+### <b>How to use it?</b>
 
 This package contains projects for 3 IDEs viz. IAR, Keil µVision 5 and Integrated Development Environment for STM32. 
 In order to make the  program work, you must do the following:
+
  - WARNING: before opening the project with any toolchain be sure your folder
    installation path is not too in-depth since the toolchain may report errors
    after building.
 
 For IAR:
+
  - Open IAR toolchain (this firmware has been successfully tested with Embedded Workbench V9.20.1).
  - Open the IAR project file EWARM\Project.eww
- - Rebuild all files and run these script that you find on the same directory:
-   - CleanALLMEMS1_IAR_IKS01A3_L476.bat
+ - Rebuild all files and run these script that you find on the directory Utilities and you had installed STM32CubeProgrammer tool:
+   - CleanALLMEMS1.sh
 
 For Keil µVision 5:
- - Open Keil µVision 5 toolchain (this firmware has been successfully tested with MDK-ARM Professional Version: 5.32.0).
- - Open the µVision project file MDK-ARM\STM32L476RG-Nucleo_IKS01A3_ALLMEMS1.uvprojx
- - Rebuild all files and run these script that you find on the same directory:
-   - CleanALLMEMS1_MDK-ARM_IKS01A3_L476.bat
+
+ - Open Keil µVision 5 toolchain (this firmware has been successfully tested with MDK-ARM Professional Version: 5.37.0).
+ - Open the µVision project file MDK-ARM\STM32F446RE-Nucleo_IKS01A3_ALLMEMS1.uvprojx
+ - Rebuild all files and run these script that you find on the directory Utilities and you had installed STM32CubeProgrammer tool:
+   - CleanALLMEMS1.sh
  
 For Integrated Development Environment for STM32:
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.8.0).
+
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.12.1).
  - Set the default workspace proposed by the IDE (please be sure that there are not spaces in the workspace path).
  - Press "File" -> "Import" -> "Existing Projects into Workspace"; press "Browse" in the "Select root directory" and choose the path where the System
    Workbench project is located (it should be STM32CubeIDE). 
- - Rebuild all files and and run these script that you find on the same directory:
-   - if you are on windows and you had installed the STM32 ST-Link utility:
-	 - CleanALLMEMS1_STM32CubeIDE_IKS01A3_L476.bat
-   - Otherwise (Linux/iOS or Windows without the STM32 ST-Link Utility):
-	 - CleanALLMEMS1_STM32CubeIDE_IKS01A3_L476.sh
+ - Rebuild all files and run these script that you find on the directory Utilities and you had installed STM32CubeProgrammer tool:
+   - CleanALLMEMS1.sh
+
+### <b>Author</b>
+
+SRA Application Team
+
+### <b>License</b>
+
+Copyright (c) 2023 STMicroelectronics.
+All rights reserved.
+
+This software is licensed under terms that can be found in the LICENSE file
+in the root directory of this software component.
+If no LICENSE file comes with this software, it is provided AS-IS.

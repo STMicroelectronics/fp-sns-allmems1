@@ -2,14 +2,14 @@
   ******************************************************************************
   * @file    TemplateFlashManagement.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.5.0
-  * @date    18-Nov-2021
+  * @version 1.7.0
+  * @date    10-February-2023
   * @brief   Templete File User specialization of Flash Management
   *          for MetaDataManager
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_SensorFusion.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add Sensor Fusion service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,11 +26,10 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_SENSOR_FUSION_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x01,0x00,0x00,0x01,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define SENSOR_FUSION_ADVERTIZE_DATA_POSITION  17
+#define SENSOR_FUSION_ADVERTISE_DATA_POSITION  17
 
 /* Exported variables --------------------------------------------------------*/
-
-BLE_NotifyEnv_t BLE_SensorFusion_NotifyEvent = BLE_NOTIFY_NOTHING;
+CustomNotifyEventSensorFusion_t CustomNotifyEventSensorFusion=NULL;
 
 /* Private variables ---------------------------------------------------------*/
 /* Data structure pointer for Sensor Fusion service */
@@ -80,9 +79,9 @@ extern BleCharTypeDef* BLE_InitSensorFusionService(uint8_t NumberQuaternionsToSe
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-void BLE_SetSensorFusionAdvertizeData(uint8_t *manuf_data)
+void BLE_SetSensorFusionAdvertiseData(uint8_t *manuf_data)
 {
-  manuf_data[SENSOR_FUSION_ADVERTIZE_DATA_POSITION] |= 0x01U;
+  manuf_data[SENSOR_FUSION_ADVERTISE_DATA_POSITION] |= 0x01U;
 }
 #endif /* BLE_MANAGER_SDKV2 */
 
@@ -103,7 +102,7 @@ tBleStatus BLE_SensorFusionUpdate(BLE_MOTION_SENSOR_Axes_t *data, uint8_t Number
   
   switch(NumberQuaternionsToSend) {
   case 1:
-    STORE_LE_16(buff+2,data[0].x);
+    STORE_LE_16(buff+2,data[0].x);   
     STORE_LE_16(buff+4,data[0].y);
     STORE_LE_16(buff+6,data[0].z);
     break;
@@ -157,18 +156,22 @@ tBleStatus BLE_SensorFusionUpdate(BLE_MOTION_SENSOR_Axes_t *data, uint8_t Number
  */
 static void AttrMod_Request_SensorFusion(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_SensorFusion_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_SensorFusion_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventSensorFusion!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventSensorFusion(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventSensorFusion(BLE_NOTIFY_UNSUB);
+    }
   }
- 
 #if (BLE_DEBUG_LEVEL>1)
+  else {
+    BLE_MANAGER_PRINTF("CustomNotifyEventSensorFusion function Not Defined\r\n");
+  }
  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->Sensor Fusion=%s\n", (BLE_SensorFusion_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->Sensor Fusion=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
    Term_Update(BufferToWrite,BytesToWrite);
  } else {
-   BLE_MANAGER_PRINTF("--->Sensor Fusion=%s", (BLE_SensorFusion_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+   BLE_MANAGER_PRINTF("--->Sensor Fusion=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
  }
 #endif
 }

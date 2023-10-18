@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_Battery.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add battery info services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,11 +26,10 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_BATTERY_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x02,0x00,0x00,0x00,0x01,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define BATTERY_ADVERTIZE_DATA_POSITION  16
+#define BATTERY_ADVERTISE_DATA_POSITION  16
 
 /* Exported variables --------------------------------------------------------*/
-
-BLE_NotifyEnv_t BLE_Battery_NotifyEvent = BLE_NOTIFY_NOTHING;
+CustomNotifyEventBattery_t CustomNotifyEventBattery=NULL;
 
 /* Private variables ---------------------------------------------------------*/
 /* Data structure pointer for battery info service */
@@ -73,10 +72,10 @@ BleCharTypeDef* BLE_InitBatteryService(void)
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-void BLE_SetBatteryAdvertizeData(uint8_t *manuf_data)
+void BLE_SetBatteryAdvertiseData(uint8_t *manuf_data)
 {
   /* Setting Battery Advertise Data */
-  manuf_data[BATTERY_ADVERTIZE_DATA_POSITION] |= 0x02U;
+  manuf_data[BATTERY_ADVERTISE_DATA_POSITION] |= 0x02U;
 }
 #endif /* BLE_MANAGER_SDKV2 */
 
@@ -102,7 +101,7 @@ tBleStatus BLE_BatteryUpdate(uint32_t BatteryLevel, uint32_t Voltage, uint32_t C
 
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharBattery, 0, 2+2+2+2+1,buff);
 
-  if (ret != BLE_STATUS_SUCCESS){
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
     if(BLE_StdErr_Service==BLE_SERV_ENABLE){
       BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating Bat Char\n");
       Stderr_Update(BufferToWrite,BytesToWrite);
@@ -128,18 +127,23 @@ tBleStatus BLE_BatteryUpdate(uint32_t BatteryLevel, uint32_t Voltage, uint32_t C
  */
 static void AttrMod_Request_Battery(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_Battery_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_Battery_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventBattery!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventBattery(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventBattery(BLE_NOTIFY_UNSUB);
+    }
   }
- 
 #if (BLE_DEBUG_LEVEL>1)
+  else {
+     BLE_MANAGER_PRINTF("CustomNotifyEventBattery function Not Defined\r\n");
+  }
+  
  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite = (uint8_t) sprintf((char *)BufferToWrite,"--->Bat=%s\n", (BLE_Battery_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+   BytesToWrite = (uint8_t) sprintf((char *)BufferToWrite,"--->Bat=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
    Term_Update(BufferToWrite,BytesToWrite);
  } else {
-   BLE_MANAGER_PRINTF("--->Bat=%s", (BLE_Battery_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+   BLE_MANAGER_PRINTF("--->Bat=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
  }
 #endif
 }

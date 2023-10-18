@@ -3,13 +3,13 @@
   ******************************************************************************
   * @file    main.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Main program body
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -61,8 +61,6 @@ MOTION_SENSOR_Axes_t MAG_Offset;
 
 uint32_t ForceReCalibration    =0;
 
-uint8_t bdaddr[6];
-
 uint8_t EnvironmentalTimerEnabled= 0;
 uint8_t InertialTimerEnabled= 0;
 uint8_t AccEventEnabled= 0;
@@ -110,16 +108,10 @@ uint16_t PedometerStepCount= 0;
 /* Private variables ---------------------------------------------------------*/
 CRC_HandleTypeDef hcrc;
 
-DFSDM_Channel_HandleTypeDef hdfsdm1_channel0;
-
-SAI_HandleTypeDef hsai_BlockA2;
-
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim5;
-
-UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 uint32_t MagCalibrationData[6];
@@ -144,6 +136,11 @@ static volatile uint32_t TimeStamp		= 0;
 static float UsedGyroscopeDataRate;
 static float UsedAccelerometerDataRate;
 static float UsedPressureDataRate;
+
+static uint32_t FirstConnectionConfig =0;
+static uint16_t BLE_ConnectionHandle = 0;
+static uint8_t connected= FALSE;
+static uint32_t OTA_RemainingSize=0;
 
 static volatile uint32_t Quaternion      = 0;
 static volatile uint32_t UpdateMotionAR  = 0;
@@ -170,6 +167,8 @@ static volatile uint32_t UpdateMotionSD  =0;
 /* Code for MotionTL integration - Start Section */
 static volatile uint32_t UpdateMotionTL  =0;
 MTL_acc_cal_t AccelerometerCalibrationValue;
+static uint8_t  StartMotionTL_Calibration= 0;
+static uint32_t CalibrationsPerformed= 0;
 /* Code for MotionTL integration - End Section */
 
 /* Code for MotionVC integration - Start Section */
@@ -186,19 +185,15 @@ static uint32_t mag_time_stamp = 0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_USART2_UART_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_CRC_Init(void);
 static void MX_TIM1_Init(void);
-static void MX_DFSDM1_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM5_Init(void);
-static void MX_SAI2_Init(void);
 /* USER CODE BEGIN PFP */
 static void Set2GAccelerometerFullScale(void);
 static void Set4GAccelerometerFullScale(void);
 static void InitMotionLibraries(void);
-static void EnableDisableFeatures(void);
   
 static unsigned char ResetCalibrationInMemory(void);
 static unsigned char ReCallNodeNameFromMemory(void);
@@ -217,16 +212,18 @@ static void SendAudioLevelData(void);
 
 static void ButtonCallback(void);
 
-static void Inertial_StartStopTimer(void);
-static void Environmental_StartStopTimer(void);
-static void AccEnv_StartStop(void);
-static void AudioLevel_StartStopTimer(void);
-static void AudioSourceLocalization_StartStopTimer(void);
+static void Inertial_StartStopTimer(BLE_NotifyEvent_t Event);
+static void Environmental_StartStopTimer(BLE_NotifyEvent_t Event);
+static void AccEnv_StartStop(BLE_NotifyEvent_t Event);
+static void AudioLevel_StartStopTimer(BLE_NotifyEvent_t Event);
+static void AudioSourceLocalization_StartStopTimer(BLE_NotifyEvent_t Event);
 
-static void TIM1_CHANNEL_1_StartStop(void);
-static void TIM1_CHANNEL_2_StartStop(void);
-static void TIM1_CHANNEL_3_StartStop(void);
-static void TIM1_CHANNEL_4_StartStop(void);
+static void TIM1_CHANNEL_1_StartStop(BLE_NotifyEvent_t Event, uint8_t Algorithm);
+static void TIM1_CHANNEL_2_StartStop(BLE_NotifyEvent_t Event, uint8_t Algorithm);
+static void TIM1_CHANNEL_3_StartStop(BLE_NotifyEvent_t Event, uint8_t Algorithm);
+static void TIM1_CHANNEL_4_StartStop(BLE_NotifyEvent_t Event, uint8_t Algorithm);
+
+static uint32_t DebugConsoleCommandParsing(uint8_t * att_data, uint8_t data_length);
 
 void AudioProcess_DB_Noise(void);
 
@@ -296,18 +293,12 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_USART2_UART_Init();
   MX_TIM4_Init();
   MX_CRC_Init();
   MX_TIM1_Init();
-  MX_DFSDM1_Init();
   MX_TIM3_Init();
   MX_TIM5_Init();
-  MX_SAI2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_SAI_DeInit(&hsai_BlockA2);
-  HAL_DFSDM_ChannelDeInit(&hdfsdm1_channel0);
-  
   InitTargetPlatform();
   
   /* Check the MetaDataManager */
@@ -318,7 +309,7 @@ int main(void)
 
 #if defined (__IAR_SYSTEMS_ICC__)
         " (IAR)\r\n"
-#elif defined (__CC_ARM)
+#elif defined (__CC_ARM) || (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)) /* For ARM Compiler 5 and 6 */
         " (KEIL)\r\n"
 #elif defined (__GNUC__)
         " (STM32CubeIDE)\r\n"
@@ -345,9 +336,6 @@ int main(void)
   ALLMEMS1_PRINTF("Debug Notify Trasmission Enabled\r\n\n");
 #endif /* ALLMEMS1_DEBUG_NOTIFY_TRAMISSION */
 
-  /* Set Node Name */
-  ReCallNodeNameFromMemory();
-  
   /* Initialize the BlueNRG stack and services */
   BluetoothInit();
   
@@ -400,9 +388,6 @@ int main(void)
       set_connectable = FALSE;
     }
     
-    /* Enable/Disable BLE features and related timer */
-    EnableDisableFeatures();
-
     /* Handle user button */
     if(ButtonPressed) {
       ButtonCallback();
@@ -546,6 +531,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
@@ -564,6 +550,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -607,93 +594,6 @@ static void MX_CRC_Init(void)
   /* USER CODE BEGIN CRC_Init 2 */
 
   /* USER CODE END CRC_Init 2 */
-
-}
-
-/**
-  * @brief DFSDM1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_DFSDM1_Init(void)
-{
-
-  /* USER CODE BEGIN DFSDM1_Init 0 */
-//////
-  /* USER CODE END DFSDM1_Init 0 */
-
-  /* USER CODE BEGIN DFSDM1_Init 1 */
-//////
-  /* USER CODE END DFSDM1_Init 1 */
-  hdfsdm1_channel0.Instance = DFSDM1_Channel0;
-  hdfsdm1_channel0.Init.OutputClock.Activation = DISABLE;
-  hdfsdm1_channel0.Init.OutputClock.Selection = DFSDM_CHANNEL_OUTPUT_CLOCK_SYSTEM;
-  hdfsdm1_channel0.Init.OutputClock.Divider = 2;
-  hdfsdm1_channel0.Init.Input.Multiplexer = DFSDM_CHANNEL_EXTERNAL_INPUTS;
-  hdfsdm1_channel0.Init.Input.DataPacking = DFSDM_CHANNEL_STANDARD_MODE;
-  hdfsdm1_channel0.Init.Input.Pins = DFSDM_CHANNEL_SAME_CHANNEL_PINS;
-  hdfsdm1_channel0.Init.SerialInterface.Type = DFSDM_CHANNEL_SPI_RISING;
-  hdfsdm1_channel0.Init.SerialInterface.SpiClock = DFSDM_CHANNEL_SPI_CLOCK_EXTERNAL;
-  hdfsdm1_channel0.Init.Awd.FilterOrder = DFSDM_CHANNEL_FASTSINC_ORDER;
-  hdfsdm1_channel0.Init.Awd.Oversampling = 1;
-  hdfsdm1_channel0.Init.Offset = 0;
-  hdfsdm1_channel0.Init.RightBitShift = 0x00;
-  if (HAL_DFSDM_ChannelInit(&hdfsdm1_channel0) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN DFSDM1_Init 2 */
-//////
-  /* USER CODE END DFSDM1_Init 2 */
-
-}
-
-/**
-  * @brief SAI2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_SAI2_Init(void)
-{
-
-  /* USER CODE BEGIN SAI2_Init 0 */
-
-  /* USER CODE END SAI2_Init 0 */
-
-  /* USER CODE BEGIN SAI2_Init 1 */
-
-  /* USER CODE END SAI2_Init 1 */
-  hsai_BlockA2.Instance = SAI2_Block_A;
-  hsai_BlockA2.Init.Protocol = SAI_FREE_PROTOCOL;
-  hsai_BlockA2.Init.AudioMode = SAI_MODEMASTER_TX;
-  hsai_BlockA2.Init.DataSize = SAI_DATASIZE_8;
-  hsai_BlockA2.Init.FirstBit = SAI_FIRSTBIT_MSB;
-  hsai_BlockA2.Init.ClockStrobing = SAI_CLOCKSTROBING_FALLINGEDGE;
-  hsai_BlockA2.Init.Synchro = SAI_ASYNCHRONOUS;
-  hsai_BlockA2.Init.OutputDrive = SAI_OUTPUTDRIVE_DISABLE;
-  hsai_BlockA2.Init.NoDivider = SAI_MASTERDIVIDER_ENABLE;
-  hsai_BlockA2.Init.FIFOThreshold = SAI_FIFOTHRESHOLD_EMPTY;
-  hsai_BlockA2.Init.AudioFrequency = SAI_AUDIO_FREQUENCY_192K;
-  hsai_BlockA2.Init.SynchroExt = SAI_SYNCEXT_DISABLE;
-  hsai_BlockA2.Init.MonoStereoMode = SAI_STEREOMODE;
-  hsai_BlockA2.Init.CompandingMode = SAI_NOCOMPANDING;
-  hsai_BlockA2.Init.TriState = SAI_OUTPUT_NOTRELEASED;
-  hsai_BlockA2.FrameInit.FrameLength = 8;
-  hsai_BlockA2.FrameInit.ActiveFrameLength = 1;
-  hsai_BlockA2.FrameInit.FSDefinition = SAI_FS_STARTFRAME;
-  hsai_BlockA2.FrameInit.FSPolarity = SAI_FS_ACTIVE_LOW;
-  hsai_BlockA2.FrameInit.FSOffset = SAI_FS_FIRSTBIT;
-  hsai_BlockA2.SlotInit.FirstBitOffset = 0;
-  hsai_BlockA2.SlotInit.SlotSize = SAI_SLOTSIZE_DATASIZE;
-  hsai_BlockA2.SlotInit.SlotNumber = 1;
-  hsai_BlockA2.SlotInit.SlotActive = 0x00000000;
-  if (HAL_SAI_Init(&hsai_BlockA2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SAI2_Init 2 */
-
-  /* USER CODE END SAI2_Init 2 */
 
 }
 
@@ -917,41 +817,6 @@ static void MX_TIM5_Init(void)
 }
 
 /**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART2_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART2_Init 0 */
-
-  /* USER CODE END USART2_Init 0 */
-
-  /* USER CODE BEGIN USART2_Init 1 */
-
-  /* USER CODE END USART2_Init 1 */
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART2_Init 2 */
-
-  /* USER CODE END USART2_Init 2 */
-
-}
-
-/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -959,6 +824,8 @@ static void MX_USART2_UART_Init(void)
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -1004,6 +871,8 @@ static void MX_GPIO_Init(void)
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
@@ -1122,125 +991,1208 @@ static void InitMotionLibraries(void)
   /* Code for AcousticSL integration - End Section */
 }
 
+/*******************************************************
+ * Callback functions to manage the BLE events - Start *
+ *******************************************************/
 
 /**
-  * @brief  Enable/Disable BLE Features
-  * @param  None
-  * @retval None
-  */
-static void EnableDisableFeatures(void)
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventEnv(BLE_NotifyEvent_t Event)
 {
   /* Enviromental Features */
-  if(BLE_Env_NotifyEvent != BLE_NOTIFY_NOTHING)
+  if(Event != BLE_NOTIFY_NOTHING)
   {
-    Environmental_StartStopTimer();
-    BLE_Env_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Inertial Features */
-  if(BLE_Inertial_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    Inertial_StartStopTimer();   
-    BLE_Inertial_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Accelerometer events Features */
-  if(BLE_AccEnv_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    AccEnv_StartStop();   
-    BLE_AccEnv_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Audio Level Features */
-  if(BLE_AudioLevel_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    AudioLevel_StartStopTimer(); 
-    BLE_AudioLevel_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Audio Source Localization Features */
-  if(BLE_AudioSourceLocalization_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    AudioSourceLocalization_StartStopTimer(); 
-    BLE_AudioSourceLocalization_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Sensor Fusion Features */
-  if(BLE_SensorFusion_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_1_StartStop();   
-    BLE_SensorFusion_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* E-Compass Features */
-  if(BLE_ECompass_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_1_StartStop();   
-    BLE_ECompass_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Activity Recognition Features */
-  if(BLE_CarryPosition_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_2_StartStop();   
-    BLE_CarryPosition_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Gesture Recognition Features */
-  if(BLE_GestureRecognition_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_2_StartStop();   
-    BLE_GestureRecognition_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Gesture Recognition Features */
-  if(BLE_MotionAlgorithms_VC_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_2_StartStop();   
-    BLE_MotionAlgorithms_VC_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Tilt Sensing Features */
-  if(BLE_TiltSensing_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_2_StartStop();   
-    BLE_TiltSensing_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Activity Recognition Features */
-  if(BLE_ActRec_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_3_StartStop();   
-    BLE_ActRec_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Motion Intensity Features */
-  if(BLE_MotionIntensity_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_3_StartStop();   
-    BLE_MotionIntensity_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  /* Motion Algorithms Features - Pose Estimation */
-  if(BLE_MotionAlgorithms_PE_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_3_StartStop();   
-    BLE_MotionAlgorithms_PE_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  if(BLE_MotionAlgorithms_SD_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_4_StartStop();   
-    BLE_MotionAlgorithms_SD_NotifyEvent = BLE_NOTIFY_NOTHING;
-  }
-  
-  if(BLE_FitnessActivities_NotifyEvent != BLE_NOTIFY_NOTHING)
-  {
-    TIM1_CHANNEL_4_StartStop();   
-    BLE_FitnessActivities_NotifyEvent = BLE_NOTIFY_NOTHING;
+    Environmental_StartStopTimer(Event);
   }
 }
 
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventInertial(BLE_NotifyEvent_t Event)
+{
+  /* Inertial Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    Inertial_StartStopTimer(Event);
+  }
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventAccEvent(BLE_NotifyEvent_t Event)
+{
+  /* Accelerometer events Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    AccEnv_StartStop(Event);
+  }
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventAudioLevel (BLE_NotifyEvent_t Event)
+{
+  /* Audio Level Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    AudioLevel_StartStopTimer(Event); 
+  }  
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventAudioSourceLocalization (BLE_NotifyEvent_t Event)
+{
+  /* Audio Source Localization Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    AudioSourceLocalization_StartStopTimer(Event); 
+  }  
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventECompass(BLE_NotifyEvent_t Event)
+{
+  /* E-Compass Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    TIM1_CHANNEL_1_StartStop(Event, 1);
+  }
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventSensorFusion(BLE_NotifyEvent_t Event)
+{
+  /* Sensor Fusion Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    TIM1_CHANNEL_1_StartStop(Event, 0);
+  }
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventCarryPosition(BLE_NotifyEvent_t Event)
+{
+  /* Carry Position Algorithm Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    TIM1_CHANNEL_2_StartStop(Event, 0);
+  }
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventGestureRecognition(BLE_NotifyEvent_t Event)
+{
+  /* Gesture Recognition Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    TIM1_CHANNEL_2_StartStop(Event, 1);
+  }
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventTiltSensing(BLE_NotifyEvent_t Event)
+{
+  /* Tilt Sensing Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    TIM1_CHANNEL_2_StartStop(Event, 2);
+  }
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @param  BLE_MotionAlgorithmsType_t Algorithm
+ * @retval None
+ */
+void NotifyEventMotionAlgorithms(BLE_NotifyEvent_t Event, BLE_MotionAlgorithmsType_t Algorithm)
+{
+  /* Motion Algorithms Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    switch(Algorithm)
+    {
+    case 0:
+      break;
+    /* Pose Estimation */
+    case 1:
+      TIM1_CHANNEL_3_StartStop(Event, 2);
+      break;
+    case 2:
+      /* Setting Desktop */
+      TIM1_CHANNEL_4_StartStop(Event, 0);
+      break;
+    /* Vertical Context */
+    case 3:
+      TIM1_CHANNEL_2_StartStop(Event, 3);
+      break;
+    default:
+      break;
+    }
+  }
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventActRec(BLE_NotifyEvent_t Event)
+{
+  /* Activity Recognition Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    TIM1_CHANNEL_3_StartStop(Event, 0);
+  }
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventMotionIntensity(BLE_NotifyEvent_t Event)
+{
+  /* Motion Intensity Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    TIM1_CHANNEL_3_StartStop(Event, 1);
+  }
+}
+
+/**
+ * @brief  Callback Function for Un/Subscription Feature
+ * @param  BLE_NotifyEvent_t Event Sub/Unsub
+ * @retval None
+ */
+void NotifyEventFitnessActivities(BLE_NotifyEvent_t Event)
+{
+  /* Fitness Activities Features */
+  if(Event != BLE_NOTIFY_NOTHING)
+  {
+    TIM1_CHANNEL_4_StartStop(Event, 1);
+  }
+}
+
+/**
+ * @brief  This function is called when the peer device get disconnected.
+ * @param  None 
+ * @retval None
+ */
+void DisconnectionCompletedFunction(void)
+{
+  connected = FALSE;
+  
+  ForceReCalibration= 0;
+  FirstConnectionConfig= 0;
+  
+  /* Disable all timer */
+  if(InertialTimerEnabled) {
+    /* Stop the TIM Base generation in interrupt mode */
+    if(HAL_TIM_Base_Stop_IT(&TimInertialHandle) != HAL_OK){
+      /* Stopping Error */
+      Error_Handler();
+    }
+    
+    InertialTimerEnabled= 0;
+  }
+  
+  if(EnvironmentalTimerEnabled) {
+    /* Stop the TIM Base generation in interrupt mode */
+    if(HAL_TIM_Base_Stop_IT(&TimEnvHandle) != HAL_OK){
+      /* Stopping Error */
+      Error_Handler();
+    }
+    
+    EnvironmentalTimerEnabled= 0;
+  }
+  
+  if( (AudioLevelTimerEnabled) || (AudioSourceLocalizationTimerEnabled) ){
+    /* Stop the TIM Base generation in interrupt mode (for mic audio level) */
+    if(HAL_TIM_OC_Stop_IT(&TimCCHandle, TIM_CHANNEL_2) != HAL_OK){
+      /* Stopping Error */
+      Error_Handler();
+    }  
+    
+    AudioLevelTimerEnabled= 0;
+    AudioSourceLocalizationTimerEnabled= 0;
+  }
+  
+  if(TIM1_CHANNEL_1_Enabled) {
+    /* Stop the TIM Base generation in interrupt mode (for mic audio level) */
+    if(HAL_TIM_OC_Stop_IT(&TimCCHandle, TIM_CHANNEL_1) != HAL_OK){
+      /* Stopping Error */
+      Error_Handler();
+    }  
+    
+    TIM1_CHANNEL_1_Enabled= 0;
+    SensorFusionEnabled= 0;
+    ECompassEnabled= 0;
+  }
+  
+  if(TIM1_CHANNEL_2_Enabled) {
+    /* Stop the TIM Base generation in interrupt mode (for Acc/Gyro/Mag sensor) */
+    if(HAL_TIM_OC_Stop_IT(&TimCCHandle, TIM_CHANNEL_2) != HAL_OK){
+      /* Stopping Error */
+      Error_Handler();
+    }
+    
+    TIM1_CHANNEL_2_Enabled= 0;
+    CarryPositionEnabled= 0;
+    GestureRecognitionEnabled= 0;
+    TiltSensingEnabled= 0;
+    VerticalContextEnabled= 0;
+  }
+       
+  if(TIM1_CHANNEL_3_Enabled) {
+    /* Stop the TIM Base generation in interrupt mode (for Acc/Gyro/Mag sensor) */
+    if(HAL_TIM_OC_Stop_IT(&TimCCHandle, TIM_CHANNEL_3) != HAL_OK){
+      /* Stopping Error */
+      Error_Handler();
+    }
+    
+    TIM1_CHANNEL_3_Enabled= 0;
+    ActivityRecognitionEnabled= 0;
+    MotionIntensityEnabled= 0;
+    PoseEstimationEnabled= 0;
+  }
+  
+  if(TIM1_CHANNEL_4_Enabled){
+    /* Stop the TIM Base generation in interrupt mode (for Acc/Gyro/Mag sensor) */
+    if(HAL_TIM_OC_Stop_IT(&TimCCHandle, TIM_CHANNEL_4) != HAL_OK){
+      /* Stopping Error */
+      Error_Handler();
+    }
+    
+    TIM1_CHANNEL_4_Enabled= 0;
+    Standing_VS_SittingDeskEnabled= 0;
+    FitnessActivitiesEnabled= 0;
+  }
+      
+  /* Reset for any problem during FOTA update */
+  OTA_RemainingSize = 0;
+    
+  BLE_MANAGER_PRINTF("Call to DisconnectionCompletedFunction\r\n");
+  BLE_MANAGER_DELAY(100);
+}
+
+/**
+ * @brief  This function is called when there is a LE Connection Complete event.
+ * @param  None 
+ * @retval None
+ */
+void ConnectionCompletedFunction(uint16_t ConnectionHandle, uint8_t Address_Type, uint8_t Addr[6])
+{
+  BLE_ConnectionHandle = ConnectionHandle;
+  
+  connected = TRUE;
+  
+  ForceReCalibration= 0;
+  FirstConnectionConfig= 0;
+  
+  BLE_MANAGER_PRINTF("Call to ConnectionCompletedFunction\r\n");
+  BLE_MANAGER_DELAY(100);
+}
+
+/**
+ * @brief  This function is called when there is a change on the gatt attribute
+ * @param  uint8_t *att_data attribute data
+ * @param  uint8_t data_length length of the data
+ * @retval None
+ */
+void AttrModConfigFunction(uint8_t * att_data, uint8_t data_length)
+{
+  if (att_data[0] == 01) {
+    Config_Update(FEATURE_MASK_SENSORFUSION_SHORT,W2ST_COMMAND_CAL_STATUS,MagnetoCalibrationDone ? 100: 0);
+    Config_Update(FEATURE_MASK_ECOMPASS,W2ST_COMMAND_CAL_STATUS,MagnetoCalibrationDone ? 100: 0);
+    FirstConnectionConfig=1;
+  } else if (att_data[0] == 0){
+    FirstConnectionConfig=0;
+  }
+}
+
+/**
+ * @brief  Callback Function for Fitness Activities write request.
+ * @param  uint8_t FitnessActivitie
+ * @retval None
+ */
+void WriteRequestFitnessActivities(uint8_t FitnessActivitie)
+{
+  MotionFA_manager_set_activity((MFA_activity_t)FitnessActivitie);
+  MotionFA_manager_reset_counter();
+  BLE_FitnessActivitiesUpdate(FitnessActivitie, 0);
+}
+
+/**
+ * @brief  Callback Function for Fitness Activities write request.
+ * @param  uint8_t FitnessActivitie
+ * @retval None
+ */
+void WriteRequestMotionAlgorithms(BLE_MotionAlgorithmsType_t Algorithm)
+{
+  if(TIM1_CHANNEL_2_Enabled)
+    TIM1_CHANNEL_2_StartStop(BLE_NOTIFY_UNSUB, 3);
+  
+  if(TIM1_CHANNEL_3_Enabled)
+    TIM1_CHANNEL_3_StartStop(BLE_NOTIFY_UNSUB, 2);
+  
+  if(TIM1_CHANNEL_4_Enabled)
+    TIM1_CHANNEL_4_StartStop(BLE_NOTIFY_UNSUB, 0);
+  
+  switch(Algorithm)
+  {
+  case 0:
+    break;
+  /* Pose Estimation */
+  case 1:
+    TIM1_CHANNEL_3_StartStop(BLE_NOTIFY_SUB, 2);
+    break;
+  case 2:
+    /* Setting Desktop */
+    TIM1_CHANNEL_4_StartStop(BLE_NOTIFY_SUB, 0);
+    break;
+  /* Vertical Context */
+  case 3:
+    TIM1_CHANNEL_2_StartStop(BLE_NOTIFY_SUB, 3);
+    break;
+  default:
+    break;
+  }
+}
+
+/**
+* @brief  This function makes the parsing of the Configuration Commands
+* @param uint8_t *att_data attribute data
+* @param uint8_t data_length length of the data
+* @retval None
+*/
+void WriteRequestConfigFunction(uint8_t * att_data, uint8_t data_length)
+{
+  uint32_t FeatureMask = (att_data[3]) | (att_data[2]<<8) | (att_data[1]<<16) | (att_data[0]<<24);
+  uint8_t Command = att_data[4];
+  uint8_t Data    = att_data[5];
+  
+  switch (FeatureMask) {
+    /* Code for AcousticSL integration - Start Section */
+    case FEATURE_MASK_DIR_OF_ARRIVAL:
+        
+      switch (Command) {
+      case W2ST_COMMAND_SL_SENSITIVITY:
+        
+        switch(Data) {
+        case W2ST_COMMAND_SL_HIGH:
+          SetConfig_SL(SENSITIVITY_SL_HI_THRESHOLD);
+          break;
+        case W2ST_COMMAND_SL_LOW:
+          SetConfig_SL(SENSITIVITY_SL_LOW_THRESHOLD);
+          break;
+        }
+        
+        break;
+      }
+    break;
+    /* Code for AcousticSL integration - End Section */
+    
+    case FEATURE_MASK_SENSORFUSION_SHORT:
+      /* Sensor Fusion */
+      switch (Command) {
+        case W2ST_COMMAND_CAL_STATUS:
+#ifdef ALLMEMS1_DEBUG_CONNECTION
+          if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+            BytesToWrite =sprintf((char *)BufferToWrite,"Calibration STATUS Signal For Features=%lx\n\r",FeatureMask);
+            Term_Update(BufferToWrite,BytesToWrite);
+          } else {
+            BLE_MANAGER_PRINTF("Calibration STATUS Signal For Features=%lx\n\r",FeatureMask);
+          }
+#endif /* ALLMEMS1_DEBUG_CONNECTION */
+          /* Replay with the calibration status for the feature */
+          /* Control the calibration status */
+          {
+            Config_Update(FeatureMask,Command,MagnetoCalibrationDone ? 100: 0);
+          }
+        break;
+        case W2ST_COMMAND_CAL_RESET:
+#ifdef ALLMEMS1_DEBUG_CONNECTION
+          if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+            BytesToWrite =sprintf((char *)BufferToWrite,"Calibration RESET Signal For Feature=%lx\n\r",FeatureMask);
+            Term_Update(BufferToWrite,BytesToWrite);
+          } else {
+            BLE_MANAGER_PRINTF("Calibration RESET Signal For Feature=%lx\n\r",FeatureMask);
+          }
+#endif /* ALLMEMS1_DEBUG_CONNECTION */
+          /* Reset the calibration */
+          ForceReCalibration=1;
+        break;
+        case W2ST_COMMAND_CAL_STOP:
+#ifdef ALLMEMS1_DEBUG_CONNECTION
+          if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+            BytesToWrite =sprintf((char *)BufferToWrite,"Calibration STOP Signal For Feature=%lx\n\r",FeatureMask);
+            Term_Update(BufferToWrite,BytesToWrite);
+          } else {
+            BLE_MANAGER_PRINTF("Calibration STOP Signal For Feature=%lx\n\r",FeatureMask);
+          }
+#endif /* ALLMEMS1_DEBUG_CONNECTION */
+          /* Do nothing in this case */
+        break;
+        default:
+          if(BLE_StdErr_Service==BLE_SERV_ENABLE){
+            BytesToWrite =sprintf((char *)BufferToWrite, "Calibration UNKNOW Signal For Feature=%lx\n\r",FeatureMask);
+            Stderr_Update(BufferToWrite,BytesToWrite);
+          } else {
+            BLE_MANAGER_PRINTF("Calibration UNKNOW Signal For Feature=%lx\n\r",FeatureMask);
+          }
+      }      
+    break;
+  case FEATURE_MASK_ECOMPASS:
+      /* e-compass */
+      switch (Command) {
+        case W2ST_COMMAND_CAL_STATUS:
+#ifdef ALLMEMS1_DEBUG_CONNECTION
+          if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+            BytesToWrite =sprintf((char *)BufferToWrite,"Calibration STATUS Signal For Features=%lx\n\r",FeatureMask);
+            Term_Update(BufferToWrite,BytesToWrite);
+          } else {
+            BLE_MANAGER_PRINTF("Calibration STATUS Signal For Features=%lx\n\r",FeatureMask);
+          }
+#endif /* ALLMEMS1_DEBUG_CONNECTION */
+          /* Replay with the calibration status for the feature */
+          /* Control the calibration status */
+          {
+            Config_Update(FeatureMask,Command,MagnetoCalibrationDone ? 100: 0);
+          }
+        break;
+        case W2ST_COMMAND_CAL_RESET:
+#ifdef ALLMEMS1_DEBUG_CONNECTION
+          if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+            BytesToWrite =sprintf((char *)BufferToWrite,"Calibration RESET Signal For Feature=%lx\n\r",FeatureMask);
+            Term_Update(BufferToWrite,BytesToWrite);
+          } else {
+            BLE_MANAGER_PRINTF("Calibration RESET Signal For Feature=%lx\n\r",FeatureMask);
+          }
+#endif /* ALLMEMS1_DEBUG_CONNECTION */
+          /* Reset the calibration */
+          ForceReCalibration=2;
+        break;
+        case W2ST_COMMAND_CAL_STOP:
+#ifdef ALLMEMS1_DEBUG_CONNECTION
+          if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+            BytesToWrite =sprintf((char *)BufferToWrite,"Calibration STOP Signal For Feature=%lx\n\r",FeatureMask);
+            Term_Update(BufferToWrite,BytesToWrite);
+          } else {
+            BLE_MANAGER_PRINTF("Calibration STOP Signal For Feature=%lx\n\r",FeatureMask);
+          }
+#endif /* ALLMEMS1_DEBUG_CONNECTION */
+          /* Do nothing in this case */
+        break;
+        default:
+          if(BLE_StdErr_Service==BLE_SERV_ENABLE){
+            BytesToWrite =sprintf((char *)BufferToWrite, "Calibration UNKNOW Signal For Feature=%lx\n\r",FeatureMask);
+            Stderr_Update(BufferToWrite,BytesToWrite);
+          } else {
+            BLE_MANAGER_PRINTF("Calibration UNKNOW Signal For Feature=%lx\n\r",FeatureMask);
+          }
+      }  
+    break;
+  case FEATURE_MASK_ACC_EVENTS:
+    /* Acc events */
+#ifdef ALLMEMS1_DEBUG_CONNECTION
+    if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+      BytesToWrite =sprintf((char *)BufferToWrite,"Conf Sig F=%lx C=%c D=%x\r\n",FeatureMask,Command,Data);
+      Term_Update(BufferToWrite,BytesToWrite);
+    } else {
+      BLE_MANAGER_PRINTF("Conf Sig F=%lx C=%c D=%x\r\n",FeatureMask,Command,Data);
+    }
+#endif /* ALLMEMS1_DEBUG_CONNECTION */      
+    switch(Command) {
+      case 'm':
+        /* Multiple Events */
+        switch(Data) {
+          case 1:
+            EnableHWMultipleEvents();
+            ResetHWPedometer();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+          case 0:
+            DisableHWMultipleEvents();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+         }
+        break;
+      case 'f':
+        /* FreeFall */
+        switch(Data) {
+          case 1:
+            EnableHWFreeFall();
+             Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+          case 0:
+            DisableHWFreeFall();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+         }
+      break;
+      case 'd':
+        /* Double Tap */
+        switch(Data) {
+          case 1:
+            EnableHWDoubleTap();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+          case 0:
+            DisableHWDoubleTap();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+        }
+      break;
+      case 's':
+        /* Single Tap */
+        switch(Data) {
+          case 1:
+            EnableHWSingleTap();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+          case 0:
+            DisableHWSingleTap();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+        }
+      break;
+      case 'p':
+        /* Pedometer */
+        switch(Data) {
+          case 1:
+            EnableHWPedometer();
+            ResetHWPedometer();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+          case 0:
+            DisableHWPedometer();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+        }
+       break;
+      case 'w':
+        /* Wake UP */
+        switch(Data) {
+          case 1:
+            EnableHWWakeUp();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+          case 0:
+            DisableHWWakeUp();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+        }
+       break;
+       case 't':
+         /* Tilt */
+        switch(Data) {
+          case 1:
+            EnableHWTilt();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+          case 0:
+            DisableHWTilt();
+            Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+            break;
+        }
+      break;
+      case 'o' :
+        /* Tilt */
+        switch(Data) {
+        case 1:
+          EnableHWOrientation6D();
+          Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+          break;
+        case 0:
+          DisableHWOrientation6D();
+          Config_Update(FEATURE_MASK_ACC_EVENTS,Command,Data);
+          break;
+        }
+      break;
+    }
+    break;
+    /* Environmental features */
+    case FEATURE_MASK_TEMP1:
+    case FEATURE_MASK_TEMP2:
+    case FEATURE_MASK_PRESS:
+    case FEATURE_MASK_HUM:
+      switch(Command) {
+        case 255:
+          /* Change the Sending interval */
+          if(Data!=0) {
+            /* Multiple of 100mS */
+            __HAL_TIM_SET_AUTORELOAD(&TimEnvHandle,(((Data*TIM_CLOCK_ENV) / 10U) - 1));
+            __HAL_TIM_SET_COUNTER(&TimEnvHandle,0);
+            TimEnvHandle.Instance->EGR = TIM_EGR_UG;
+          } else {
+            /* Default Values */
+            __HAL_TIM_SET_AUTORELOAD(&TimEnvHandle,((TIM_CLOCK_ENV  / ALGO_FREQ_ENV) - 1));
+            __HAL_TIM_SET_COUNTER(&TimEnvHandle,0);
+          }
+#ifdef ALLMEMS1_DEBUG_CONNECTION
+          if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+            BytesToWrite = sprintf((char *)BufferToWrite,"Conf Sig F=%lx C=%2x Data=%2x\n\r",FeatureMask,Command,Data);
+            Term_Update(BufferToWrite,BytesToWrite);
+          } else {
+            BLE_MANAGER_PRINTF("Conf Sig F=%lx C=%2x Data=%2x\n\r",FeatureMask,Command,Data);
+          }
+#endif /* ALLMEMS1_DEBUG_CONNECTION */
+        break;
+      }
+    break;
+    /* Inertial features */
+    case FEATURE_MASK_ACC:
+    case FEATURE_MASK_GRYO:
+    case FEATURE_MASK_MAG:
+      switch(Command) {
+        case 255:
+          /* Change the Sending interval */
+          if(Data!=0) {
+            /* Multiple of 100mS */
+            __HAL_TIM_SET_AUTORELOAD(&TimInertialHandle,(((Data*TIM_CLOCK_INERTIAL) / 10U) - 1));
+            __HAL_TIM_SET_COUNTER(&TimInertialHandle,0);
+            TimInertialHandle.Instance->EGR = TIM_EGR_UG;
+          } else {
+            /* Default Values */
+            __HAL_TIM_SET_AUTORELOAD(&TimInertialHandle,((TIM_CLOCK_INERTIAL  / ALGO_FREQ_INERTIAL) - 1));
+            __HAL_TIM_SET_COUNTER(&TimInertialHandle,0);
+          }
+#ifdef ALLMEMS1_DEBUG_CONNECTION
+          if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
+            BytesToWrite = sprintf((char *)BufferToWrite,"Conf Sig F=%lx C=%2x Data=%2x\n\r",FeatureMask,Command,Data);
+            Term_Update(BufferToWrite,BytesToWrite);
+          } else {
+            BLE_MANAGER_PRINTF("Conf Sig F=%lx C=%2x Data=%2x\n\r",FeatureMask,Command,Data);
+          }
+#endif /* ALLMEMS1_DEBUG_CONNECTION */
+        break;
+      }
+    break;
+  }
+}
+
+/**
+* @brief  This function makes the parsing of the Debug Console
+* @param  uint8_t *att_data attribute data
+* @param  uint8_t data_length length of the data
+* @retval uint32_t SendBackData true/false
+*/
+uint32_t DebugConsoleParsing(uint8_t * att_data, uint8_t data_length)
+{
+  /* By default Answer with the same message received */
+  uint32_t SendBackData =1; 
+  
+  if(OTA_RemainingSize!=0) {
+    /* FP-IND-PREDMNT1 firwmare update */
+    int8_t RetValue = UpdateFW(&OTA_RemainingSize,att_data, data_length,1);
+    if(RetValue!=0) {
+      Term_Update((uint8_t *)&RetValue,1);
+      if(RetValue==1) {
+        /* if OTA checked */
+        //BytesToWrite =sprintf((char *)BufferToWrite,"The Board will restart in 5 seconds\r\n");
+        //Term_Update(BufferToWrite,BytesToWrite);
+        BLE_MANAGER_PRINTF("%s will restart in 5 seconds\r\n",ALLMEMS1_PACKAGENAME);
+        HAL_Delay(5000);
+        HAL_NVIC_SystemReset();
+      }
+    }
+    SendBackData=0;
+  } else {
+    /* Received one write from Client on Terminal characteristc */
+    SendBackData = DebugConsoleCommandParsing(att_data,data_length);
+  }
+  
+  return SendBackData;
+}
+
+/**
+ * @brief  This function makes the parsing of the Debug Console Commands
+ * @param  uint8_t *att_data attribute data
+ * @param  uint8_t data_length length of the data
+ * @retval uint32_t SendBackData true/false
+ */
+static uint32_t DebugConsoleCommandParsing(uint8_t * att_data, uint8_t data_length)
+{
+  uint32_t SendBackData = 1;
+  
+  /* Help Command */
+  if(!strncmp("help",(char *)(att_data),4))
+  {
+    /* Print Legend */
+    SendBackData=0;
+
+    BytesToWrite =sprintf((char *)BufferToWrite,"Command:\r\n"
+      "info-> System Info\r\n"
+      "versionFw-> FW Version\r\n"
+      "versionBle-> Ble Version\r\n");   
+    Term_Update(BufferToWrite,BytesToWrite);
+  }
+  else if(!strncmp("versionFw",(char *)(att_data),9))
+  {
+    BytesToWrite =sprintf((char *)BufferToWrite,"%s_%s_%c.%c.%c\r\n",
+                          BLE_STM32_MICRO,
+                          ALLMEMS1_PACKAGENAME,
+                          ALLMEMS1_VERSION_MAJOR,
+                          ALLMEMS1_VERSION_MINOR,
+                          ALLMEMS1_VERSION_PATCH);
+    Term_Update(BufferToWrite,BytesToWrite);
+    SendBackData=0;
+  }
+  else if(!strncmp("info",(char *)(att_data),4))
+  {
+    SendBackData=0;
+      
+    BytesToWrite =sprintf((char *)BufferToWrite,"\r\nSTMicroelectronics %s:\r\n"
+        "\tVersion %c.%c.%c\r\n"
+        "\tSTM32L476RG-Nucleo board"
+         "\r\n",
+         ALLMEMS1_PACKAGENAME,
+         ALLMEMS1_VERSION_MAJOR,ALLMEMS1_VERSION_MINOR,ALLMEMS1_VERSION_PATCH);
+    
+    Term_Update(BufferToWrite,BytesToWrite);
+
+    BytesToWrite =sprintf((char *)BufferToWrite,"\t(HAL %ld.%ld.%ld_%ld)\r\n"
+        "\tCompiled %s %s"
+#if defined (__IAR_SYSTEMS_ICC__)
+        " (IAR)\r\n",
+#elif defined (__CC_ARM) || (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)) /* For ARM Compiler 5 and 6 */
+        " (KEIL)\r\n",
+#elif defined (__GNUC__)
+        " (STM32CubeIDE)\r\n",
+#endif
+        HAL_GetHalVersion() >>24,
+        (HAL_GetHalVersion() >>16)&0xFF,
+        (HAL_GetHalVersion() >> 8)&0xFF,
+        HAL_GetHalVersion()      &0xFF,
+        __DATE__,__TIME__);
+
+    Term_Update(BufferToWrite,BytesToWrite);
+
+    BytesToWrite =sprintf((char *)BufferToWrite,"Code compiled for X-NUCLEO-IKS01A3\r\n");
+    Term_Update(BufferToWrite,BytesToWrite);
+  }
+  else if(!strncmp("upgradeFw",(char *)(att_data),9))
+  {
+    uint32_t OTA_crc;
+    uint8_t *PointerByte = (uint8_t*) &OTA_RemainingSize;
+
+    OTA_RemainingSize=atoi((char *)(att_data+9));
+    PointerByte[0]=att_data[ 9];
+    PointerByte[1]=att_data[10];
+    PointerByte[2]=att_data[11];
+    PointerByte[3]=att_data[12];
+
+    /* Check the Maximum Possible OTA size */
+    if(OTA_RemainingSize>OTA_MAX_PROG_SIZE)
+    {
+      BLE_MANAGER_PRINTF("OTA %s SIZE=%ld > %ld Max Allowed\r\n",ALLMEMS1_PACKAGENAME,OTA_RemainingSize, OTA_MAX_PROG_SIZE);
+      /* Answer with a wrong CRC value for signaling the problem to BlueMS application */
+      BufferToWrite[0]= att_data[13];
+      BufferToWrite[1]=(att_data[14]!=0) ? 0 : 1;/* In order to be sure to have a wrong CRC */
+      BufferToWrite[2]= att_data[15];
+      BufferToWrite[3]= att_data[16];
+      BytesToWrite = 4;
+      Term_Update(BufferToWrite,BytesToWrite);
+    }
+    else
+    {
+      PointerByte = (uint8_t*) &OTA_crc;
+      PointerByte[0]=att_data[13];
+      PointerByte[1]=att_data[14];
+      PointerByte[2]=att_data[15];
+      PointerByte[3]=att_data[16];
+
+      BLE_MANAGER_PRINTF("OTA %s SIZE=%ld OTA_crc=%lx\r\n",ALLMEMS1_PACKAGENAME,OTA_RemainingSize,OTA_crc);
+
+      /* Reset the Flash */
+      StartUpdateFW(OTA_RemainingSize,OTA_crc);
+
+      /* Reduce the connection interval */
+      {
+        int ret = aci_l2cap_connection_parameter_update_req(BLE_ConnectionHandle,
+                                                      10 /* interval_min*/,
+                                                      10 /* interval_max */,
+                                                      0   /* slave_latency */,
+                                                      400 /*timeout_multiplier*/);
+        /* Go to infinite loop if there is one error */
+        if (ret != BLE_STATUS_SUCCESS) {
+          while (1) {
+            BLE_MANAGER_PRINTF("Problem Changing the connection interval\r\n");
+          }
+        }
+      }
+
+      /* Signal that we are ready sending back the CRC value*/
+      BufferToWrite[0] = PointerByte[0];
+      BufferToWrite[1] = PointerByte[1];
+      BufferToWrite[2] = PointerByte[2];
+      BufferToWrite[3] = PointerByte[3];
+      BytesToWrite = 4;
+      Term_Update(BufferToWrite,BytesToWrite);
+    }
+
+    SendBackData=0;
+  }
+  else if(!strncmp("versionBle",(char *)(att_data),10))
+  {
+    uint8_t  hwVersion;
+    uint16_t fwVersion;
+    /* get the BlueNRG HW and FW versions */
+    getBlueNRGVersion(&hwVersion, &fwVersion);
+    BytesToWrite =sprintf((char *)BufferToWrite,"%s_%d.%d.%c\r\n",
+                          "BlueNRG2",
+                          (fwVersion>>8)&0xF,
+                          (fwVersion>>4)&0xF,
+                          ('a' + (fwVersion&0xF)));
+    Term_Update(BufferToWrite,BytesToWrite);
+    SendBackData=0;
+  } 
+  else if((att_data[0]=='u') & (att_data[1]=='i') & (att_data[2]=='d'))
+  {
+    /* Write back the STM32 UID */
+    uint8_t *uid = (uint8_t *)STM32_UUID;
+    uint32_t MCU_ID = STM32_MCU_ID[0]&0xFFF;
+    BytesToWrite =sprintf((char *)BufferToWrite,"%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X_%.3lX\r\n",
+                          uid[ 3],uid[ 2],uid[ 1],uid[ 0],
+                          uid[ 7],uid[ 6],uid[ 5],uid[ 4],
+                          uid[11],uid[ 10],uid[9],uid[8],
+                          MCU_ID);
+    Term_Update(BufferToWrite,BytesToWrite);
+    SendBackData=0;
+  }else if(!strncmp("setName ",(char *)(att_data),8)) {
+      
+      //int NameLength= strcspn((const char *)att_data,"\n");
+      int NameLength= data_length -1;
+      
+      if(NameLength > 8)
+      {
+        for(int i=1;i<8;i++)
+          NodeName[i]= atoi(" ");
+ 
+        if((NameLength - 8) > 7)
+          NameLength= 7;
+        else NameLength= NameLength - 8;
+        
+        for(int i=1;i<NameLength+1;i++)
+          NodeName[i]= att_data[i+7];
+        
+        MDM_SaveGMD(GMD_NODE_NAME,(void *)&NodeName);
+        NecessityToSaveMetaDataManager=1;
+        
+        BytesToWrite =sprintf((char *)BufferToWrite,"\nThe node nome has been updated\r\n");
+        Term_Update(BufferToWrite,BytesToWrite);
+        BytesToWrite =sprintf((char *)BufferToWrite,"Disconnecting and riconnecting to see the new node name\r\n");
+        Term_Update(BufferToWrite,BytesToWrite);
+      }
+      else
+      {
+        BytesToWrite =sprintf((char *)BufferToWrite,"\nInsert the node name\r\n");
+        Term_Update(BufferToWrite,BytesToWrite);
+        BytesToWrite =sprintf((char *)BufferToWrite,"Use command: setName 'xxxxxxx'\r\n");
+        Term_Update(BufferToWrite,BytesToWrite);
+      }
+
+      SendBackData=0;
+  } else if(!strncmp("TLcalibstart",(char *)(att_data),12)) {
+    StartMotionTL_Calibration= 1;
+    CalibrationsPerformed= 0;
+    BytesToWrite =sprintf((char *)BufferToWrite,"ok\r\n");
+    Term_Update(BufferToWrite,BytesToWrite);
+    BytesToWrite =sprintf((char *)BufferToWrite,"Board Position %ld - Write next\r\n", CalibrationsPerformed+1);
+    Term_Update(BufferToWrite,BytesToWrite);
+    SendBackData=0;
+  } else if(!strncmp("TLcalibstop",(char *)(att_data),11)) {
+    StartMotionTL_Calibration= 0;
+    CalibrationsPerformed= 0;
+    BytesToWrite =sprintf((char *)BufferToWrite,"ok\r\n");
+    Term_Update(BufferToWrite,BytesToWrite);
+    BytesToWrite =sprintf((char *)BufferToWrite,"Calibration Failed\r\n");
+    Term_Update(BufferToWrite,BytesToWrite);
+    SendBackData=0;
+  }
+  
+/* Code for MotionTL integration - Start Section */
+    if(StartMotionTL_Calibration)
+    { 
+      if(!strncmp("next",(char *)(att_data),4))
+      {
+        switch(CalibrationsPerformed)
+        {
+        case 0:
+          MotionTL_manager_calibratePosition(Z_UP);
+          CalibrationsPerformed++;
+          break;
+        case 1:
+          MotionTL_manager_calibratePosition(Z_DOWN);
+          CalibrationsPerformed++;
+          break;
+        case 2:
+          MotionTL_manager_calibratePosition(Y_UP);
+          CalibrationsPerformed++;
+          break;
+        case 3:
+          MotionTL_manager_calibratePosition(X_DOWN);
+          CalibrationsPerformed++;
+          break;
+        case 4:
+          MotionTL_manager_calibratePosition(Y_DOWN);
+          CalibrationsPerformed++;
+          break;
+        case 5:
+          MotionTL_manager_calibratePosition(X_UP);
+          CalibrationsPerformed++;
+          break;
+        }
+        
+        if(CalibrationsPerformed == 6)
+        {
+          MTL_acc_cal_t acc_cal;
+          MTL_cal_result_t cal_result = CAL_FAIL;
+          
+          cal_result = MotionTL_manager_getCalibrationValues(&acc_cal);
+          
+          if (cal_result == CAL_PASS)
+          {
+            BytesToWrite =sprintf((char *)BufferToWrite,"Calibration Done\r\n");
+            Term_Update(BufferToWrite,BytesToWrite);
+            
+            MotionTL_manager_SaveCalValuesInNVM(&acc_cal);
+          }
+          else
+          {
+            BytesToWrite =sprintf((char *)BufferToWrite,"Calibration Failed\r\n");
+            Term_Update(BufferToWrite,BytesToWrite);
+          }
+          
+          CalibrationsPerformed= 0;
+          StartMotionTL_Calibration= 0;
+        }
+        else
+        {
+          BytesToWrite =sprintf((char *)BufferToWrite,"Board Position %ld - Write next\r\n", CalibrationsPerformed+1);
+          Term_Update(BufferToWrite,BytesToWrite);
+        }
+        
+        SendBackData=0;
+      }
+    }
+/* Code for MotionTL integration - End Section */
+
+  if(SendBackData) {
+    if(att_data[0]=='@') {
+      if(att_data[1]=='T') {
+        uint8_t loc_att_data[6];
+        uint8_t loc_data_length=6;
+
+        loc_att_data[0] = (FEATURE_MASK_TEMP1>>24)&0xFF;
+        loc_att_data[1] = (FEATURE_MASK_TEMP1>>16)&0xFF;
+        loc_att_data[2] = (FEATURE_MASK_TEMP1>>8 )&0xFF;
+        loc_att_data[3] = (FEATURE_MASK_TEMP1    )&0xFF;
+        loc_att_data[4] = 255;
+
+        switch(att_data[2]) {
+          case 'L':
+            loc_att_data[5] = 50; /* @5S */
+          break;
+          case 'M':
+            loc_att_data[5] = 10; /* @1S */
+          break;
+          case 'H':
+            loc_att_data[5] = 1; /* @100mS */
+          break;
+          case 'D':
+            loc_att_data[5] = 0; /* Default */
+          break;
+        }
+        WriteRequestConfigFunction(loc_att_data,loc_data_length);
+        SendBackData = 0;
+      } else if(att_data[1]=='A') {
+        uint8_t loc_att_data[6];
+        uint8_t loc_data_length=6;
+
+        loc_att_data[0] = (FEATURE_MASK_ACC>>24)&0xFF;
+        loc_att_data[1] = (FEATURE_MASK_ACC>>16)&0xFF;
+        loc_att_data[2] = (FEATURE_MASK_ACC>>8 )&0xFF;
+        loc_att_data[3] = (FEATURE_MASK_ACC    )&0xFF;
+        loc_att_data[4] = 255;
+
+        switch(att_data[2]) {
+          case 'L':
+            loc_att_data[5] = 50; /* @5S */
+          break;
+          case 'M':
+            loc_att_data[5] = 10; /* @1S */
+          break;
+          case 'H':
+            loc_att_data[5] = 1; /* @100mS */
+          break;
+          case 'D':
+            loc_att_data[5] = 0; /* Default */
+          break;
+        }
+        WriteRequestConfigFunction(loc_att_data,loc_data_length);
+        SendBackData = 0;
+      }
+    }
+  }
+
+  return SendBackData;
+}
+
+/**
+ * @brief  Set Board Name.
+ * @param  None
+ * @retval None
+ */
+void SetBoardName(void)
+{
+  sprintf(BLE_StackValue.BoardName,"%s%c%c%c","AM1V",
+          ALLMEMS1_VERSION_MAJOR,
+          ALLMEMS1_VERSION_MINOR,
+          ALLMEMS1_VERSION_PATCH);
+
+  /* Set Node Name */
+  ReCallNodeNameFromMemory();
+}
+
+/**
+ * @brief  Set Custom Advertize Data.
+ * @param  uint8_t *manuf_data: Advertize Data
+ * @retval None
+ */
+void BLE_SetCustomAdvertiseData(uint8_t *manuf_data)
+{
+#ifndef BLE_MANAGER_SDKV2
+  /**
+  * For only SDKV1, user can add here the custom advertize data setting for the selected BLE features.
+  * For example for the environmental features:
+  *
+  * BLE_SetCustomEnvAdvertizeData(manuf_data);
+  */
+
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+#else /* BLE_MANAGER_SDKV2 */
+  /* USER CODE BEGIN 2 */
+  manuf_data[BLE_MANAGER_CUSTOM_FIELD1]=0x08; /* Custom Firmware */
+  manuf_data[BLE_MANAGER_CUSTOM_FIELD2]=0x01;
+  manuf_data[BLE_MANAGER_CUSTOM_FIELD3]=0x00;
+  manuf_data[BLE_MANAGER_CUSTOM_FIELD4]=0x00;
+  /* USER CODE END 2 */
+#endif /* BLE_MANAGER_SDKV2 */
+}
+
+/*****************************************************
+ * Callback functions to manage the BLE events - End *
+ *****************************************************/
+
+/***********************************************************************************************
+ * Callback functions to manage the BLE extended configuration characteristic commands - Start *
+ ***********************************************************************************************/
+
+/**
+ * @brief  Callback Function for answering to VersionFw command
+ * @param  uint8_t *Answer Return String
+ * @retval None
+ */
+void ExtConfigVersionFwCommandCallback(uint8_t *Answer)
+{
+  sprintf((char *)Answer,"%s_%s_%c.%c.%c",
+      BLE_STM32_MICRO,
+      ALLMEMS1_PACKAGENAME,
+      ALLMEMS1_VERSION_MAJOR,
+      ALLMEMS1_VERSION_MINOR,
+      ALLMEMS1_VERSION_PATCH);
+}
+
+/**
+ * @brief  Callback Function for answering to Info command
+ * @param  uint8_t *Answer Return String
+ * @retval None
+ */
+void ExtConfigInfoCommandCallback(uint8_t *Answer)
+{
+  uint8_t  hwVersion;
+  uint16_t fwVersion;
+
+  /* get the BlueNRG HW and FW versions */
+  getBlueNRGVersion(&hwVersion, &fwVersion);
+
+  sprintf((char *)Answer,"STMicroelectronics %s:\n"
+    "Version %c.%c.%c\n"
+    "%s board\n"
+    "BlueNRG-2 HW ver%d.%d\n"
+    "BlueNRG-2 FW ver%d.%d.%c\n"
+    "(HAL %ld.%ld.%ld_%ld)\n"
+    "Compiled %s %s"
+#if defined (__IAR_SYSTEMS_ICC__)
+    " (IAR)"
+#elif defined (__CC_ARM) || (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)) /* For ARM Compiler 5 and 6 */
+    " (KEIL)"
+#elif defined (__GNUC__)
+    " (STM32CubeIDE)"
+#endif
+
+    "\nCode compiled for X-NUCLEO-IKS01A3 board\n",
+    ALLMEMS1_PACKAGENAME,
+    ALLMEMS1_VERSION_MAJOR,
+    ALLMEMS1_VERSION_MINOR,
+    ALLMEMS1_VERSION_PATCH,
+    BLE_STM32_BOARD,
+    ((hwVersion>>4)&0x0F),
+    (hwVersion&0x0F),
+    (fwVersion>>8)&0xF,
+    (fwVersion>>4)&0xF,
+    ('a' + (fwVersion&0xF)),
+    HAL_GetHalVersion() >>24,
+    (HAL_GetHalVersion() >>16)&0xFF,
+    (HAL_GetHalVersion() >> 8)&0xFF,
+    HAL_GetHalVersion()      &0xFF,
+    __DATE__,__TIME__);
+}
+
+/*********************************************************************************************
+ * Callback functions to manage the BLE extended configuration characteristic commands - End *
+ *********************************************************************************************/
 
 /**
   * @brief  Output Compare callback in non blocking mode 
@@ -1611,7 +2563,7 @@ static void ComputeMotionCP(void)
   */
 static void ComputeMotionFA(void)
 {  
-  MFA_input_t data_in = {.AccX = 0.0f, .AccY = 0.0f, .AccZ = 0.0f, .GyrX = 0.0f, .GyrZ = 0.0f, .GyrZ = 0.0f, .Press = 0.0f};
+  MFA_input_t data_in = {.AccX = 0.0f, .AccY = 0.0f, .AccZ = 0.0f, .GyrX = 0.0f, .GyrY = 0.0f, .GyrZ = 0.0f, .Press = 0.0f};
   static MFA_output_t data_out;
   static MFA_output_t data_out_prev = {0};
   MFA_activity_t activity_type;
@@ -2262,21 +3214,25 @@ void ReadEnvironmentalData(int32_t *PressToSend,uint16_t *HumToSend,int16_t *Tem
   *Temp2ToSend=0,*Temp1ToSend=0;
 
   /* Read Humidity */
+  SensorValue= 0.0;
   ENV_SENSOR_GetValue(HUMIDITY_INSTANCE,ENV_HUMIDITY,&SensorValue);
   MCR_BLUEMS_F2I_1D(SensorValue, intPart, decPart);
   *HumToSend = intPart*10+decPart;
 
   /* Read Temperature for sensor 1 */
+  SensorValue= 0.0;
   ENV_SENSOR_GetValue(TEMPERATURE_INSTANCE_1,ENV_TEMPERATURE,&SensorValue);
   MCR_BLUEMS_F2I_1D(SensorValue, intPart, decPart);
   *Temp1ToSend = intPart*10+decPart;
   
   /* Read Pressure */
+  SensorValue= 0.0;
   ENV_SENSOR_GetValue(PRESSURE_INSTANCE,ENV_PRESSURE,&SensorValue);
   MCR_BLUEMS_F2I_2D(SensorValue, intPart, decPart);
   *PressToSend=intPart*100+decPart;
 
   /* Read Temperature for sensor 2 */
+  SensorValue= 0.0;
   ENV_SENSOR_GetValue(TEMPERATURE_INSTANCE_2,ENV_TEMPERATURE,&SensorValue);
   MCR_BLUEMS_F2I_1D(SensorValue, intPart, decPart);
   *Temp2ToSend = intPart*10+decPart;
@@ -2291,18 +3247,7 @@ static void SendEnvironmentalData(void)
 {
   /* Notifications of Compass Calibration status*/
   if(FirstConnectionConfig) {
-    Config_Update(FEATURE_MASK_SENSORFUSION_SHORT,W2ST_COMMAND_CAL_STATUS,MagnetoCalibrationDone ? 100: 0);
-    Config_Update(FEATURE_MASK_ECOMPASS,W2ST_COMMAND_CAL_STATUS,MagnetoCalibrationDone ? 100: 0);
-#ifdef ALLMEMS1_DEBUG_NOTIFY_TRAMISSION
-     if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-       BytesToWrite = sprintf((char *)BufferToWrite,"Cal=%d\r\n",MagnetoCalibrationDone);
-       Term_Update(BufferToWrite,BytesToWrite);
-     } else {
-      ALLMEMS1_PRINTF("Cal=%d\r\n",MagnetoCalibrationDone);
-     }
-#endif /* ALLMEMS1_DEBUG_NOTIFY_TRAMISSION */
     FirstConnectionConfig=0;
-  
     /* Switch on/off the LED according to calibration */
     if(MagnetoCalibrationDone){
         LedOnTargetPlatform();
@@ -2518,8 +3463,6 @@ static unsigned char ResetCalibrationInMemory(void)
  */
 static unsigned char ReCallNodeNameFromMemory(void)
 {
-  const char DefaultBoardName[7] = {NAME_BLUEMS};
-  
   /* ReLoad the Node Name Values from RAM */
   unsigned char Success=0;
 
@@ -2529,20 +3472,22 @@ static unsigned char ReCallNodeNameFromMemory(void)
   if(NodeName[0] != 0x12)
   {
     NodeName[0]= 0x12;
-    
+
     for(int i=0; i<7; i++)
-    {
-      NodeName[i+1]= DefaultBoardName[i];
-      BlueNRG_StackValue.BoardName[i]= DefaultBoardName[i];
-    }
-    
+      NodeName[i+1]= BLE_StackValue.BoardName[i];
+
     MDM_SaveGMD(GMD_NODE_NAME,(void *)&NodeName);
     NecessityToSaveMetaDataManager=1;
+
+    ALLMEMS1_PRINTF("\r\nNode name not present in FLASH\r\n");
+    ALLMEMS1_PRINTF("\tNode name written to FLASH= %s\r\n", BLE_StackValue.BoardName);
   }
   else
   {
     for(int i=0; i<7; i++)
-      BlueNRG_StackValue.BoardName[i]= NodeName[i+1];
+      BLE_StackValue.BoardName[i]= NodeName[i+1];
+
+    ALLMEMS1_PRINTF("\r\nNode name read from FLASH (%s)\r\n", BLE_StackValue.BoardName);
   }
 
   return Success;
@@ -2687,12 +3632,12 @@ unsigned char ResetAccellerometerCalibrationInMemory(void)
 /**
  * @brief  This function is called when there is a change on the gatt attribute for Inertial (Acc/Gyro/Mag plot)
  *         for Start/Stop Timer
- * @param  None
+ * @param  BLE_NotifyEvent_t Event
  * @retval None
  */
-static void Inertial_StartStopTimer(void)
+static void Inertial_StartStopTimer(BLE_NotifyEvent_t Event)
 {
-  if( (BLE_Inertial_NotifyEvent == BLE_NOTIFY_SUB) &&
+  if( (Event == BLE_NOTIFY_SUB) &&
       (!InertialTimerEnabled) ){
         /* Start the TIM Base generation in interrupt mode */
         if(HAL_TIM_Base_Start_IT(&TimInertialHandle) != HAL_OK){
@@ -2703,7 +3648,7 @@ static void Inertial_StartStopTimer(void)
     InertialTimerEnabled= 1;
   }
   
-  if( (BLE_Inertial_NotifyEvent == BLE_NOTIFY_UNSUB) &&
+  if( (Event == BLE_NOTIFY_UNSUB) &&
       (InertialTimerEnabled) ){
         /* Stop the TIM Base generation in interrupt mode */
         if(HAL_TIM_Base_Stop_IT(&TimInertialHandle) != HAL_OK){
@@ -2718,12 +3663,12 @@ static void Inertial_StartStopTimer(void)
 /**
  * @brief  This function is called when there is a change on the gatt attribute for Environmental
  *         for Start/Stop Timer
- * @param  None
+ * @param  BLE_NotifyEvent_t Event
  * @retval None
  */
-static void Environmental_StartStopTimer(void)
+static void Environmental_StartStopTimer(BLE_NotifyEvent_t Event)
 {
-  if( (BLE_Env_NotifyEvent == BLE_NOTIFY_SUB) &&
+  if( (Event == BLE_NOTIFY_SUB) &&
       (!EnvironmentalTimerEnabled) ){
         /* Start the TIM Base generation in interrupt mode */
         if(HAL_TIM_Base_Start_IT(&TimEnvHandle) != HAL_OK){
@@ -2734,7 +3679,7 @@ static void Environmental_StartStopTimer(void)
     EnvironmentalTimerEnabled= 1;
   }
   
-  if( (BLE_Env_NotifyEvent == BLE_NOTIFY_UNSUB) &&
+  if( (Event == BLE_NOTIFY_UNSUB) &&
       (EnvironmentalTimerEnabled) ){
         /* Stop the TIM Base generation in interrupt mode */
         if(HAL_TIM_Base_Stop_IT(&TimEnvHandle) != HAL_OK){
@@ -2748,12 +3693,12 @@ static void Environmental_StartStopTimer(void)
 
 /**
   * @brief  Enable/Disable Accelerometer events 
-  * @param  None
+  * @param  BLE_NotifyEvent_t Event
   * @retval None
   */
-static void AccEnv_StartStop(void)
+static void AccEnv_StartStop(BLE_NotifyEvent_t Event)
 {
-  if( (BLE_AccEnv_NotifyEvent == BLE_NOTIFY_SUB) &&
+  if( (Event == BLE_NOTIFY_SUB) &&
       (!AccEventEnabled) ){
         EnableHWMultipleEvents();
         ResetHWPedometer();
@@ -2761,7 +3706,7 @@ static void AccEnv_StartStop(void)
         AccEventEnabled= 1;
   }
   
-  if( (BLE_AccEnv_NotifyEvent == BLE_NOTIFY_UNSUB) &&
+  if( (Event == BLE_NOTIFY_UNSUB) &&
       (AccEventEnabled) ){
         DisableHWMultipleEvents();
         AccEventEnabled= 0;
@@ -2771,12 +3716,12 @@ static void AccEnv_StartStop(void)
 /**
  * @brief  This function is called when there is a change on the gatt attribute for Audio Level
  *         for Start/Stop Timer
- * @param  None
+ * @param  BLE_NotifyEvent_t Event
  * @retval None
  */
-static void AudioLevel_StartStopTimer(void)
+static void AudioLevel_StartStopTimer(BLE_NotifyEvent_t Event)
 {
-  if( (BLE_AudioLevel_NotifyEvent == BLE_NOTIFY_SUB) &&
+  if( (Event == BLE_NOTIFY_SUB) &&
       (!AudioLevelTimerEnabled) ){
         int32_t Count;
       
@@ -2796,7 +3741,7 @@ static void AudioLevel_StartStopTimer(void)
         AudioLevelTimerEnabled= 1;
   }
   
-  if( (BLE_AudioLevel_NotifyEvent == BLE_NOTIFY_UNSUB) &&
+  if( (Event == BLE_NOTIFY_UNSUB) &&
       (AudioLevelTimerEnabled) ){
         DeInitMics();
         
@@ -2813,12 +3758,12 @@ static void AudioLevel_StartStopTimer(void)
 /**
  * @brief  This function is called when there is a change on the gatt attribute for Audio Source Localization
  *         for Start/Stop Timer
- * @param  None
+ * @param  BLE_NotifyEvent_t Event
  * @retval None
  */
-static void AudioSourceLocalization_StartStopTimer(void)
+static void AudioSourceLocalization_StartStopTimer(BLE_NotifyEvent_t Event)
 {
-  if( (BLE_AudioSourceLocalization_NotifyEvent == BLE_NOTIFY_SUB) &&
+  if( (Event == BLE_NOTIFY_SUB) &&
       (!AudioSourceLocalizationTimerEnabled) ){
       
         InitMics(AUDIO_IN_SAMPLING_FREQUENCY, AUDIO_VOLUME_INPUT, PCM_AUDIO_IN_SAMPLES);
@@ -2832,7 +3777,7 @@ static void AudioSourceLocalization_StartStopTimer(void)
         AudioSourceLocalizationTimerEnabled= 1;
   }
   
-  if( (BLE_AudioSourceLocalization_NotifyEvent == BLE_NOTIFY_UNSUB) &&
+  if( (Event == BLE_NOTIFY_UNSUB) &&
       (AudioSourceLocalizationTimerEnabled) ){
         DeInitMics();
         
@@ -2848,12 +3793,13 @@ static void AudioSourceLocalization_StartStopTimer(void)
 
 /**
   * @brief  Enable/Disable TIM1 Channel 1 
-  * @param  None
+  * @param  BLE_NotifyEvent_t Event
+  * @param uint8_t Algorithm
   * @retval None
   */
-static void TIM1_CHANNEL_1_StartStop(void)
+static void TIM1_CHANNEL_1_StartStop(BLE_NotifyEvent_t Event, uint8_t Algorithm)
 {
-  if( ((BLE_SensorFusion_NotifyEvent == BLE_NOTIFY_SUB) || (BLE_ECompass_NotifyEvent == BLE_NOTIFY_SUB)) &&
+  if( (Event == BLE_NOTIFY_SUB) &&
       (!TIM1_CHANNEL_1_Enabled) ){
         
     /* Get ODR accelerometer default Value */
@@ -2878,14 +3824,14 @@ static void TIM1_CHANNEL_1_StartStop(void)
     
     TIM1_CHANNEL_1_Enabled= 1;
     
-    if(BLE_SensorFusion_NotifyEvent == BLE_NOTIFY_SUB)
+    if(Algorithm == 0)
       SensorFusionEnabled= 1;
-    
-    if(BLE_ECompass_NotifyEvent == BLE_NOTIFY_SUB)
+
+    if(Algorithm == 1)
       ECompassEnabled= 1;
   }
   
-  if( ((BLE_SensorFusion_NotifyEvent == BLE_NOTIFY_UNSUB) || (BLE_ECompass_NotifyEvent == BLE_NOTIFY_UNSUB)) &&
+  if( (Event == BLE_NOTIFY_UNSUB) &&
       (TIM1_CHANNEL_1_Enabled) ){
     /* Stop the TIM Base generation in interrupt mode (for Acc/Gyro/Mag sensor) */
     if(HAL_TIM_OC_Stop_IT(&TimCCHandle, TIM_CHANNEL_1) != HAL_OK){
@@ -2906,15 +3852,13 @@ static void TIM1_CHANNEL_1_StartStop(void)
 
 /**
   * @brief  Enable/Disable TIM1 Channel 2 
-  * @param  None
+  * @param  BLE_NotifyEvent_t Event
+  * @param  uint8_t Algorithm
   * @retval None
   */
-static void TIM1_CHANNEL_2_StartStop(void)
+static void TIM1_CHANNEL_2_StartStop(BLE_NotifyEvent_t Event, uint8_t Algorithm)
 {
-  if( ((BLE_CarryPosition_NotifyEvent == BLE_NOTIFY_SUB) ||
-       (BLE_GestureRecognition_NotifyEvent == BLE_NOTIFY_SUB) ||
-       (BLE_TiltSensing_NotifyEvent == BLE_NOTIFY_SUB) ||
-       (BLE_MotionAlgorithms_VC_NotifyEvent == BLE_NOTIFY_SUB)) &&
+  if( (Event == BLE_NOTIFY_SUB) &&
       (!TIM1_CHANNEL_2_Enabled) ){
         
     /* Get ODR accelerometer default Value */
@@ -2924,7 +3868,7 @@ static void TIM1_CHANNEL_2_StartStop(void)
     /* Set FS accelerometer: = <-4g, 4g> */
     Set4GAccelerometerFullScale();
     
-    if(BLE_MotionAlgorithms_VC_NotifyEvent == BLE_NOTIFY_SUB) {
+    if(Algorithm == 3) {
       /* Get ODR pressure sensor default Value */
       ENV_SENSOR_GetOutputDataRate(PRESSURE_INSTANCE, ENV_PRESSURE, &UsedPressureDataRate);
       /* Set ODR pressure sensor: >= 25 Hz*/
@@ -2946,21 +3890,18 @@ static void TIM1_CHANNEL_2_StartStop(void)
     }
     
     TIM1_CHANNEL_2_Enabled=1;
-      
-    if(BLE_CarryPosition_NotifyEvent == BLE_NOTIFY_SUB)
+    
+    if(Algorithm == 0)
       CarryPositionEnabled= 1;
-    if(BLE_GestureRecognition_NotifyEvent == BLE_NOTIFY_SUB)
+    if(Algorithm == 1)
       GestureRecognitionEnabled= 1;
-     if(BLE_TiltSensing_NotifyEvent == BLE_NOTIFY_SUB)
+    if(Algorithm == 2)
       TiltSensingEnabled= 1;
-    if(BLE_MotionAlgorithms_VC_NotifyEvent == BLE_NOTIFY_SUB)
+    if(Algorithm == 3)
       VerticalContextEnabled= 1;
   }
   
-  if( ((BLE_CarryPosition_NotifyEvent == BLE_NOTIFY_UNSUB) ||
-       (BLE_GestureRecognition_NotifyEvent == BLE_NOTIFY_UNSUB) ||
-       /*(BLE_TiltSensing_NotifyEvent == BLE_NOTIFY_UNSUB) ||*/
-       (BLE_MotionAlgorithms_VC_NotifyEvent == BLE_NOTIFY_UNSUB)) &&
+  if( (Event == BLE_NOTIFY_UNSUB) &&
       (TIM1_CHANNEL_2_Enabled) ){
     /* Stop the TIM Base generation in interrupt mode (for Acc/Gyro/Mag sensor) */
     if(HAL_TIM_OC_Stop_IT(&TimCCHandle, TIM_CHANNEL_2) != HAL_OK){
@@ -2973,7 +3914,7 @@ static void TIM1_CHANNEL_2_StartStop(void)
     /* Set default FS accelerometer: = <-2g, 2g> */
     Set2GAccelerometerFullScale();
     
-    if(BLE_MotionAlgorithms_VC_NotifyEvent == BLE_NOTIFY_UNSUB) {
+    if(Algorithm == 3) {
       /* Set default ODR pressure sensor value*/
       ENV_SENSOR_SetOutputDataRate(PRESSURE_INSTANCE, ENV_PRESSURE, UsedPressureDataRate);
     }
@@ -2989,14 +3930,13 @@ static void TIM1_CHANNEL_2_StartStop(void)
 
 /**
   * @brief  Enable/Disable TIM1 Channel 3 
-  * @param  None
+  * @param  BLE_NotifyEvent_t Event
+  * @param  uint8_t Algorithm
   * @retval None
   */
-static void TIM1_CHANNEL_3_StartStop(void)
+static void TIM1_CHANNEL_3_StartStop(BLE_NotifyEvent_t Event, uint8_t Algorithm)
 {
-  if( ((BLE_ActRec_NotifyEvent == BLE_NOTIFY_SUB) ||
-       (BLE_MotionIntensity_NotifyEvent == BLE_NOTIFY_SUB) ||
-       (BLE_MotionAlgorithms_PE_NotifyEvent == BLE_NOTIFY_SUB)) &&
+  if( (Event == BLE_NOTIFY_SUB) &&
       (!TIM1_CHANNEL_3_Enabled) ){
         
     /* Get ODR accelerometer default Value */
@@ -3023,23 +3963,17 @@ static void TIM1_CHANNEL_3_StartStop(void)
     
     TIM1_CHANNEL_3_Enabled= 1;
     
-    if(BLE_ActRec_NotifyEvent == BLE_NOTIFY_SUB)
+    if(Algorithm == 0)
       ActivityRecognitionEnabled= 1;
-    
-    if(BLE_MotionIntensity_NotifyEvent == BLE_NOTIFY_SUB)
+    if(Algorithm == 1)
       MotionIntensityEnabled= 1;
-    
-    if(BLE_MotionAlgorithms_PE_NotifyEvent == BLE_NOTIFY_SUB)
-    {
+    if(Algorithm == 2)
       PoseEstimationEnabled= 1;
-    }
   }
   
-  if( ((BLE_ActRec_NotifyEvent == BLE_NOTIFY_UNSUB) ||
-       (BLE_MotionIntensity_NotifyEvent == BLE_NOTIFY_UNSUB) ||
-       (BLE_MotionAlgorithms_PE_NotifyEvent == BLE_NOTIFY_UNSUB)) &&
+  if( (Event == BLE_NOTIFY_UNSUB) &&
       (TIM1_CHANNEL_3_Enabled) ){
-    /* Stop the TIM Base generation in interrupt mode (for Acc/Gyro/Mag sensor) */
+    /* Stop the TIM Base generation in interrupt mode */
     if(HAL_TIM_OC_Stop_IT(&TimCCHandle, TIM_CHANNEL_3) != HAL_OK){
       /* Stopping Error */
       Error_Handler();
@@ -3059,13 +3993,13 @@ static void TIM1_CHANNEL_3_StartStop(void)
 
 /**
   * @brief  Enable/Disable TIM1 Channel 4 
-  * @param  None
+  * @param  BLE_NotifyEvent_t Event
+  * @param  uint8_t Algorithm
   * @retval None
   */
-static void TIM1_CHANNEL_4_StartStop(void)
+static void TIM1_CHANNEL_4_StartStop(BLE_NotifyEvent_t Event, uint8_t Algorithm)
 { 
-  if( ((BLE_MotionAlgorithms_SD_NotifyEvent == BLE_NOTIFY_SUB) ||
-       (BLE_FitnessActivities_NotifyEvent == BLE_NOTIFY_SUB)) &&
+  if( (Event == BLE_NOTIFY_SUB) &&
       (!TIM1_CHANNEL_4_Enabled) ){
         
     /* Get ODR accelerometer default Value */
@@ -3073,7 +4007,7 @@ static void TIM1_CHANNEL_4_StartStop(void)
     /* Set ODR accelerometer: >= 25 Hz*/
     MOTION_SENSOR_SetOutputDataRate(ACCELERO_INSTANCE, MOTION_ACCELERO, 25.0f);
     
-    if(BLE_FitnessActivities_NotifyEvent == BLE_NOTIFY_SUB)
+    if(Algorithm == 0)
     {
       /* Get ODR gyroscope default Value */
       MOTION_SENSOR_GetOutputDataRate(ACCELERO_INSTANCE, MOTION_GYRO,&UsedGyroscopeDataRate);
@@ -3101,13 +4035,11 @@ static void TIM1_CHANNEL_4_StartStop(void)
     
     TIM1_CHANNEL_4_Enabled= 1;
     
-    if(BLE_MotionAlgorithms_SD_NotifyEvent == BLE_NOTIFY_SUB)
-    {
+    if(Algorithm == 0)
       Standing_VS_SittingDeskEnabled= 1;
-    }
     
     #ifdef ALLMEMS1_MOTIONFA
-    if(BLE_FitnessActivities_NotifyEvent == BLE_NOTIFY_SUB)
+    if(Algorithm == 1)
     {
       MotionFA_manager_reset_counter();
       FitnessActivitiesEnabled= 1;
@@ -3115,8 +4047,7 @@ static void TIM1_CHANNEL_4_StartStop(void)
     #endif /* ALLMEMS1_MOTIONFA */
   }
   
-  if( ((BLE_MotionAlgorithms_SD_NotifyEvent == BLE_NOTIFY_UNSUB) ||
-       (BLE_FitnessActivities_NotifyEvent == BLE_NOTIFY_UNSUB)) &&
+  if( (Event == BLE_NOTIFY_UNSUB) &&
       (TIM1_CHANNEL_4_Enabled) ){
     /* Stop the TIM Base generation in interrupt mode (for Acc/Gyro/Mag sensor) */
     if(HAL_TIM_OC_Stop_IT(&TimCCHandle, TIM_CHANNEL_4) != HAL_OK){
@@ -3127,7 +4058,7 @@ static void TIM1_CHANNEL_4_StartStop(void)
     /* Set default ODR accelerometer */
     MOTION_SENSOR_SetOutputDataRate(ACCELERO_INSTANCE, MOTION_ACCELERO, UsedAccelerometerDataRate);
 
-    if(BLE_FitnessActivities_NotifyEvent == BLE_NOTIFY_UNSUB)
+    if(Algorithm == 0)
     {
       /* Set default ODR gyroscope */
       MOTION_SENSOR_SetOutputDataRate(ACCELERO_INSTANCE, MOTION_GYRO, UsedGyroscopeDataRate);
@@ -3174,4 +4105,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-

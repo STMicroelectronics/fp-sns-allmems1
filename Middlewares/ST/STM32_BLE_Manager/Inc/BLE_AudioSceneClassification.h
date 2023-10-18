@@ -1,14 +1,14 @@
 /**
   ******************************************************************************
-  * @file    BLE_AudioSceneClasssification.h
+  * @file    BLE_AudioSceneClassification.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Audio Scene Classification info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -39,27 +39,36 @@ typedef enum
   BLE_ASC_UNDEFINED = 0xFF
 } BLE_ASC_output_t;
 
-typedef void (*CustomReadRequestAudioSceneClass_t)(BLE_ASC_output_t *ASC_Code);
+typedef enum
+{
+  BLE_ASC_ALG_SCENE_CLASS = 0x00,
+  BLE_ASC_ALG_BABY_CRYING = 0x01,
+  BLE_ASC_ALG_UNDEFINED = 0xFF
+} BLE_ASC_Algorithm_t;
+
+typedef void (*CustomReadRequestAudioSceneClass_t)(BLE_ASC_output_t *ASC_Code, BLE_ASC_Algorithm_t *ASC_AlgId);
+typedef void (*CustomNotifyEventAudioSceneClass_t)(BLE_NotifyEvent_t Event);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_AudioSceneClass_NotifyEvent;
 extern CustomReadRequestAudioSceneClass_t CustomReadRequestAudioSceneClass;
+extern CustomNotifyEventAudioSceneClass_t CustomNotifyEventAudioSceneClass;
 
 /* Exported functions ------------------------------------------------------- */
 
 /**
  * @brief  Init Audio Scene Classification info service
- * @param  None
+ * @param  uint8_t SendAlgorithmCode 0/1 -> Send also the Audio Scene Classificatio algorithm code
  * @retval BleCharTypeDef* BleCharPointer: Data structure pointer for Activity Classification info service
  */
-extern BleCharTypeDef* BLE_InitAudioSceneClassService(void);
+extern BleCharTypeDef* BLE_InitAudioSceneClassService(uint8_t SendAlgorithmCode);
 
 /**
  * @brief  Update Audio Scene Classification characteristic
  * @param  BLE_ASC_output_t ASC_Code Audio Scene Classification Code
+ * @param BLE_ASC_Algorithm_t ASC_AlgId Algorithm Id
  * @retval tBleStatus   Status
  */
-extern tBleStatus BLE_AudioSceneClassUpdate(BLE_ASC_output_t ASC_Code);
+extern tBleStatus BLE_AudioSceneClassUpdate(BLE_ASC_output_t ASC_Code,BLE_ASC_Algorithm_t ASC_AlgId);
 
 #ifdef __cplusplus
 }

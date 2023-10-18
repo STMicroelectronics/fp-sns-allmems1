@@ -3,13 +3,13 @@
   ******************************************************************************
   * @file    main.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.2.0
-  * @date    07-Feb-2022
+  * @version 4.3.0
+  * @date    30-June-2023
   * @brief   Main program body
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -70,14 +70,18 @@
  * 2) This example must run starting at address 0x08004000 in memory and works ONLY if the BootLoader 
  * is saved at the beginning of the FLASH (address 0x08000000)
  *
- * 4) For each IDE (IAR/µVision/STM32CubeIDE) there are some scripts *.bat and *.sh that makes the following operations:
+ * 3) In the folder Utilities there is a scripts *.sh that makes the following operations:
  * - Full Flash Erase
  * - Load the BootLoader on the rigth flash region
  * - Load the Program (after the compilation) on the rigth flash region (This could be used for a FOTA)
  * - Dump back one single binary that contain BootLoader+Program that could be
  *   flashed at the flash beginning (address 0x08000000) (This COULD BE NOT used for FOTA)
  * - Reset the board
- * .
+ * 
+ * Before to execute the *.sh script, it is necessary to edit it to set the installation path for STM32CubeProgrammer.
+ *
+ * BootLoaderPath BinaryPath as input are required when execute *.sh script
+ *
  *                              --------------------
  *                              | VERY IMPORTANT 2 |
  *                              --------------------
@@ -361,7 +365,7 @@ int main(void)
 
 #if defined (__IAR_SYSTEMS_ICC__)
         " (IAR)\r\n"
-#elif defined (__CC_ARM)
+#elif defined (__CC_ARM) || (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)) /* For ARM Compiler 5 and 6 */
         " (KEIL)\r\n"
 #elif defined (__GNUC__)
         " (STM32CubeIDE)\r\n"

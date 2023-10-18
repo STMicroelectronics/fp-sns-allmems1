@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_Environmental.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add environmental info services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -26,13 +26,11 @@
 /* Private define ------------------------------------------------------------*/
 #define COPY_ENVIRONMENTAL_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x00,0x00,0x01,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
-#define ENVIRONMENTAL_ADVERTIZE_DATA_POSITION  16
+#define ENVIRONMENTAL_ADVERTISE_DATA_POSITION  16
 
 /* Exported variables --------------------------------------------------------*/
-/* Identifies the notification Events */
-BLE_NotifyEnv_t BLE_Env_NotifyEvent = BLE_NOTIFY_NOTHING;
-
 CustomReadRequestEnv_t CustomReadRequestEnv=NULL;
+CustomNotifyEventEnv_t CustomNotifyEventEnv=NULL;
 
 /* Private Types ----------------------------------------------------------- */
 typedef struct
@@ -52,9 +50,9 @@ static uint8_t  EnvironmentalCharSize;
 
 /* Private functions ---------------------------------------------------------*/
 static void AttrMod_Request_Env(void *BleCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data);
-#ifndef BLUENRG_LP
+#if (BLUE_CORE != BLUENRG_LP)
 static void Read_Request_Env(void *BleCharPointer,uint16_t handle);
-#else /* BLUENRG_LP */
+#else /* (BLUE_CORE != BLUENRG_LP) */
 static void Read_Request_Env(void *BleCharPointer,
                              uint16_t handle,
                              uint16_t Connection_Handle,
@@ -62,7 +60,7 @@ static void Read_Request_Env(void *BleCharPointer,
                              uint16_t Attr_Val_Offset,
                              uint8_t Data_Length,
                              uint8_t Data[]);
-#endif /* BLUENRG_LP */
+#endif /* (BLUE_CORE != BLUENRG_LP) */
 
 /**
 * @brief  Init environmental info service
@@ -155,26 +153,26 @@ BleCharTypeDef* BLE_InitEnvService(uint8_t PressEnable, uint8_t HumEnable, uint8
 * @param  uint8_t *manuf_data: Advertise Data
 * @retval None
 */
-void BLE_SetEnvAdvertizeData(uint8_t *manuf_data)
+void BLE_SetEnvAdvertiseData(uint8_t *manuf_data)
 {
   /* Setting Pressure Advertise Data */
   if(EnvFeaturesEnabled.PressureIsEnable == 1U) {
-    manuf_data[ENVIRONMENTAL_ADVERTIZE_DATA_POSITION] |= 0x10U;
+    manuf_data[ENVIRONMENTAL_ADVERTISE_DATA_POSITION] |= 0x10U;
   }
   
   /* Setting Humidity Advertise Data */
   if(EnvFeaturesEnabled.HumidityIsEnable == 1U) {
-    manuf_data[ENVIRONMENTAL_ADVERTIZE_DATA_POSITION] |= 0x08U;
+    manuf_data[ENVIRONMENTAL_ADVERTISE_DATA_POSITION] |= 0x08U;
   }
   
   /* Setting One Temperature Advertise Data */
   if(EnvFeaturesEnabled.NumberTemperaturesEnabled == 1U) {
-    manuf_data[ENVIRONMENTAL_ADVERTIZE_DATA_POSITION] |= 0x04U;
+    manuf_data[ENVIRONMENTAL_ADVERTISE_DATA_POSITION] |= 0x04U;
   }
   
   /* Setting Two Temperature Advertise Data */
   if(EnvFeaturesEnabled.NumberTemperaturesEnabled == 2U) {
-    manuf_data[ENVIRONMENTAL_ADVERTIZE_DATA_POSITION] |= 0x05U;
+    manuf_data[ENVIRONMENTAL_ADVERTISE_DATA_POSITION] |= 0x05U;
   }
 }
 #endif /* BLE_MANAGER_SDKV2 */
@@ -246,23 +244,28 @@ tBleStatus BLE_EnvironmentalUpdate(int32_t Press, uint16_t Hum, int16_t Temp1, i
 */
 static void AttrMod_Request_Env(void *VoidCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_Env_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_Env_NotifyEvent= BLE_NOTIFY_UNSUB;
+  if(CustomNotifyEventEnv!=NULL) {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventEnv(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventEnv(BLE_NOTIFY_UNSUB);
+    }
   }
-  
 #if (BLE_DEBUG_LEVEL>1)
+  else {
+    BLE_MANAGER_PRINTF("CustomNotifyEventEnv function Not Defined\r\n");
+  }
+
   if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-    BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite,"--->Env=%s\n", (BLE_Env_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+    BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite,"--->Env=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
     Term_Update(BufferToWrite,BytesToWrite);
   } else {
-    BLE_MANAGER_PRINTF("--->Env=%s", (BLE_Env_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+    BLE_MANAGER_PRINTF("--->Env=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
   }
 #endif
 }
 
-#ifndef BLUENRG_LP
+#if (BLUE_CORE != BLUENRG_LP)
 /**
 * @brief  This event is given when a read request is received by the server from the client.
 * @param  void *VoidCharPointer
@@ -282,7 +285,7 @@ static void Read_Request_Env(void *VoidCharPointer,uint16_t handle)
     BLE_MANAGER_PRINTF("\r\n\nRead request environmental function not defined\r\n\n");
   } 
 }
-#else /* BLUENRG_LP */
+#else /* (BLUE_CORE != BLUENRG_LP) */
 /**
 * @brief  This event is given when a read request is received by the server from the client.
 * @param  void *VoidCharPointer
@@ -357,4 +360,4 @@ static void Read_Request_Env(void *BleCharPointer,
     BLE_MANAGER_PRINTF("aci_gatt_srv_authorize_resp_nwk() failed: 0x%02x\r\n", ret);
   }
 }
-#endif /* BLUENRG_LP */
+#endif /* (BLUE_CORE != BLUENRG_LP) */

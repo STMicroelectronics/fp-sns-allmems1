@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_MotionAlgorithms.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Motion Algorithms info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,8 +29,6 @@
 /* Exported defines ---------------------------------------------------------*/
 
 /* Exported typedef --------------------------------------------------------- */
-typedef void (*CustomWriteRequestMotionAlgorithms_t)(void);
-
 typedef enum
 {
   BLE_MOTION_ALGORITHMS_NO_ALGO = 0x00,
@@ -39,12 +37,13 @@ typedef enum
   BLE_MOTION_ALGORITHMS_VC      = 0x03
 } BLE_MotionAlgorithmsType_t;
 
+typedef void (*CustomNotifyEventMotionAlgorithms_t)(BLE_NotifyEvent_t Event, BLE_MotionAlgorithmsType_t Algorithm);
+typedef void (*CustomWriteRequestMotionAlgorithms_t)(BLE_MotionAlgorithmsType_t Algorithm);
+
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_MotionAlgorithms_PE_NotifyEvent;
-extern BLE_NotifyEnv_t BLE_MotionAlgorithms_SD_NotifyEvent;
-extern BLE_NotifyEnv_t BLE_MotionAlgorithms_VC_NotifyEvent;
 
 extern CustomWriteRequestMotionAlgorithms_t CustomWriteRequestMotionAlgorithms;
+extern CustomNotifyEventMotionAlgorithms_t CustomNotifyEventMotionAlgorithms;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -54,15 +53,6 @@ extern CustomWriteRequestMotionAlgorithms_t CustomWriteRequestMotionAlgorithms;
  * @retval BleCharTypeDef* BleCharPointer: Data structure pointer for Motion Algorithms info service
  */
 extern BleCharTypeDef* BLE_InitMotionAlgorithmsService(void);
-
-#ifndef BLE_MANAGER_SDKV2
-/**
- * @brief  Setting Motion Algorithms Advertise Data
- * @param  uint8_t *manuf_data: Advertise Data
- * @retval None
- */
-extern void BLE_SetMotionAlgorithmsAdvertizeData(uint8_t *manuf_data);
-#endif /* BLE_MANAGER_SDKV2 */
 
 /**
  * @brief  Update Motion Algorithms characteristic

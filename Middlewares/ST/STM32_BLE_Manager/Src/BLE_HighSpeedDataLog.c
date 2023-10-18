@@ -2,14 +2,14 @@
   ******************************************************************************
   * @file    BLE_HighSpeedDataLog.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add High Speed Data Log info services using vendor specific
   *          profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -28,10 +28,8 @@
 #define COPY_HIGH_SPEED_DATA_LOG_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x11,0x00,0x02,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
 /* Exported Variables ------------------------------------------------------- */
-/* Identifies the notification Events */
-BLE_NotifyEnv_t BLE_HighSpeedDataLog_NotifyEvent = BLE_NOTIFY_NOTHING;
-
-CustomWriteRequestHighSpeedDataLogFunction CustomWriteRequestHighSpeedDataLogFunctionPointer;
+CustomNotifyEventHighSpeedDataLog_t CustomNotifyEventHighSpeedDataLog=NULL;
+CustomWriteRequestHighSpeedDataLog_t CustomWriteRequestHighSpeedDataLog;
 
 /* Private variables ---------------------------------------------------------*/
 /* Data structure pointer for High Speed Data Log info service */
@@ -51,7 +49,7 @@ BleCharTypeDef* BLE_InitHighSpeedDataLogService(void)
   /* Data structure pointer for BLE service */
   BleCharTypeDef *BleCharPointer;
 
-  /* Init data structure pointer for battery info service */
+  /* Init data structure pointer for High Speed Data Log info service */
   BleCharPointer = &BleCharHighSpeedDataLog;
   memset(BleCharPointer,0,sizeof(BleCharTypeDef));  
   BleCharPointer->AttrMod_Request_CB = AttrMod_Request_HighSpeedDataLog;
@@ -65,23 +63,13 @@ BleCharTypeDef* BLE_InitHighSpeedDataLogService(void)
   BleCharPointer->Enc_Key_Size=16;
   BleCharPointer->Is_Variable=1;
   
-  if(CustomWriteRequestHighSpeedDataLogFunctionPointer == NULL) {
+  if(CustomWriteRequestHighSpeedDataLog == NULL) {
     BLE_MANAGER_PRINTF("Error: Write request High Speed Data Log function not defined\r\n");
   }
   
   BLE_MANAGER_PRINTF("BLE High Speed Data Log features ok\r\n");
   
   return BleCharPointer;
-}
-
-/**
- * @brief  Setting High Speed Data Log Advertize Data
- * @param  uint8_t *manuf_data: Advertize Data
- * @retval None
- */
-void BLE_SetHighSpeedDataLogAdvertizeData(uint8_t *manuf_data)
-{
-  /* Setting High Speed Data Log Advertize Data */
 }
 
 /**
@@ -112,18 +100,21 @@ tBleStatus BLE_HighSpeedDataLogSendBuffer(uint8_t* buffer, uint32_t len)
  */
 static void AttrMod_Request_HighSpeedDataLog(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if (att_data[0] == 01U) {
-    BLE_HighSpeedDataLog_NotifyEvent= BLE_NOTIFY_SUB;
-  } else if (att_data[0] == 0U){
-    BLE_HighSpeedDataLog_NotifyEvent= BLE_NOTIFY_UNSUB;
- }
+  if(CustomNotifyEventHighSpeedDataLog != NULL)
+  {
+    if (att_data[0] == 01U) {
+      CustomNotifyEventHighSpeedDataLog(BLE_NOTIFY_SUB);
+    } else if (att_data[0] == 0U){
+      CustomNotifyEventHighSpeedDataLog(BLE_NOTIFY_UNSUB);
+    }
+  }
  
 #if (BLE_DEBUG_LEVEL>1)
  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->High Speed Data Log=%s\n", (BLE_HighSpeedDataLog_NotifyEvent == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->HSDataLog=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
    Term_Update(BufferToWrite,BytesToWrite);
  } else {
-   BLE_MANAGER_PRINTF("--->High Speed Data Log=%s", (BLE_HighSpeedDataLog_NotifyEvent == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+   BLE_MANAGER_PRINTF("--->HSDataLog=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
  }
 #endif
 }
@@ -136,10 +127,10 @@ static void AttrMod_Request_HighSpeedDataLog(void *VoidCharPointer, uint16_t att
  */
 static void Write_Request_HighSpeedDataLog(void *BleCharPointer,uint16_t handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
-  if(CustomWriteRequestHighSpeedDataLogFunctionPointer != NULL) {
-    CustomWriteRequestHighSpeedDataLogFunctionPointer(att_data, data_length);
+  if(CustomWriteRequestHighSpeedDataLog!= NULL) {
+    CustomWriteRequestHighSpeedDataLog(att_data, data_length);
   } else {
-    BLE_MANAGER_PRINTF("\r\n\nRead request High Speed Data Log function not defined\r\n\n");
+    BLE_MANAGER_PRINTF("\r\n\nWrite request High Speed Data Log function not defined\r\n\n");
   }
 }
 

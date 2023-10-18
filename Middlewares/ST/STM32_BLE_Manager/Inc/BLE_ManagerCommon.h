@@ -2,14 +2,14 @@
   ******************************************************************************
   * @file    BLE_ManagerCommon.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Macros used for exporting the BLE Characteristics
   *          and Services
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -38,6 +38,7 @@
 }
 
 /* Store Value into a buffer in Little Endian Format */
+#if 0
 #define STORE_LE_16(buf, val)    ( ((buf)[0] =  (uint8_t) (0xFFU&(val)   )) , \
                                    ((buf)[1] =  (uint8_t) (0xFFU&((val)>>8)) ) )
 
@@ -50,7 +51,20 @@
                                    ((buf)[2] =  (uint8_t) (0xFFU&((val)>>8))  ) , \
                                    ((buf)[1] =  (uint8_t) (0xFFU&((val)>>16)) ) , \
                                    ((buf)[0] =  (uint8_t) (0xFFU&((val)>>24)) ) )
+#else
+#define STORE_LE_16(buf, val)    ( ((buf)[0] =  (uint8_t) (((uint32_t )0xFF)&(((uint32_t)(val))   ))) , \
+                                   ((buf)[1] =  (uint8_t) (((uint32_t )0xFF)&(((uint32_t)(val))>>((uint32_t)8))) ) )
 
+#define STORE_LE_32(buf, val)    ( ((buf)[0] =  (uint8_t) (((uint32_t )0xFF)&(((uint32_t)(val))      ) )) , \
+                                   ((buf)[1] =  (uint8_t) (((uint32_t )0xFF)&(((uint32_t)(val))>>((uint32_t)8)))  ) , \
+                                   ((buf)[2] =  (uint8_t) (((uint32_t )0xFF)&(((uint32_t)(val))>>((uint32_t)16))) ) , \
+                                   ((buf)[3] =  (uint8_t) (((uint32_t )0xFF)&(((uint32_t)(val))>>((uint32_t)24))) ) )
+
+#define STORE_BE_32(buf, val)    ( ((buf)[3] =  (uint8_t) (0xFFU&(val)     )) , \
+                                   ((buf)[2] =  (uint8_t) (0xFFU&((val)>>8))  ) , \
+                                   ((buf)[1] =  (uint8_t) (0xFFU&((val)>>16)) ) , \
+                                   ((buf)[0] =  (uint8_t) (0xFFU&((val)>>24)) ) )
+#endif
 #ifdef __cplusplus
 }
 #endif

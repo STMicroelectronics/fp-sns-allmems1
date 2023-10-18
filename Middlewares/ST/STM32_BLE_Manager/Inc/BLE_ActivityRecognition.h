@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_ActivityRecognition.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.1.0
-  * @date    23-Dec-2021
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Activity Recognition info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -38,7 +38,8 @@ typedef enum
   BLE_AR_JOGGING             = 0x04,
   BLE_AR_BIKING              = 0x05,
   BLE_AR_DRIVING             = 0x06,
-  BLE_AR_STAIRS              = 0x07
+  BLE_AR_STAIRS              = 0x07,
+  BLE_AR_ERROR               = 0x08
 } BLE_AR_output_t;
 
 typedef enum
@@ -52,10 +53,11 @@ typedef enum
 } BLE_AR_algoIdx_t;
 
 typedef void(*CustomReadRequestActRec_t)(BLE_AR_output_t *ActivityCode, BLE_AR_algoIdx_t *Algorithm);
+typedef void (*CustomNotifyEventActRec_t)(BLE_NotifyEvent_t Event);
 
 /* Exported Variables ------------------------------------------------------- */
-extern BLE_NotifyEnv_t BLE_ActRec_NotifyEvent;
 extern CustomReadRequestActRec_t CustomReadRequestActRec;
+extern CustomNotifyEventActRec_t CustomNotifyEventActRec;
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -72,7 +74,7 @@ extern BleCharTypeDef* BLE_InitActRecService(void);
  * @param  uint8_t *manuf_data: Advertise Data
  * @retval None
  */
-extern void BLE_SetActRecAdvertizeData(uint8_t *manuf_data);
+extern void BLE_SetActRecAdvertiseData(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**

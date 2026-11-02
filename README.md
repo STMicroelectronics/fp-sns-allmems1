@@ -2,6 +2,9 @@
 
 ![latest tag](https://img.shields.io/github/v/tag/STMicroelectronics/fp-sns-allmems1.svg?color=brightgreen)
 
+> [!NOTE]
+> ## **FP-SNS-ALLMEMS1** software package is now deprecated and this repository is not maintained anymore.
+
 The FP-SNS-ALLMEMS1 is an STM32 ODE function pack. Thanks to this package you can connect your IoT node to a smartphone using BLE, and by using a suitable Android or iOS application
 such as the ST BLE Sensor app, you can visualize real-time environmental sensor data, motion sensor data, digital microphone levels, and battery level.
 With this package you can record on SD card the enviromental sensor data, motion sensor data and digital microphone levels.
